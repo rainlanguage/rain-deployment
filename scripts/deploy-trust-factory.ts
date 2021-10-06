@@ -1,17 +1,17 @@
 import { ethers } from "hardhat"
 // import { factoriesDeploy } from '../balancer/test/Util'
 
-import { RightsManager__factory } from '@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/typechain/factories/RightsManager__factory'
-import { CRPFactory__factory } from '@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/typechain/factories/CRPFactory__factory'
-import { BFactory__factory } from '@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/typechain/factories/BFactory__factory'
+import { RightsManager__factory } from './typechain/factories/RightsManager__factory'
+import { CRPFactory__factory } from './typechain/factories/CRPFactory__factory'
+import { BFactory__factory } from './typechain/factories/BFactory__factory'
 
-import type { CRPFactory } from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/typechain/CRPFactory";
-import type { BFactory } from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/typechain/BFactory";
+import type { CRPFactory } from "./typechain/CRPFactory";
+import type { BFactory } from "./typechain/BFactory";
 
-import type { TrustFactory } from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/typechain/TrustFactory";
-import type { RedeemableERC20Factory } from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/typechain/RedeemableERC20Factory";
-import type { RedeemableERC20PoolFactory } from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/typechain/RedeemableERC20PoolFactory";
-import type { SeedERC20Factory } from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/typechain/SeedERC20Factory";
+import type { TrustFactory } from "./typechain/TrustFactory";
+import type { RedeemableERC20Factory } from "./typechain/RedeemableERC20Factory";
+import type { RedeemableERC20PoolFactory } from "./typechain/RedeemableERC20PoolFactory";
+import type { SeedERC20Factory } from "./typechain/SeedERC20Factory";
 
 const crpFactoryAddress = '0xFB7Cd2084f0C745193DF635413dFbc1a682bD494'
 const bFactoryAddress = '0xc50aAf61BAE0b5c69DAf59aED1Fe8dC793C44595'
