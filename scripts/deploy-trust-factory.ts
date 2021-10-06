@@ -1,21 +1,21 @@
 import { ethers } from "hardhat"
 // import { factoriesDeploy } from '../balancer/test/Util'
-import { RightsManager__factory } from '../balancer/dist/2683b5a19850e69b5a222e45ab624dc7dacad2d8/typechain/factories/RightsManager__factory'
-import { CRPFactory__factory } from '../balancer/dist/2683b5a19850e69b5a222e45ab624dc7dacad2d8/typechain/factories/CRPFactory__factory'
-import { BFactory__factory } from '../balancer/dist/2683b5a19850e69b5a222e45ab624dc7dacad2d8/typechain/factories/BFactory__factory'
 
-import type { CRPFactory } from "../balancer/dist/2683b5a19850e69b5a222e45ab624dc7dacad2d8/typechain/CRPFactory";
-import type { BFactory } from "../balancer/dist/2683b5a19850e69b5a222e45ab624dc7dacad2d8/typechain/BFactory";
+import { RightsManager__factory } from '@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/typechain/factories/RightsManager__factory'
+import { CRPFactory__factory } from '@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/typechain/factories/CRPFactory__factory'
+import { BFactory__factory } from '@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/typechain/factories/BFactory__factory'
 
-import type { TrustFactory } from "../balancer/dist/2683b5a19850e69b5a222e45ab624dc7dacad2d8/typechain/TrustFactory";
-import type { RedeemableERC20Factory } from "../balancer/dist/2683b5a19850e69b5a222e45ab624dc7dacad2d8/typechain/RedeemableERC20Factory";
-import type { RedeemableERC20PoolFactory } from "../balancer/dist/2683b5a19850e69b5a222e45ab624dc7dacad2d8/typechain/RedeemableERC20PoolFactory";
-import type { SeedERC20Factory } from "../balancer/dist/2683b5a19850e69b5a222e45ab624dc7dacad2d8/typechain/SeedERC20Factory";
+import type { CRPFactory } from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/typechain/CRPFactory";
+import type { BFactory } from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/typechain/BFactory";
 
-const crpFactoryAddress = '0x099AF419108Cb9eCa09f09a6c68004d926d608DD'
-const bFactoryAddress = '0xB7f7d31de9cB2936E513E677c98D937F2455E385'
-const rightsManagerAddress = '0x1a144B597B6da8056B0bc487e504C0d86d8e64e8'
+import type { TrustFactory } from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/typechain/TrustFactory";
+import type { RedeemableERC20Factory } from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/typechain/RedeemableERC20Factory";
+import type { RedeemableERC20PoolFactory } from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/typechain/RedeemableERC20PoolFactory";
+import type { SeedERC20Factory } from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/typechain/SeedERC20Factory";
 
+const crpFactoryAddress = '0xFB7Cd2084f0C745193DF635413dFbc1a682bD494'
+const bFactoryAddress = '0xc50aAf61BAE0b5c69DAf59aED1Fe8dC793C44595'
+const rightsManagerAddress = '0x3F9276cE9DDCaaB2b558DeFEA6DE1a8ee321536b'
 async function main() {
 
     const signers = await ethers.getSigners();
