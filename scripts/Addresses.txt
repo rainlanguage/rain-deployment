@@ -1,0 +1,14 @@
+- Reef testnet
+SmartPoolManager deployed to:  0xf0D00D6B47ED45AC41238fF3D2ca89eb065FE507
+BalancerSafeMath deployed to:  0x9cFd3a3F0690fDCcCe78Ea8AbE6Caf8fc4a7b757
+RightsManager deployed to:  0x35B6567C46664489bF67BAea3f62AC0ee92325b6
+BFactory deployed to:  0x7C6d26dc2CAcb0DAdb952208C156CF6dDA5FfD1A
+CRPFactory deployed to:  0xCF1f6784bed17E28834adE3227c0820687FB85FA
+
+
+- Ropsten *ignore this*:
+SmartPoolManager deployed to:  0xdcE20fE4E286912ec457536Ae0b3Df5fDE21a40A
+BalancerSafeMath deployed to:  0xc1E7CA4D153Ac0919f34198c1d029ed3391b9f29
+RightsManager deployed to:  0x3F9276cE9DDCaaB2b558DeFEA6DE1a8ee321536b
+BFactory deployed to:  0xc50aAf61BAE0b5c69DAf59aED1Fe8dC793C44595
+CRPFactory deployed to:  0xFB7Cd2084f0C745193DF635413dFbc1a682bD494
