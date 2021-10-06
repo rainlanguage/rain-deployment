@@ -2,8 +2,8 @@
   "scripts":{
     "deploy-balancer":"hardhat run scripts/deploy-balancer.ts",
     "deploy-balancer-reef":"hardhat run scripts/deploy-balancer-reef.ts",
-    "deploy-trust":"hardhat run scripts/deploy-trust-factory-reef.ts",
-    "deploy-trust-reef":"hardhat run scripts/deploy-trust-factory.ts"
+    "deploy-trust-reef":"hardhat run scripts/deploy-trust-factory-reef.ts",
+    "deploy-trust":"hardhat run scripts/deploy-trust-factory.ts"
   },
   "dependencies": {
     "@beehiveinnovation/rain-protocol": "^0.0.13"
