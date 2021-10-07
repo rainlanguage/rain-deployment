@@ -14,10 +14,6 @@ import { RightsManager__factory } from './typechain/factories/RightsManager__fac
 import { CRPFactory__factory } from './typechain/factories/CRPFactory__factory';
 import { BFactory__factory } from './typechain/factories/BFactory__factory';
 
-// const CRPFactoryAddress = '0xCF1f6784bed17E28834adE3227c0820687FB85FA';
-// const BFactoryAddress = '0x7C6d26dc2CAcb0DAdb952208C156CF6dDA5FfD1A';
-// const RightsManagerAddress = '0x35B6567C46664489bF67BAea3f62AC0ee92325b6';
-
 // This is provisional while we fix the JSON that we get on the import
 import CRPFactoryProvisional from "./dist/CRPFactory.sol/CRPFactory.json";
 

@@ -11,9 +11,7 @@ import BalancerSafeMath from "@beehiveinnovation/rain-protocol/dist/e07af1be5703
 import { RightsManager__factory } from './typechain/factories/RightsManager__factory';
 import { CRPFactory__factory } from './typechain/factories/CRPFactory__factory';
 import { BFactory__factory } from './typechain/factories/BFactory__factory';
-const crpFactoryAddress = '0xFB7Cd2084f0C745193DF635413dFbc1a682bD494';
-const bFactoryAddress = '0xc50aAf61BAE0b5c69DAf59aED1Fe8dC793C44595';
-const rightsManagerAddress = '0x3F9276cE9DDCaaB2b558DeFEA6DE1a8ee321536b';
+
 
 // This is provisional while we fix the JSON that we get on the import
 import CRPFactoryProvisional from "./dist/CRPFactory.sol/CRPFactory.json";
@@ -46,8 +44,8 @@ async function main() {
     console.log('- CRPFactory deployed to: ', CRPFactoryAddress);
 
     // Deploying trust factory
-    const crpFactory = CRPFactory__factory.connect(crpFactoryAddress, signer);
-    const bFactory = BFactory__factory.connect(bFactoryAddress, signer);
+    const crpFactory = CRPFactory__factory.connect(CRPFactoryAddress, signer);
+    const bFactory = BFactory__factory.connect(BFactoryAddress, signer);
 
     const  addresses = await factoriesDeploy(crpFactory, bFactory, signer);
     console.log('- Trust factory deployed to: ', addresses.trustFactoryAddress);
