@@ -8,54 +8,23 @@ import BalancerSafeMath from "@beehiveinnovation/rain-protocol/dist/e07af1be5703
 // import Prestige from '../balancer_mainnet_bytecode/PrestigeDeployTx.json'
 
 import CRPFactoryProvisional from "./dist/CRPFactory.sol/CRPFactory.json"
+//----
+import {deploy, linkBytecode} from "./utils";
 
-async function deploy(artifact:any, signer:any) {
-
-    const iface = new ethers.utils.Interface(artifact.abi)
-    const factory = new ethers.ContractFactory(iface, artifact.bytecode, signer)
-    const contract = await factory.deploy()
-    await contract.deployTransaction.wait()
-    return contract.address
-
-}
-
-function linkBytecode(bytecode:any, links:any) {
-    Object.keys(links).forEach(library_name => {
-      const library_address = links[library_name];
-      const regex = new RegExp(`__${library_name}_+`, "g");
-
-      bytecode = bytecode.replace(regex, library_address.replace("0x", ""));
-    });
-
-    return bytecode;
-}
-
-async function deployFromTx(artifact:any, signer:any) {
-
-    const tx = {
-        data: artifact.deploy_tx,
-        chainId: await signer.provider.send('eth_chainId')
-    }
-
-    const deployTx = await signer.sendTransaction(tx)
-
-    return deployTx.creates
-}
    
 async function main() {
-
     const signers = await ethers.getSigners()
 
-    const SmartPoolManagerAddress = await deploy(SmartPoolManager, signers[0])
+    const SmartPoolManagerAddress = await deploy(SmartPoolManager, signers[0], [])
     console.log('SmartPoolManager deployed to: ', SmartPoolManagerAddress)
 
-    const BalancerSafeMathAddress = await deploy(BalancerSafeMath, signers[0])
+    const BalancerSafeMathAddress = await deploy(BalancerSafeMath, signers[0], [])
     console.log('BalancerSafeMath deployed to: ', BalancerSafeMathAddress)
 
-    const RightsManagerAddress = await deploy(RightsManager, signers[0])
+    const RightsManagerAddress = await deploy(RightsManager, signers[0], [])
     console.log('RightsManager deployed to: ', RightsManagerAddress)
 
-    const BFactoryAddress = await deploy(BFactory, signers[0])
+    const BFactoryAddress = await deploy(BFactory, signers[0], [])
     console.log('BFactory deployed to: ', BFactoryAddress)
 
     let _CRPFactory = CRPFactoryProvisional
@@ -66,9 +35,8 @@ async function main() {
         "BalancerSafeMath" : BalancerSafeMathAddress
     })
 
-    const CRPFactoryAddress = await deploy(_CRPFactory, signers[0])
+    const CRPFactoryAddress = await deploy(_CRPFactory, signers[0], [])
     console.log('CRPFactory deployed to: ', CRPFactoryAddress)
-
 }
 
 main()
