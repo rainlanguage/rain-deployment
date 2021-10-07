@@ -22,7 +22,8 @@ import CRPFactoryProvisional from "./dist/CRPFactory.sol/CRPFactory.json";
 async function main() {
     const signers = await ethers.getSigners();
     const signer = signers[0];
-
+    
+    // Deploying balancer
     const SmartPoolManagerAddress = await deploy(SmartPoolManager, signer, []);
     console.log('- SmartPoolManager deployed to: ', SmartPoolManagerAddress);
 
@@ -44,6 +45,7 @@ async function main() {
     const CRPFactoryAddress = await deploy(_CRPFactory, signer, []);
     console.log('- CRPFactory deployed to: ', CRPFactoryAddress);
 
+    // Deploying trust factory
     const crpFactory = CRPFactory__factory.connect(crpFactoryAddress, signer);
     const bFactory = BFactory__factory.connect(bFactoryAddress, signer);
 

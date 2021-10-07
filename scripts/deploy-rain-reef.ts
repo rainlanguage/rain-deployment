@@ -1,5 +1,6 @@
 import { ethers } from "hardhat";
 const hre = require("hardhat");
+
 import {deploy, linkBytecode, factoriesDeploy} from "./utils";
 
 import BFactory  from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/artifacts/@beehiveinnovation/balancer-core/contracts/BFactory.sol/BFactory.json";
@@ -12,18 +13,25 @@ import BalancerSafeMath from "@beehiveinnovation/rain-protocol/dist/e07af1be5703
 import { RightsManager__factory } from './typechain/factories/RightsManager__factory';
 import { CRPFactory__factory } from './typechain/factories/CRPFactory__factory';
 import { BFactory__factory } from './typechain/factories/BFactory__factory';
-const crpFactoryAddress = '0xFB7Cd2084f0C745193DF635413dFbc1a682bD494';
-const bFactoryAddress = '0xc50aAf61BAE0b5c69DAf59aED1Fe8dC793C44595';
-const rightsManagerAddress = '0x3F9276cE9DDCaaB2b558DeFEA6DE1a8ee321536b';
+
+// const CRPFactoryAddress = '0xCF1f6784bed17E28834adE3227c0820687FB85FA';
+// const BFactoryAddress = '0x7C6d26dc2CAcb0DAdb952208C156CF6dDA5FfD1A';
+// const RightsManagerAddress = '0x35B6567C46664489bF67BAea3f62AC0ee92325b6';
 
 // This is provisional while we fix the JSON that we get on the import
 import CRPFactoryProvisional from "./dist/CRPFactory.sol/CRPFactory.json";
 
    
 async function main() {
-    const signers = await ethers.getSigners();
+    const signers = await hre.reef.getSigners();
     const signer = signers[0];
+    /**
+    "claimDefaultAccount" has to be done only once, multiple calls however won't change anything.
+    This call take some REEF from the balance
+    await signer.claimDefaultAccount();
+    */
 
+    // Deploying balancer
     const SmartPoolManagerAddress = await deploy(SmartPoolManager, signer, []);
     console.log('- SmartPoolManager deployed to: ', SmartPoolManagerAddress);
 
@@ -45,8 +53,9 @@ async function main() {
     const CRPFactoryAddress = await deploy(_CRPFactory, signer, []);
     console.log('- CRPFactory deployed to: ', CRPFactoryAddress);
 
-    const crpFactory = CRPFactory__factory.connect(crpFactoryAddress, signer);
-    const bFactory = BFactory__factory.connect(bFactoryAddress, signer);
+    // Deploying trust factory
+    const crpFactory = CRPFactory__factory.connect(CRPFactoryAddress, signer);
+    const bFactory = BFactory__factory.connect(BFactoryAddress, signer);
 
     const  addresses = await factoriesDeploy(crpFactory, bFactory, signer);
     console.log('- Trust factory deployed to: ', addresses.trustFactoryAddress);
