@@ -47,6 +47,18 @@ const config = {
       url: "https://rpc-mumbai.maticvigil.com",
       accounts: process.env.MUMBAI_PRIVATE_KEY !== undefined ? [process.env.MUMBAI_PRIVATE_KEY] : [],
     },
+    avalanche: {
+      url: 'https://api.avax.network/ext/bc/C/rpc',
+      gasPrice: 225000000000,
+      chainId: 43114,
+      accounts: []
+    },
+    fuji: {
+      url: 'https://api.avax-test.network/ext/bc/C/rpc',
+      gasPrice: 225000000000,
+      chainId: 43113,
+      accounts: []
+    }
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
