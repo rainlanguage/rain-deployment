@@ -23,8 +23,29 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 
-const config = {
-  solidity: "0.6.12",
+const config:any = {
+  solidity: {
+    compilers: [
+      {
+        version: "0.6.12",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 100000,
+          },
+        },
+      },
+      {
+        version: "0.5.12",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 100000,
+          },
+        },
+      },
+    ]
+  },
   networks: {
     ropsten: {
       url: process.env.ROPSTEN_URL || "",
