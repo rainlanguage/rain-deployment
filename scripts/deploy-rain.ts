@@ -1,20 +1,30 @@
 import { ethers } from "hardhat";
-import {deploy, linkBytecode, factoriesDeploy} from "./utils";
+const hre = require("hardhat");
+import {deploy,  linkBytecode, factoriesDeploy} from "./utils";
 
+/*
 import BFactory  from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/artifacts/@beehiveinnovation/balancer-core/contracts/BFactory.sol/BFactory.json";
 import CRPFactory from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/artifacts/@beehiveinnovation/configurable-rights-pool/contracts/CRPFactory.sol/CRPFactory.json";
 import RightsManager from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/artifacts/@beehiveinnovation/configurable-rights-pool/libraries/RightsManager.sol/RightsManager.json";
 import SmartPoolManager from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/artifacts/@beehiveinnovation/configurable-rights-pool/libraries/SmartPoolManager.sol/SmartPoolManager.json";
 import BalancerSafeMath from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/artifacts/@beehiveinnovation/configurable-rights-pool/libraries/BalancerSafeMath.sol/BalancerSafeMath.json";
-// import Prestige from '../balancer_mainnet_bytecode/PrestigeDeployTx.json';
-
+//import Prestige from '../balancer_mainnet_bytecode/PrestigeDeployTx.json';
+**/
 import { RightsManager__factory } from './typechain/factories/RightsManager__factory';
 import { CRPFactory__factory } from './typechain/factories/CRPFactory__factory';
 import { BFactory__factory } from './typechain/factories/BFactory__factory';
 
 
+
 // This is provisional while we fix the JSON that we get on the import
 import CRPFactoryProvisional from "./dist/CRPFactory.sol/CRPFactory.json";
+
+import BFactory  from "../artifacts/@beehiveinnovation/balancer-core/contracts/BFactory.sol/BFactory.json";
+import RightsManager from "../artifacts/@beehiveinnovation/configurable-rights-pool/libraries/RightsManager.sol/RightsManager.json";
+import SmartPoolManager from "../artifacts/@beehiveinnovation/configurable-rights-pool/libraries/SmartPoolManager.sol/SmartPoolManager.json";
+import BalancerSafeMath from "../artifacts/@beehiveinnovation/configurable-rights-pool/libraries/BalancerSafeMath.sol/BalancerSafeMath.json";
+//import Prestige from '../balancer_mainnet_bytecode/PrestigeDeployTx.json';
+
 
    
 async function main() {
