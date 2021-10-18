@@ -3,11 +3,11 @@ const hre = require("hardhat");
 
 import {deploy, linkBytecode, factoriesDeploy} from "./utils";
 
-import BFactory  from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/artifacts/@beehiveinnovation/balancer-core/contracts/BFactory.sol/BFactory.json";
-import CRPFactory from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/artifacts/@beehiveinnovation/configurable-rights-pool/contracts/CRPFactory.sol/CRPFactory.json";
-import RightsManager from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/artifacts/@beehiveinnovation/configurable-rights-pool/libraries/RightsManager.sol/RightsManager.json";
-import SmartPoolManager from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/artifacts/@beehiveinnovation/configurable-rights-pool/libraries/SmartPoolManager.sol/SmartPoolManager.json";
-import BalancerSafeMath from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/artifacts/@beehiveinnovation/configurable-rights-pool/libraries/BalancerSafeMath.sol/BalancerSafeMath.json";
+const BFactory = require(`${process.env.DIST_VERSION}/artifacts/@beehiveinnovation/balancer-core/contracts/BFactory.sol/BFactory.json`);
+const CRPFactory = require(`${process.env.DIST_VERSION}/artifacts/@beehiveinnovation/configurable-rights-pool/contracts/CRPFactory.sol/CRPFactory.json`);
+const RightsManager = require(`${process.env.DIST_VERSION}/artifacts/@beehiveinnovation/configurable-rights-pool/libraries/RightsManager.sol/RightsManager.json`);
+const SmartPoolManager = require(`${process.env.DIST_VERSION}/artifacts/@beehiveinnovation/configurable-rights-pool/libraries/SmartPoolManager.sol/SmartPoolManager.json`);
+const BalancerSafeMath = require(`${process.env.DIST_VERSION}/artifacts/@beehiveinnovation/configurable-rights-pool/libraries/BalancerSafeMath.sol/BalancerSafeMath.json`);
 // import Prestige from '../balancer_mainnet_bytecode/PrestigeDeployTx.json';
 
 import { RightsManager__factory } from './typechain/factories/RightsManager__factory';
