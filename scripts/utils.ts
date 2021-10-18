@@ -11,15 +11,21 @@ import { CRPFactoryLibraryAddresses } from './typechain/factories/CRPFactory__fa
 // import SeedERC20Factory  from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/artifacts/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json"
 // import TrustFactory  from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json"
 
-import RedeemableERC20Factory  from "../artifacts/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json"
-import RedeemableERC20PoolFactory  from "../artifacts/contracts/pool/RedeemableERC20PoolFactory.sol/RedeemableERC20PoolFactory.json"
-import SeedERC20Factory  from "../artifacts/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json"
-import TrustFactory  from "../artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json"
+// import RedeemableERC20Factory  from "../artifacts/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json"
+// import RedeemableERC20PoolFactory  from "../artifacts/contracts/pool/RedeemableERC20PoolFactory.sol/RedeemableERC20PoolFactory.json"
+// import SeedERC20Factory  from "../artifacts/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json"
+// import TrustFactory  from "../artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json"
+
+import RedeemableERC20Factory  from "@beehiveinnovation/rain-protocol/artifacts/RedeemableERC20Factory.json"
+import RedeemableERC20PoolFactory  from "@beehiveinnovation/rain-protocol/artifacts/RedeemableERC20PoolFactory.json"
+import SeedERC20Factory  from "@beehiveinnovation/rain-protocol/artifacts/SeedERC20Factory.json"
+import TrustFactory  from "@beehiveinnovation/rain-protocol/artifacts/TrustFactory.json"
+
 
 export async function deploy(artifact:any, signer:any, args:any[]) {  
     const iface = new ethers.utils.Interface(artifact.abi)
     const factory = new ethers.ContractFactory(iface, artifact.bytecode, signer)
-    const contract = await factory.deploy(args)
+    const contract = await factory.deploy(...args)
     await contract.deployTransaction.wait()
     return contract.address
 }
