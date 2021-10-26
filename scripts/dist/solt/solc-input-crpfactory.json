@@ -45,6 +45,17 @@
         "metadata": {
             "useLiteralContent": true
         },
+        "libraries": {
+            "./contracts/configurable-rights-pool/libraries/SmartPoolManager.sol": {
+              "SmartPoolManager": "0x64aFEe1677efFC9395836A84E98A45b444fFe3C6"
+            },
+            "./contracts/configurable-rights-pool/libraries/RightsManager.sol": {
+              "RightsManager": "0xc29c4f84A9cD49BADED4bCb4c7100F0002076A7d"
+            },
+            "./contracts/configurable-rights-pool/libraries/BalancerSafeMath.sol": {
+              "BalancerSafeMath": "0x598239B32D2e16e1ae4d0BbD9Ceb0Ee88fb6cC14"
+            }
+          },
         "optimizer": {
             "enabled": true,
             "runs": 100

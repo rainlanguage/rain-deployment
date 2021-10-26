@@ -11,13 +11,18 @@ RedeemableERC20PoolFactory deployed to:  0x933165018d5f1eC2ef7F10C327130218a8c4c
 SeedERC20Factory deployed to:  0x06dFA1525B87790fca056B43057C6E47Eb70b375 (cannot)
 Trust factory deployed to:  0xB3B43BA5407814E792d111e7DAf3529f0d81d150 (cannot)
 
+- Mumbai:
+
+
 - Ropsten *ignore this*:
 SmartPoolManager deployed to:  0x64aFEe1677efFC9395836A84E98A45b444fFe3C6 (verified)
 BalancerSafeMath deployed to:  0x598239B32D2e16e1ae4d0BbD9Ceb0Ee88fb6cC14 (verified)
 RightsManager deployed to:  0xc29c4f84A9cD49BADED4bCb4c7100F0002076A7d (verified)
 BFactory deployed to:  0xBb08ca771c6C0a52868534D39E1e17b42134D45F (verified) - using 100runs
-CRPFactory deployed to:  0x6e2B9E6428d978CfadF251e6ca77590737EEa11b (cannot verified because the linked libraries)
+CRPFactory deployed to:  0x6e2B9E6428d978CfadF251e6ca77590737EEa11b (verified) - using 100runs we can use 200 instead
 RedeemableERC20Factory deployed to:  0x82Caf92067A9cC095440CE81f0F65A1285D1D8F6 (verified)
 RedeemableERC20PoolFactory deployed to:  0x30f5d11e4384c5e8c2D886EAdBa925fe643Ab118 (cannot: source not found: File import callback not supported)
 SeedERC20Factory deployed to:  0x4f5A25939e6e3B82D7FB36167860AfD6dE7c7D31 (cannot: source not found: File import callback not supported)
 Trust factory deployed to:  0x60fB9F4C2930595c242eE5b57C8bd13cbaF594Bc (cannot: source not found: File import callback not supported)
+
+find contracts -type f -not -path 'contracts/test/*' | xargs -i solt write '{}' --npm --runs 100000

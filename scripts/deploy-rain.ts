@@ -40,10 +40,7 @@ async function main() {
     console.log('- CRPFactory deployed to: ', CRPFactoryAddress);
 
     // Deploying trust factory
-    const crpFactory = CRPFactory__factory.connect(CRPFactoryAddress, signer);
-    const bFactory = BFactory__factory.connect(BFactoryAddress, signer);
-
-    const  addresses = await factoriesDeploy(crpFactory, bFactory, signer);
+    const  addresses = await factoriesDeploy(CRPFactoryAddress, BFactoryAddress, signer);
     console.log('- Trust factory deployed to: ', addresses.trustFactoryAddress);
 }
 main();

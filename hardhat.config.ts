@@ -51,7 +51,16 @@ const config:any = {
         settings: {
           optimizer: {
             enabled: true,
-            runs: 100,
+            runs: 200,
+          },
+        }
+      },
+      "contracts/configurable-rights-pool/contracts/ConfigurableRightsPool.sol": {
+        version: "0.6.12",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
           },
         }
       },
@@ -60,7 +69,16 @@ const config:any = {
         settings: {
           optimizer: {
             enabled: true,
-            runs: 100,
+            runs: 200,
+          },
+        }
+      },
+      "@beehiveinnovation/configurable-rights-pool/contracts/ConfigurableRightsPool.sol": {
+        version: "0.6.12",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
           },
         }
       }
