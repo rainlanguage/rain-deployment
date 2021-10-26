@@ -23,7 +23,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 
-const config = {
+const config:any = {
   solidity: {
     compilers: [
       {
@@ -44,7 +44,27 @@ const config = {
           },
         },
       },
-    ]
+    ],
+    overrides: {
+      "contracts/configurable-rights-pool/contracts/CRPFactory.sol": {
+        version: "0.6.12",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 100,
+          },
+        }
+      },
+      "@beehiveinnovation/configurable-rights-pool/contracts/CRPFactory.sol": {
+        version: "0.6.12",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 100,
+          },
+        }
+      }
+    }
   },
   networks: {
     ropsten: {

@@ -1,22 +1,23 @@
-- Reef testnet
-SmartPoolManager deployed to:  0x21F156d8D9144b7935b64F25a30014d0DE3e531d
-BalancerSafeMath deployed to:  0xF4d05C2657dB65727969fe5B26Ad24311879dd01
-RightsManager deployed to:  0xb1BD924580F45044d34B39Cc84902b9157177fAe
-BFactory deployed to:  0xd458636Bd5cb876cA35b8E34E2B35322F61B5426
-CRPFactory deployed to:  0x8e930df4109630B7F7df112B071afc8D538De867
-RedeemableERC20Factory deployed to:  0x81b0d62E4AE8Ec94B0e46dC379C3f268d03973eC
-RedeemableERC20PoolFactory deployed to:  0x02B59ac6B6a98c2d83F48aF98a8BAae0ccE841fB
-SeedERC20Factory deployed to:  0xf73A7298892886658b49EA7cFD5dC4e4CBB2F41f
-Trust factory deployed to:  0x71eE964267cD390B90af0E38a3dBDD905797dcAe
+- Reef testnet (using flat contracts): "The Reef chain smart contracts are written in Solidity. 
+Any existing Ethereum smart contracts written in Solidity 0.6 or greater will work on Reef chain without a need for modifications."
 
+SmartPoolManager deployed to:  0x8e930df4109630B7F7df112B071afc8D538De867 (verified)
+BalancerSafeMath deployed to:  0x81b0d62E4AE8Ec94B0e46dC379C3f268d03973eC (verified)
+RightsManager deployed to:  0x02B59ac6B6a98c2d83F48aF98a8BAae0ccE841fB (verified)
+BFactory deployed to:  0xf73A7298892886658b49EA7cFD5dC4e4CBB2F41f (Reef removed the old compiler version. Work now with >=0.6.0)
+CRPFactory deployed to:  0x71eE964267cD390B90af0E38a3dBDD905797dcAe (cannot)
+RedeemableERC20Factory deployed to:  0xdEdfF7c77C069d2CdfDC293a72cc00f717d14c43 (cannot)
+RedeemableERC20PoolFactory deployed to:  0x933165018d5f1eC2ef7F10C327130218a8c4c81D (cannot)
+SeedERC20Factory deployed to:  0x06dFA1525B87790fca056B43057C6E47Eb70b375 (cannot)
+Trust factory deployed to:  0xB3B43BA5407814E792d111e7DAf3529f0d81d150 (cannot)
 
 - Ropsten *ignore this*:
-SmartPoolManager deployed to:  0x16D33236D7Af17ca55E60EcE64e9F6CeD32Ba416
-BalancerSafeMath deployed to:  0xa018eAB945De7e8073d1995284b78FC0cfE45B76
-RightsManager deployed to:  0x333F9355Bc47A22f64ac5C5F3d7cC5408544851f
-BFactory deployed to:  0xbA9Ce92a65e172ADd70A71B6E280D9941fb9185C
-CRPFactory deployed to:  0xcF75a4bc22AD40D6DA6f57b5174D39D28bC85a96
-RedeemableERC20Factory deployed to:  0x34A0946CEAD3417E629B2679D05C0A24d49a1eB4
-RedeemableERC20PoolFactory deployed to:  0xa76F06F09346141977cF652A1EDFD09D779AA22a
-SeedERC20Factory deployed to:  0xA54f23A7B650Ea510fCA651EAfc39BFA5a04010D
-Trust factory deployed to:  0xE09f5c0bA8A3C59f3c7aFFB458058881413878a2
+SmartPoolManager deployed to:  0x64aFEe1677efFC9395836A84E98A45b444fFe3C6 (verified)
+BalancerSafeMath deployed to:  0x598239B32D2e16e1ae4d0BbD9Ceb0Ee88fb6cC14 (verified)
+RightsManager deployed to:  0xc29c4f84A9cD49BADED4bCb4c7100F0002076A7d (verified)
+BFactory deployed to:  0xBb08ca771c6C0a52868534D39E1e17b42134D45F (verified) - using 100runs
+CRPFactory deployed to:  0x6e2B9E6428d978CfadF251e6ca77590737EEa11b (cannot verified because the linked libraries)
+RedeemableERC20Factory deployed to:  0x82Caf92067A9cC095440CE81f0F65A1285D1D8F6 (verified)
+RedeemableERC20PoolFactory deployed to:  0x30f5d11e4384c5e8c2D886EAdBa925fe643Ab118 (cannot: source not found: File import callback not supported)
+SeedERC20Factory deployed to:  0x4f5A25939e6e3B82D7FB36167860AfD6dE7c7D31 (cannot: source not found: File import callback not supported)
+Trust factory deployed to:  0x60fB9F4C2930595c242eE5b57C8bd13cbaF594Bc (cannot: source not found: File import callback not supported)
