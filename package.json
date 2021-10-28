@@ -8,7 +8,8 @@
   "dependencies": {
     "@beehiveinnovation/balancer-core": "^0.0.7",
     "@beehiveinnovation/configurable-rights-pool": "^0.0.1",
-    "@beehiveinnovation/rain-protocol": "^0.0.13"
+    "@beehiveinnovation/rain-protocol": "^0.0.13",
+    "solc": "0.6.12"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",

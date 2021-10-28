@@ -47,18 +47,18 @@
         },
         "libraries": {
             "./contracts/configurable-rights-pool/libraries/SmartPoolManager.sol": {
-              "SmartPoolManager": "0x64aFEe1677efFC9395836A84E98A45b444fFe3C6"
+                "SmartPoolManager": "0xF722747736b0baf01a03F37f0e6441547c902F97"
             },
             "./contracts/configurable-rights-pool/libraries/RightsManager.sol": {
-              "RightsManager": "0xc29c4f84A9cD49BADED4bCb4c7100F0002076A7d"
+                "RightsManager": "0x863807e51041cF16C99F4138de75cED64e925753"
             },
             "./contracts/configurable-rights-pool/libraries/BalancerSafeMath.sol": {
-              "BalancerSafeMath": "0x598239B32D2e16e1ae4d0BbD9Ceb0Ee88fb6cC14"
+                "BalancerSafeMath": "0x874bF4414Cd5f4b90Ed2eE302af2952B2953D7c1"
             }
-          },
+        },
         "optimizer": {
             "enabled": true,
-            "runs": 100
+            "runs": 200
         },
         "outputSelection": {
             "*": {
