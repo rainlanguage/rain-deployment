@@ -1,14 +1,9 @@
 import { ethers } from "hardhat"
 
-import type { CRPFactory } from "./dist/typechain/CRPFactory";
-import type { BFactory } from "./dist/typechain/BFactory";
-
-
-const RedeemableERC20Factory = require("./dist/artifacts/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json")
-const RedeemableERC20PoolFactory = require("./dist/artifacts/contracts/pool/RedeemableERC20PoolFactory.sol/RedeemableERC20PoolFactory.json")
-const SeedERC20Factory = require("./dist/artifacts/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json")
-// import TrustFactory = require("./dist/artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json")
-const TrustFactory = require("../artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json")
+const RedeemableERC20Factory = require("./dist/artifacts/contracts/rain-protocol/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json")
+const RedeemableERC20PoolFactory = require("./dist/artifacts/contracts/rain-protocol/contracts/pool/RedeemableERC20PoolFactory.sol/RedeemableERC20PoolFactory.json")
+const SeedERC20Factory = require("./dist/artifacts/contracts/rain-protocol/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json")
+const TrustFactory = require("./dist/artifacts/contracts/rain-protocol/contracts/trust/TrustFactory.sol/TrustFactory.json")
 
 export async function deploy(artifact:any, signer:any, args:any[]) {
     const iface = new ethers.utils.Interface(artifact.abi)
@@ -55,7 +50,6 @@ export async function factoriesDeploy(crpFactory: string, balancerFactory: strin
       redeemableERC20PoolFactoryAddress,
       seedERC20FactoryAddress
     ]);
-    
     return {
       redeemableERC20FactoryAddress,
       redeemableERC20PoolFactoryAddress,
@@ -63,3 +57,7 @@ export async function factoriesDeploy(crpFactory: string, balancerFactory: strin
       trustFactoryAddress,
     };
   };
+
+function editFile(address: string[]) {
+  
+}

@@ -1,18 +1,12 @@
 import { ethers } from "hardhat";
 import {deploy, linkBytecode, factoriesDeploy} from "./utils";
 
-const BFactory = require(`./dist/artifacts/@beehiveinnovation/balancer-core/contracts/BFactory.sol/BFactory.json`);
-const CRPFactory = require(`./dist/artifacts/@beehiveinnovation/configurable-rights-pool/contracts/CRPFactory.sol/CRPFactory.json`); 
-const RightsManager = require(`./dist/artifacts/@beehiveinnovation/configurable-rights-pool/libraries/RightsManager.sol/RightsManager.json`);
-const SmartPoolManager = require(`./dist/artifacts/@beehiveinnovation/configurable-rights-pool/libraries/SmartPoolManager.sol/SmartPoolManager.json`);
-const BalancerSafeMath = require(`./dist/artifacts/@beehiveinnovation/configurable-rights-pool/libraries/BalancerSafeMath.sol/BalancerSafeMath.json`);
-// import Prestige from '../balancer_mainnet_bytecode/PrestigeDeployTx.json';
+const BFactory = require(`./dist/artifacts/contracts/balancer-core/contracts/BFactory.sol/BFactory.json`);
+const CRPFactory = require(`./dist/artifacts/contracts/configurable-rights-pool/contracts/CRPFactory.sol/CRPFactory.json`); 
+const RightsManager = require(`./dist/artifacts/contracts/configurable-rights-pool/libraries/RightsManager.sol/RightsManager.json`);
+const SmartPoolManager = require(`./dist/artifacts/contracts/configurable-rights-pool/libraries/SmartPoolManager.sol/SmartPoolManager.json`);
+const BalancerSafeMath = require(`./dist/artifacts/contracts/configurable-rights-pool/libraries/BalancerSafeMath.sol/BalancerSafeMath.json`);
 
-import { RightsManager__factory } from './dist/typechain/factories/RightsManager__factory';
-import { CRPFactory__factory } from './dist/typechain/factories/CRPFactory__factory';
-import { BFactory__factory } from './dist/typechain/factories/BFactory__factory';
-
-   
 async function main() {
     const signers = await ethers.getSigners();
     const signer = signers[0];

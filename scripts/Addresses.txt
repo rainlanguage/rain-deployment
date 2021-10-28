@@ -1,6 +1,4 @@
-- Reef testnet (using flat contracts): "The Reef chain smart contracts are written in Solidity. 
-Any existing Ethereum smart contracts written in Solidity 0.6 or greater will work on Reef chain without a need for modifications."
-
+- Reef testnet (using flat contracts):
 SmartPoolManager deployed to:  0x8e930df4109630B7F7df112B071afc8D538De867 (verified)
 BalancerSafeMath deployed to:  0x81b0d62E4AE8Ec94B0e46dC379C3f268d03973eC (verified)
 RightsManager deployed to:  0x02B59ac6B6a98c2d83F48aF98a8BAae0ccE841fB (verified)
@@ -12,17 +10,23 @@ SeedERC20Factory deployed to:  0x06dFA1525B87790fca056B43057C6E47Eb70b375 (canno
 Trust factory deployed to:  0xB3B43BA5407814E792d111e7DAf3529f0d81d150 (cannot)
 
 - Mumbai:
+SmartPoolManager deployed to:  0xddf904662e4A4F114d4a3Dc385cA9E47C36C160A (verified)
+BalancerSafeMath deployed to:  0xE914e4658B6e7661682afA8fB440f2070e707C7C (verified)
+RightsManager deployed to:  0x9967A6484F6506c93bA01B0aa2060A01722C7899 (verified)
+BFactory deployed to:  0x3403376167567b72E45C819eEb7F4710cc92289a (verified)
+CRPFactory deployed to:  0x717482409C0bbdaFD3080475ac4311bd13c5c006 (verified)
+RedeemableERC20Factory deployed to:  0x828BfCbEFDe4480Ec5d6EC78f44BDa5aA6C0A730 (verified)
+RedeemableERC20PoolFactory deployed to:  0x4CFB630217a116A62d9E9e115956D24b130C94b8 (verified)
+SeedERC20Factory deployed to:  0x96abf42D4058c0DC0Ff67c72fCb274Ec1ff006B3 (verified)
+Trust factory deployed to:  0x9dB7b997d5a2bf2454Bdd407421aFa666DCB1a80 (verified)
 
-
-- Ropsten *ignore this*:
-SmartPoolManager deployed to:  0x64aFEe1677efFC9395836A84E98A45b444fFe3C6 (verified)
-BalancerSafeMath deployed to:  0x598239B32D2e16e1ae4d0BbD9Ceb0Ee88fb6cC14 (verified)
-RightsManager deployed to:  0xc29c4f84A9cD49BADED4bCb4c7100F0002076A7d (verified)
-BFactory deployed to:  0xBb08ca771c6C0a52868534D39E1e17b42134D45F (verified) - using 100runs
-CRPFactory deployed to:  0x6e2B9E6428d978CfadF251e6ca77590737EEa11b (verified) - using 100runs we can use 200 instead
-RedeemableERC20Factory deployed to:  0x82Caf92067A9cC095440CE81f0F65A1285D1D8F6 (verified)
-RedeemableERC20PoolFactory deployed to:  0x30f5d11e4384c5e8c2D886EAdBa925fe643Ab118 (cannot: source not found: File import callback not supported)
-SeedERC20Factory deployed to:  0x4f5A25939e6e3B82D7FB36167860AfD6dE7c7D31 (cannot: source not found: File import callback not supported)
-Trust factory deployed to:  0x60fB9F4C2930595c242eE5b57C8bd13cbaF594Bc (cannot: source not found: File import callback not supported)
-
-find contracts -type f -not -path 'contracts/test/*' | xargs -i solt write '{}' --npm --runs 100000
+- Ropsten:
+SmartPoolManager deployed to:  0x370F01122c33E1d4D0fA724C0427F8A6aDFD12be (verified)
+BalancerSafeMath deployed to:  0xC2F0CEa575fc8d5c17688ecE2CFAd2daf4e08aA5  (verified)
+RightsManager deployed to:  0x9C93b33883EDD4C8b3455E28B69b9D9D7d8591af (verified)
+BFactory deployed to:  0xDFaB95E5B4336e14188E6AcccF9425158Eb47C95 (verified)
+CRPFactory deployed to:  0x56d0A23dB2e526a20364283196F8f388A15ffFa4 (verified)
+RedeemableERC20Factory deployed to:  0xBf8D6bf3Bb1E16416CbB9B577dcF4A96073E13B0 (verified)
+RedeemableERC20PoolFactory deployed to:  0xc0Eba9F321C6094FC04a4100c678FD51a77Dca4F (verified)
+SeedERC20Factory deployed to:  0xaDBa8E791153b93D9E0ECd5027dCFe6e20e1C791 (verified)
+Trust factory deployed to:  0xB3030e420999303F2F16eb28DFAE317d8738fCA5 (verified)

@@ -1,6 +1,5 @@
 import { ethers } from "hardhat";
 const hre = require("hardhat");
-
 import {deploy, linkBytecode, factoriesDeploy} from "./utils";
 
 const BFactory = require(`./dist/artifacts/@beehiveinnovation/balancer-core/contracts/BFactory.sol/BFactory.json`);
@@ -8,11 +7,6 @@ const CRPFactory = require(`./dist/artifacts/@beehiveinnovation/configurable-rig
 const RightsManager = require(`./dist/artifacts/@beehiveinnovation/configurable-rights-pool/libraries/RightsManager.sol/RightsManager.json`);
 const SmartPoolManager = require(`./dist/artifacts/@beehiveinnovation/configurable-rights-pool/libraries/SmartPoolManager.sol/SmartPoolManager.json`);
 const BalancerSafeMath = require(`./dist/artifacts/@beehiveinnovation/configurable-rights-pool/libraries/BalancerSafeMath.sol/BalancerSafeMath.json`);
-// import Prestige from '../balancer_mainnet_bytecode/PrestigeDeployTx.json';
-
-import { RightsManager__factory } from './dist/typechain/factories/RightsManager__factory';
-import { CRPFactory__factory } from './dist/typechain/factories/CRPFactory__factory';
-import { BFactory__factory } from './dist/typechain/factories/BFactory__factory';
    
 async function main() {
     const signers = await hre.reef.getSigners();
@@ -46,10 +40,7 @@ async function main() {
     console.log('- CRPFactory deployed to: ', CRPFactoryAddress);
 
     // Deploying trust factory
-    const crpFactory = CRPFactory__factory.connect(CRPFactoryAddress, signer);
-    const bFactory = BFactory__factory.connect(BFactoryAddress, signer);
-
-    const  addresses = await factoriesDeploy(crpFactory, bFactory, signer);
+    const  addresses = await factoriesDeploy(CRPFactoryAddress, BFactoryAddress, signer);
     console.log('- Trust factory deployed to: ', addresses.trustFactoryAddress);
 }
 main();
