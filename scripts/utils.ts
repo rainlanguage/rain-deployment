@@ -1,4 +1,6 @@
+import { KeyObject } from "crypto"
 import { ethers } from "hardhat"
+const fs = require('fs')
 
 const RedeemableERC20Factory = require("./dist/artifacts/contracts/rain-protocol/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json")
 const RedeemableERC20PoolFactory = require("./dist/artifacts/contracts/rain-protocol/contracts/pool/RedeemableERC20PoolFactory.sol/RedeemableERC20PoolFactory.json")
@@ -40,6 +42,10 @@ export async function factoriesDeploy(crpFactory: string, balancerFactory: strin
       crpFactory,
       balancerFactory
     ]);
+    exportArguments(
+      RedeemableERC20PoolFactory.contractName, 
+      [crpFactory, balancerFactory]
+    );
     console.log('- RedeemableERC20PoolFactory deployed to: ', redeemableERC20PoolFactoryAddress);
     
     const seedERC20FactoryAddress = await deploy(SeedERC20Factory, signer, []);
@@ -50,6 +56,10 @@ export async function factoriesDeploy(crpFactory: string, balancerFactory: strin
       redeemableERC20PoolFactoryAddress,
       seedERC20FactoryAddress
     ]);
+    exportArguments(
+      TrustFactory.contractName, 
+      [redeemableERC20FactoryAddress, redeemableERC20PoolFactoryAddress, seedERC20FactoryAddress]
+    );
     return {
       redeemableERC20FactoryAddress,
       redeemableERC20PoolFactoryAddress,
@@ -58,6 +68,24 @@ export async function factoriesDeploy(crpFactory: string, balancerFactory: strin
     };
   };
 
-function editFile(address: string[]) {
-  
+export function editSolc(address: string[]) {
+  const fileJson = 'scripts/dist/solt/solc-input-crpfactory.json'
+  const content = JSON.parse(fs.readFileSync(fileJson).toString())
+  const keys = Object.keys(content.settings.libraries);
+  for(let i = 0; i < keys.length; i++) {
+    const aux = Object.keys(content.settings.libraries[keys[i]])[0];
+    content.settings.libraries[keys[i]][aux] = address[i];
+  }
+  fs.writeFileSync(fileJson, JSON.stringify(content, null, 4));
+}
+
+export function exportArguments(name:string, args:string[]) {
+  const fileJson = 'scripts/dist/solt/arguments.json'
+  const content = JSON.parse(fs.readFileSync(fileJson).toString())
+  let argumts = "";
+  for (let i = 0; i < args.length; i++) {
+    argumts = argumts.concat("000000000000000000000000").concat(args[i].replace("0x", ""));
+  }
+  content[name]= argumts
+  fs.writeFileSync(fileJson, JSON.stringify(content, null, 4));
 }

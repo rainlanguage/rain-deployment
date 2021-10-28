@@ -47,15 +47,15 @@
         },
         "libraries": {
             "./contracts/configurable-rights-pool/libraries/SmartPoolManager.sol": {
-              "SmartPoolManager": "0x370F01122c33E1d4D0fA724C0427F8A6aDFD12be"
+                "SmartPoolManager": "0xF722747736b0baf01a03F37f0e6441547c902F97"
             },
             "./contracts/configurable-rights-pool/libraries/RightsManager.sol": {
-              "RightsManager": "0x9C93b33883EDD4C8b3455E28B69b9D9D7d8591af"
+                "RightsManager": "0x863807e51041cF16C99F4138de75cED64e925753"
             },
             "./contracts/configurable-rights-pool/libraries/BalancerSafeMath.sol": {
-              "BalancerSafeMath": "0xC2F0CEa575fc8d5c17688ecE2CFAd2daf4e08aA5"
+                "BalancerSafeMath": "0x874bF4414Cd5f4b90Ed2eE302af2952B2953D7c1"
             }
-          },
+        },
         "optimizer": {
             "enabled": true,
             "runs": 200

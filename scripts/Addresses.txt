@@ -30,3 +30,14 @@ RedeemableERC20Factory deployed to:  0xBf8D6bf3Bb1E16416CbB9B577dcF4A96073E13B0 
 RedeemableERC20PoolFactory deployed to:  0xc0Eba9F321C6094FC04a4100c678FD51a77Dca4F (verified)
 SeedERC20Factory deployed to:  0xaDBa8E791153b93D9E0ECd5027dCFe6e20e1C791 (verified)
 Trust factory deployed to:  0xB3030e420999303F2F16eb28DFAE317d8738fCA5 (verified)
+
+- Rinkeby
+SmartPoolManager deployed to:  0x863807e51041cF16C99F4138de75cED64e925753 (verified)
+BalancerSafeMath deployed to:  0x874bF4414Cd5f4b90Ed2eE302af2952B2953D7c1
+RightsManager deployed to:  0xF722747736b0baf01a03F37f0e6441547c902F97
+BFactory deployed to:  0x1A95C2FF348415d2f26F696278221382134B060D
+CRPFactory deployed to:  0x443638ea3a337bBf7f57c093171347673Fb4ECF1
+RedeemableERC20Factory deployed to:  0x4c784A049c4F3058F83a6a58b94c0B17a6F27E76
+RedeemableERC20PoolFactory deployed to:  0x6F6aFBd167eE532A17085367Ba3f0677fE141188
+SeedERC20Factory deployed to:  0x25b597DbeF33De4939ecF6411c3A247efDf44Ef7
+Trust factory deployed to:  0xDd70b5E6eF5365AA9F2D9B096472BCcA32713B76
