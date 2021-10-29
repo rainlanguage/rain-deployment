@@ -23,7 +23,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 
-const config = {
+const config:any = {
   solidity: {
     compilers: [
       {
@@ -40,11 +40,31 @@ const config = {
         settings: {
           optimizer: {
             enabled: true,
-            runs: 100000,
+            runs: 100,
           },
         },
       },
-    ]
+    ],
+    overrides: {
+      "contracts/configurable-rights-pool/contracts/CRPFactory.sol": {
+        version: "0.6.12",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        }
+      },
+      "@beehiveinnovation/configurable-rights-pool/contracts/CRPFactory.sol": {
+        version: "0.6.12",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        }
+      }
+    }
   },
   networks: {
     ropsten: {
@@ -79,7 +99,11 @@ const config = {
       gasPrice: 225000000000,
       chainId: 43113,
       accounts: []
-    }
+    },
+    rinkeby: {
+      url: `https://eth-rinkeby.alchemyapi.io/v2/osbn9I1B4bzSpo25FcPLC6zM0OyA8_7_`,
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,

@@ -1,10 +1,15 @@
 {
   "scripts": {
     "deploy-rain": "hardhat run scripts/deploy-rain.ts",
-    "deploy-rain-reef": "hardhat run scripts/deploy-rain-reef.ts"
+    "deploy-rain-reef": "hardhat run scripts/deploy-rain-reef.ts",
+    "flat-contracts": "sol-merger \"./contracts/**/*.sol\" ./scripts/dist/flaten-contracts",
+    "compile": "hardhat compile --force"
   },
   "dependencies": {
-    "@beehiveinnovation/rain-protocol": "^0.0.13"
+    "@beehiveinnovation/balancer-core": "^0.0.7",
+    "@beehiveinnovation/configurable-rights-pool": "^0.0.1",
+    "@beehiveinnovation/rain-protocol": "^0.0.13",
+    "solc": "0.6.12"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",
@@ -33,6 +38,7 @@
     "hardhat-gas-reporter": "^1.0.4",
     "prettier": "^2.4.1",
     "prettier-plugin-solidity": "^1.0.0-beta.13",
+    "sol-merger": "^3.1.0",
     "solhint": "^3.3.6",
     "solidity-coverage": "^0.7.17",
     "ts-node": "^10.2.1",
