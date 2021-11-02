@@ -8,11 +8,12 @@ const Verify = require("./dist/artifacts/contracts/rain-protocol/contracts/verif
 const VerifyTier = require("./dist/artifacts/contracts/rain-protocol/contracts/tier/VerifyTier.sol/VerifyTier.json")
    
 async function main() {
-    const signers = await ethers.getSigners();
+    const signers = await hre.reef.getSigners();
     const signer = signers[0];
+    const deployer_address = await signer.getAddress();
     
     // Deploying Verify
-    const VerifyAddress = await deploy(Verify, signer, [signer.address]); // admin will be the deployer address
+    const VerifyAddress = await deploy(Verify, signer, [deployer_address]); // admin will be the deployer address
     console.log('- Verify deployed to: ', VerifyAddress);
 
     // Deploying VerifyTier

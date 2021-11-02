@@ -31,7 +31,7 @@ async function main() {
         "BalancerSafeMath" : BalancerSafeMathAddress
     });
     const CRPFactoryAddress = await deploy(_CRPFactory, signer, []);
-    editSolc([RightsManagerAddress, SmartPoolManagerAddress, BalancerSafeMathAddress]);
+    editSolc([SmartPoolManagerAddress, RightsManagerAddress, BalancerSafeMathAddress]);
     console.log('- CRPFactory deployed to: ', CRPFactoryAddress);
 
     // Deploying trust factory
