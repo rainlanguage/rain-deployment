@@ -2,12 +2,14 @@
   "scripts": {
     "deploy-rain": "hardhat run scripts/deploy-rain.ts",
     "deploy-rain-reef": "hardhat run scripts/deploy-rain-reef.ts",
-    "compile": "hardhat compile"
+    "flat-contracts": "sol-merger \"./contracts/**/*.sol\" ./scripts/dist/flaten-contracts",
+    "compile": "hardhat compile --force"
   },
   "dependencies": {
     "@beehiveinnovation/balancer-core": "^0.0.7",
     "@beehiveinnovation/configurable-rights-pool": "^0.0.1",
-    "@beehiveinnovation/rain-protocol": "^0.0.13"
+    "@beehiveinnovation/rain-protocol": "^0.0.13",
+    "solc": "0.6.12"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",
