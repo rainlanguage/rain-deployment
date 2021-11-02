@@ -92,13 +92,13 @@ const config:any = {
       url: 'https://api.avax.network/ext/bc/C/rpc',
       gasPrice: 225000000000,
       chainId: 43114,
-      accounts: []
+      accounts: process.env.AVALANCHE_PRIVATE_KEY !== undefined ? [process.env.AVALANCHE_PRIVATE_KEY] : [],
     },
     fuji: {
       url: 'https://api.avax-test.network/ext/bc/C/rpc',
       gasPrice: 225000000000,
       chainId: 43113,
-      accounts: []
+      accounts: process.env.AVALANCHE_PRIVATE_KEY !== undefined ? [process.env.AVALANCHE_PRIVATE_KEY] : [],
     },
     rinkeby: {
       url: `https://eth-rinkeby.alchemyapi.io/v2/osbn9I1B4bzSpo25FcPLC6zM0OyA8_7_`,

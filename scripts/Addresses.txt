@@ -20,6 +20,17 @@ RedeemableERC20PoolFactory deployed to:  0x4CFB630217a116A62d9E9e115956D24b130C9
 SeedERC20Factory deployed to:  0x96abf42D4058c0DC0Ff67c72fCb274Ec1ff006B3 (verified)
 Trust factory deployed to:  0x9dB7b997d5a2bf2454Bdd407421aFa666DCB1a80 (verified)
 
+- Fuji
+SmartPoolManager deployed to:  0x34A0946CEAD3417E629B2679D05C0A24d49a1eB4 (verified)
+BalancerSafeMath deployed to:  0xa76F06F09346141977cF652A1EDFD09D779AA22a
+RightsManager deployed to:  0xA54f23A7B650Ea510fCA651EAfc39BFA5a04010D
+BFactory deployed to:  0xE09f5c0bA8A3C59f3c7aFFB458058881413878a2
+CRPFactory deployed to:  0x00DDE5505E0075C4bF7536d3d2014895D9cbE546
+RedeemableERC20Factory deployed to:  0x25ACA096cbEF597Aa3B99CDD747805e58d1aea81
+RedeemableERC20PoolFactory deployed to:  0x586Fa008Ae3C1228B9E42452DfE04c99D7E97C35
+SeedERC20Factory deployed to:  0x31aa5951100e11b8A34Bc9D98a44De152Dc5d3a2
+Trust factory deployed to:  0xD5D4373F3ac5846ACEdE555DEbD9a13D318c0678
+
 - Ropsten:
 SmartPoolManager deployed to:  0x370F01122c33E1d4D0fA724C0427F8A6aDFD12be (verified)
 BalancerSafeMath deployed to:  0xC2F0CEa575fc8d5c17688ecE2CFAd2daf4e08aA5  (verified)
@@ -31,7 +42,7 @@ RedeemableERC20PoolFactory deployed to:  0xc0Eba9F321C6094FC04a4100c678FD51a77Dc
 SeedERC20Factory deployed to:  0xaDBa8E791153b93D9E0ECd5027dCFe6e20e1C791 (verified)
 Trust factory deployed to:  0xB3030e420999303F2F16eb28DFAE317d8738fCA5 (verified)
 
-- Rinkeby
+- Rinkeby 
 SmartPoolManager deployed to:  0x863807e51041cF16C99F4138de75cED64e925753 (verified)
 BalancerSafeMath deployed to:  0x874bF4414Cd5f4b90Ed2eE302af2952B2953D7c1
 RightsManager deployed to:  0xF722747736b0baf01a03F37f0e6441547c902F97
