@@ -8,6 +8,8 @@ RedeemableERC20Factory deployed to:  0xdEdfF7c77C069d2CdfDC293a72cc00f717d14c43 
 RedeemableERC20PoolFactory deployed to:  0x933165018d5f1eC2ef7F10C327130218a8c4c81D (cannot)
 SeedERC20Factory deployed to:  0x06dFA1525B87790fca056B43057C6E47Eb70b375 (cannot)
 Trust factory deployed to:  0xB3B43BA5407814E792d111e7DAf3529f0d81d150 (cannot)
+Verify deployed to:  0x7BfB61DEE58C3C8D0b64B4Fa4002FC407FA0c0b4
+VerifyTier deployed to:  0x0A8547A3D1C711461F9da9370558ed946B705FF8
 
 - Mumbai:
 SmartPoolManager deployed to:  0xddf904662e4A4F114d4a3Dc385cA9E47C36C160A (verified)
