@@ -27,6 +27,7 @@ export const trustDeploy = async (
     ](...args);
     const receipt = await tx.wait();
   
+    // Getting the address, and get the contract abstraction
     const trust = new ethers.Contract(
       ethers.utils.hexZeroPad(
         ethers.utils.hexStripZeros(

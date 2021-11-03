@@ -36,7 +36,7 @@ async function main() {
     .add(seederFee)
     .add(reserveInit);
     
-  const trust1 = await trustDeploy(
+  const trust = await trustDeploy(
     trustFactory,
     creator,
     {
@@ -65,7 +65,7 @@ async function main() {
     { gasLimit: 100000000 }
   );
 
-  if (await trustFactory.isChild(trust1.address)) {
+  if (await trustFactory.isChild(trust.address)) {
     console.log("Child was registered")
   } else {
     console.log("Child was NOT registered")
