@@ -2,13 +2,30 @@
 SmartPoolManager deployed to:  0x8e930df4109630B7F7df112B071afc8D538De867 (verified)
 BalancerSafeMath deployed to:  0x81b0d62E4AE8Ec94B0e46dC379C3f268d03973eC (verified)
 RightsManager deployed to:  0x02B59ac6B6a98c2d83F48aF98a8BAae0ccE841fB (verified)
-BFactory deployed to:  0xf73A7298892886658b49EA7cFD5dC4e4CBB2F41f (Reef removed the old compiler version. Work now with >=0.6.0)
-CRPFactory deployed to:  0x71eE964267cD390B90af0E38a3dBDD905797dcAe (cannot)
-RedeemableERC20Factory deployed to:  0xdEdfF7c77C069d2CdfDC293a72cc00f717d14c43 (cannot)
-RedeemableERC20PoolFactory deployed to:  0x933165018d5f1eC2ef7F10C327130218a8c4c81D (cannot)
-SeedERC20Factory deployed to:  0x06dFA1525B87790fca056B43057C6E47Eb70b375 (cannot)
-Trust factory deployed to:  0xB3B43BA5407814E792d111e7DAf3529f0d81d150 (cannot)
+BFactory deployed to:  0xf73A7298892886658b49EA7cFD5dC4e4CBB2F41f (Cannot verify, have compiler version of 0.5.12)
+CRPFactory deployed to:  0x71eE964267cD390B90af0E38a3dBDD905797dcAe (Cannot verify)
+RedeemableERC20Factory deployed to:  0xdEdfF7c77C069d2CdfDC293a72cc00f717d14c43 (Cannot verify)
+RedeemableERC20PoolFactory deployed to:  0x933165018d5f1eC2ef7F10C327130218a8c4c81D (Cannot verify)
+SeedERC20Factory deployed to:  0x06dFA1525B87790fca056B43057C6E47Eb70b375 (Cannot verify)
+Trust factory deployed to:  0xB3B43BA5407814E792d111e7DAf3529f0d81d150 (Cannot verify)
 
+-- New Reef addresses
+SmartPoolManager deployed to:  0x40C798Be570c9Ca4a28faD8Cfe148F02b5935874
+BalancerSafeMath deployed to:  0xf42e022649F4e713944cb8B84A66B88Cde1b3880
+RightsManager deployed to:  0xCD883DB238e0FeE72D5A301C62f0df601D97E620
+BFactory deployed to:  0x42a3A62675bC5D226805fA615318ECd6F897320D
+CRPFactory deployed to:  0xB14C4eFb72aE6B69C8083305Ce7DDf3dFDED9Aa9
+RedeemableERC20Factory deployed to:  0xF935e310738A741bcd582DfB7eD6874571ECae08
+RedeemableERC20PoolFactory deployed to:  0xcEc47C7Ab1C2842450c8CF2d463F39b6C8728131
+SeedERC20Factory deployed to:  0xdD5df329e73b3C2F5bd2b11C8C44BdB70B76b73c
+Trust factory deployed to:  0x97283C6b8BF4508338c6615E5a26BAEC19006fdd
+
+---- Necessary o deploy a trust on Reef ----
+-Tier read/write deployed to:  0x8aCfce346D72e7b7cD9C0E15e088FEad17927e62
+-ReserveToken deployed to:  0xC2BC4a05931D583Bad998cDc52E6c560BD0035A8 
+
+
+---- Checking the verificacion on etherscan ----
 - Mumbai:
 SmartPoolManager deployed to:  0xddf904662e4A4F114d4a3Dc385cA9E47C36C160A (verified)
 BalancerSafeMath deployed to:  0xE914e4658B6e7661682afA8fB440f2070e707C7C (verified)

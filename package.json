@@ -3,7 +3,8 @@
     "deploy-rain": "hardhat run scripts/deploy-rain.ts",
     "deploy-rain-reef": "hardhat run scripts/deploy-rain-reef.ts",
     "flat-contracts": "sol-merger \"./contracts/**/*.sol\" ./scripts/dist/flaten-contracts",
-    "compile": "hardhat compile --force"
+    "compile": "hardhat compile --force",
+    "create-child-reef": "hardhat run scripts/reef-reproduction/create-child.ts"
   },
   "dependencies": {
     "@beehiveinnovation/balancer-core": "^0.0.7",
