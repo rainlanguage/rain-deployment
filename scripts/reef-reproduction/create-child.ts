@@ -4,7 +4,9 @@ import hre from "hardhat";
 import {Tier, eighteenZeros, sixZeros, trustDeploy} from "./Utils"
 
 async function main() {
-  const signers = await hre.reef.getSigners();
+  const signers = await ethers.getSigners();
+  // const signer = signers[0];
+  // const signers = await hre.reef.getSigners();
   const creator = signers[0]; // Creator of the trust
   const seeder = signers[0]; // Seeder is not creator/owner 
   const deployer = signers[0]; // Deployer of the trust factort
@@ -15,8 +17,9 @@ async function main() {
   // The read/write tier
   const tierAddress = "0x8aCfce346D72e7b7cD9C0E15e088FEad17927e62";
   // Trust factory address
-  const trustFactoryAddress = "0x97283C6b8BF4508338c6615E5a26BAEC19006fdd";
-  const trustFactory = await hre.reef.getContractAt("TrustFactory", trustFactoryAddress, deployer);
+  const trustFactoryAddress = "0x9dB7b997d5a2bf2454Bdd407421aFa666DCB1a80";
+  // const trustFactory = await hre.reef.getContractAt("TrustFactory", trustFactoryAddress, deployer);
+  const trustFactory = await ethers.getContractAt("TrustFactory", trustFactoryAddress, deployer);
 
   // Trust properties
   const minimumStatus = Tier.NIL;

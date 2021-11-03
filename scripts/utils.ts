@@ -2,10 +2,10 @@ import { KeyObject } from "crypto"
 import { ethers } from "hardhat"
 const fs = require('fs')
 
-const RedeemableERC20Factory = require("./dist/artifacts/contracts/rain-protocol/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json")
-const RedeemableERC20PoolFactory = require("./dist/artifacts/contracts/rain-protocol/contracts/pool/RedeemableERC20PoolFactory.sol/RedeemableERC20PoolFactory.json")
-const SeedERC20Factory = require("./dist/artifacts/contracts/rain-protocol/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json")
-const TrustFactory = require("./dist/artifacts/contracts/rain-protocol/contracts/trust/TrustFactory.sol/TrustFactory.json")
+const RedeemableERC20Factory = require("./dist/artifact/contracts/rain-protocol/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json")
+const RedeemableERC20PoolFactory = require("./dist/artifact/contracts/rain-protocol/contracts/pool/RedeemableERC20PoolFactory.sol/RedeemableERC20PoolFactory.json")
+const SeedERC20Factory = require("./dist/artifact/contracts/rain-protocol/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json")
+const TrustFactory = require("./dist/artifact/contracts/rain-protocol/contracts/trust/TrustFactory.sol/TrustFactory.json")
 
 export async function deploy(artifact:any, signer:any, args:any[]) {
     const iface = new ethers.utils.Interface(artifact.abi)

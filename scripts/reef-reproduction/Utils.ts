@@ -1,6 +1,6 @@
 import { ethers } from "hardhat";
-import type { Trust } from "../dist/typechain/Trust";
-import TrustJson from "../dist/artifacts/contracts/rain-protocol/contracts/trust/Trust.sol/Trust.json"
+import type { Trust } from "../dist/typechains/Trust";
+import TrustJson from "../dist/artifact/contracts/rain-protocol/contracts/trust/Trust.sol/Trust.json"
 
 export enum Tier {
     NIL,
