@@ -39,7 +39,8 @@ async function main() {
   const trust = await trustDeploy(
     trustFactory,
     creator,
-    {
+    { 
+      // The trustFactoryTrustConfig_
       creator: creator.getAddress(),
       minimumCreatorRaise,
       seeder: seeder.getAddress(),
@@ -48,21 +49,22 @@ async function main() {
       seederCooldownDuration,
       redeemInit,
     },
-    {
+    { 
+      // The trustFactoryTrustRedeemableERC20Config_
       name: tokenName,
       symbol: tokenSymbol,
       tier: tierAddress,
       minimumStatus,
       totalSupply: totalTokenSupply,
     },
-    {
+    { 
+      // The trustFactoryTrustRedeemableERC20PoolConfig_
       reserve: tokenReserveAddress,
       reserveInit,
       initialValuation,
       finalValuation: successLevel,
       minimumTradingDuration,
-    },
-    { gasLimit: 100000000 }
+    }
   );
 
   if (await trustFactory.isChild(trust.address)) {
