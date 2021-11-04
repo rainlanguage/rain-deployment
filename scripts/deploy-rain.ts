@@ -1,5 +1,6 @@
 import { ethers } from "hardhat";
 import {deploy, linkBytecode, factoriesDeploy} from "./utils";
+
 const BFactory = require(`./dist/artifact/contracts/balancer-core/contracts/BFactory.sol/BFactory.json`);
 const CRPFactory = require(`./dist/artifact/contracts/configurable-rights-pool/contracts/CRPFactory.sol/CRPFactory.json`); 
 const RightsManager = require(`./dist/artifact/contracts/configurable-rights-pool/libraries/RightsManager.sol/RightsManager.json`);
@@ -10,31 +11,28 @@ async function main() {
     const signers = await ethers.getSigners();
     const signer = signers[0];
 
-    // // Deploying balancer
-    // const SmartPoolManagerAddress = await deploy(SmartPoolManager, signer, []);
-    // console.log('- SmartPoolManager deployed to: ', SmartPoolManagerAddress);
+    // Deploying balancer
+    const SmartPoolManagerAddress = await deploy(SmartPoolManager, signer, []);
+    console.log('- SmartPoolManager deployed to: ', SmartPoolManagerAddress);
     
-    // const BalancerSafeMathAddress = await deploy(BalancerSafeMath, signer, []);
-    // console.log('- BalancerSafeMath deployed to: ', BalancerSafeMathAddress);
+    const BalancerSafeMathAddress = await deploy(BalancerSafeMath, signer, []);
+    console.log('- BalancerSafeMath deployed to: ', BalancerSafeMathAddress);
     
-    // const RightsManagerAddress = await deploy(RightsManager, signer, []);
-    // console.log('- RightsManager deployed to: ', RightsManagerAddress);
+    const RightsManagerAddress = await deploy(RightsManager, signer, []);
+    console.log('- RightsManager deployed to: ', RightsManagerAddress);
     
-    // const BFactoryAddress = await deploy(BFactory, signer, []);
-    // console.log('- BFactory deployed to: ', BFactoryAddress);
+    const BFactoryAddress = await deploy(BFactory, signer, []);
+    console.log('- BFactory deployed to: ', BFactoryAddress);
 
-    // let _CRPFactory = CRPFactory;
-    // _CRPFactory.bytecode = linkBytecode(_CRPFactory.bytecode, {
-    //     "RightsManager" : RightsManagerAddress,
-    //     "SmartPoolManager" : SmartPoolManagerAddress,
-    //     "BalancerSafeMath" : BalancerSafeMathAddress
-    // });
-    // const CRPFactoryAddress = await deploy(_CRPFactory, signer, []);
-    // writeCRPFactorySolc([SmartPoolManagerAddress, RightsManagerAddress, BalancerSafeMathAddress]);
-    // console.log('- CRPFactory deployed to: ', CRPFactoryAddress);
+    let _CRPFactory = CRPFactory;
+    _CRPFactory.bytecode = linkBytecode(_CRPFactory.bytecode, {
+        "RightsManager" : RightsManagerAddress,
+        "SmartPoolManager" : SmartPoolManagerAddress,
+        "BalancerSafeMath" : BalancerSafeMathAddress
+    });
+    const CRPFactoryAddress = await deploy(_CRPFactory, signer, []);
+    console.log('- CRPFactory deployed to: ', CRPFactoryAddress);
 
-    const BFactoryAddress = "0x82E13C2a3bc68597C02e816d1aF65ADd8763E130";
-    const CRPFactoryAddress = "0x1A902696F6dd9Cd0d06D402b820Ae5265C1dd17c";
     // Deploying trust factory
     const  addresses = await factoriesDeploy(CRPFactoryAddress, BFactoryAddress, signer);
     console.log('- Trust factory deployed to: ', addresses.trustFactoryAddress);

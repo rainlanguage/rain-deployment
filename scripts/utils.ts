@@ -9,7 +9,7 @@ const TrustFactory = require("./dist/artifact/contracts/rain-protocol/contracts/
 export async function deploy(artifact:any, signer:any, args:any[]) {
     const iface = new ethers.utils.Interface(artifact.abi)
     const factory = new ethers.ContractFactory(iface, artifact.bytecode, signer)
-    const contract = await factory.deploy(args)
+    const contract = await factory.deploy(...args)
     await contract.deployTransaction.wait()
     return contract.address
 }
@@ -34,20 +34,18 @@ export async function deployFromTx(artifact:any, signer:any) {
 }
 
 export async function factoriesDeploy(crpFactory: string, balancerFactory: string, signer:any) {
-    // const redeemableERC20FactoryAddress = await deploy(RedeemableERC20Factory, signer, []);
-    // console.log('- RedeemableERC20Factory deployed to: ', redeemableERC20FactoryAddress);
+    const redeemableERC20FactoryAddress = await deploy(RedeemableERC20Factory, signer, []);
+    console.log('- RedeemableERC20Factory deployed to: ', redeemableERC20FactoryAddress);
     
-    // const redeemableERC20PoolFactoryAddress = await deploy(RedeemableERC20PoolFactory, signer, [
-    //   crpFactory,
-    //   balancerFactory
-    // ]);
-    // console.log('- RedeemableERC20PoolFactory deployed to: ', redeemableERC20PoolFactoryAddress);
+    const redeemableERC20PoolFactoryAddress = await deploy(RedeemableERC20PoolFactory, signer, [
+      crpFactory,
+      balancerFactory
+    ]);
+    console.log('- RedeemableERC20PoolFactory deployed to: ', redeemableERC20PoolFactoryAddress);
     
-    // const seedERC20FactoryAddress = await deploy(SeedERC20Factory, signer, []);
+    const seedERC20FactoryAddress = await deploy(SeedERC20Factory, signer, []);
     // console.log('- SeedERC20Factory deployed to: ', seedERC20FactoryAddress);
-    const redeemableERC20FactoryAddress = "0xc8433b84b4aE18c40ce4E147340a559feC07f4f3"
-    const redeemableERC20PoolFactoryAddress = "0x17A14D62c54938b27B1410484524098d52fd5af5"
-    const seedERC20FactoryAddress = "0xD2DC543F144b2BB49080696Df9e8b992110Ba1FB"
+
     const trustFactoryAddress = await deploy(TrustFactory, signer, [
       redeemableERC20FactoryAddress,
       redeemableERC20PoolFactoryAddress,

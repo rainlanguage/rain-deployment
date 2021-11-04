@@ -1,6 +1,6 @@
 import { ethers } from "hardhat";
 const hre = require("hardhat");
-import {deploy, linkBytecode, factoriesDeploy, editSolc, exportArguments} from "./utils";
+import {deploy, linkBytecode, factoriesDeploy} from "./utils";
 
 const BFactory = require(`./dist/artifact/contracts/balancer-core/contracts/BFactory.sol/BFactory.json`);
 const CRPFactory = require(`./dist/artifact/contracts/configurable-rights-pool/contracts/CRPFactory.sol/CRPFactory.json`); 
@@ -32,7 +32,6 @@ async function main() {
        "BalancerSafeMath" : BalancerSafeMathAddress
    });
    const CRPFactoryAddress = await deploy(_CRPFactory, signer, []);
-   editSolc([RightsManagerAddress, SmartPoolManagerAddress, BalancerSafeMathAddress]);
    console.log('- CRPFactory deployed to: ', CRPFactoryAddress);
 
    // Deploying trust factory
