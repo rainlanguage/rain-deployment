@@ -71,6 +71,7 @@ const config:any = {
       url: process.env.ROPSTEN_URL || "",
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+        gasPrice: 10e9,
     },
     reef_mainnet: {
       url: "wss://rpc.reefscan.com/ws",
@@ -87,6 +88,7 @@ const config:any = {
     mumbai: {
       url: "https://rpc-mumbai.maticvigil.com",
       accounts: process.env.MUMBAI_PRIVATE_KEY !== undefined ? [process.env.MUMBAI_PRIVATE_KEY] : [],
+      gasPrice: 10e9,
     },
     avalanche: {
       url: 'https://api.avax.network/ext/bc/C/rpc',
@@ -103,6 +105,7 @@ const config:any = {
     rinkeby: {
       url: `https://eth-rinkeby.alchemyapi.io/v2/osbn9I1B4bzSpo25FcPLC6zM0OyA8_7_`,
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      gasPrice: 10e9,
     },
   },
   gasReporter: {
