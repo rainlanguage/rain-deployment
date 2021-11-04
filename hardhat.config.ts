@@ -103,7 +103,7 @@ const config:any = {
       accounts: []
     },
     rinkeby: {
-      url: `https://eth-rinkeby.alchemyapi.io/v2/osbn9I1B4bzSpo25FcPLC6zM0OyA8_7_`,
+      url: process.env.RINKEBY_URL || "",
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
       gasPrice: 10e9,
     },
