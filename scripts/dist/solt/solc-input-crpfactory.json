@@ -47,13 +47,13 @@
         },
         "libraries": {
             "./contracts/configurable-rights-pool/libraries/SmartPoolManager.sol": {
-                "SmartPoolManager": "0xddf904662e4A4F114d4a3Dc385cA9E47C36C160A"
+                "SmartPoolManager": "__SmartPoolManager______________________"
             },
             "./contracts/configurable-rights-pool/libraries/RightsManager.sol": {
-                "RightsManager": "0x9967A6484F6506c93bA01B0aa2060A01722C7899"
+                "RightsManager": "__RightsManager_________________________"
             },
             "./contracts/configurable-rights-pool/libraries/BalancerSafeMath.sol": {
-                "BalancerSafeMath": "0xE914e4658B6e7661682afA8fB440f2070e707C7C"
+                "BalancerSafeMath": "__BalancerSafeMath______________________"
             }
         },
         "optimizer": {

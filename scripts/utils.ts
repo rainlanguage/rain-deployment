@@ -1,11 +1,10 @@
-import { KeyObject } from "crypto"
 import { ethers } from "hardhat"
 const fs = require('fs')
 
-const RedeemableERC20Factory = require("./dist/artifacts/contracts/rain-protocol/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json")
-const RedeemableERC20PoolFactory = require("./dist/artifacts/contracts/rain-protocol/contracts/pool/RedeemableERC20PoolFactory.sol/RedeemableERC20PoolFactory.json")
-const SeedERC20Factory = require("./dist/artifacts/contracts/rain-protocol/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json")
-const TrustFactory = require("./dist/artifacts/contracts/rain-protocol/contracts/trust/TrustFactory.sol/TrustFactory.json")
+const RedeemableERC20Factory = require("./dist/artifact/contracts/rain-protocol/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json")
+const RedeemableERC20PoolFactory = require("./dist/artifact/contracts/rain-protocol/contracts/pool/RedeemableERC20PoolFactory.sol/RedeemableERC20PoolFactory.json")
+const SeedERC20Factory = require("./dist/artifact/contracts/rain-protocol/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json")
+const TrustFactory = require("./dist/artifact/contracts/rain-protocol/contracts/trust/TrustFactory.sol/TrustFactory.json")
 
 export async function deploy(artifact:any, signer:any, args:any[]) {
     const iface = new ethers.utils.Interface(artifact.abi)
@@ -35,31 +34,25 @@ export async function deployFromTx(artifact:any, signer:any) {
 }
 
 export async function factoriesDeploy(crpFactory: string, balancerFactory: string, signer:any) {
-    const redeemableERC20FactoryAddress = await deploy(RedeemableERC20Factory, signer, []);
-    console.log('- RedeemableERC20Factory deployed to: ', redeemableERC20FactoryAddress);
+    // const redeemableERC20FactoryAddress = await deploy(RedeemableERC20Factory, signer, []);
+    // console.log('- RedeemableERC20Factory deployed to: ', redeemableERC20FactoryAddress);
     
-    const redeemableERC20PoolFactoryAddress = await deploy(RedeemableERC20PoolFactory, signer, [
-      crpFactory,
-      balancerFactory
-    ]);
-    exportArguments(
-      RedeemableERC20PoolFactory.contractName, 
-      [crpFactory, balancerFactory]
-    );
-    console.log('- RedeemableERC20PoolFactory deployed to: ', redeemableERC20PoolFactoryAddress);
+    // const redeemableERC20PoolFactoryAddress = await deploy(RedeemableERC20PoolFactory, signer, [
+    //   crpFactory,
+    //   balancerFactory
+    // ]);
+    // console.log('- RedeemableERC20PoolFactory deployed to: ', redeemableERC20PoolFactoryAddress);
     
-    const seedERC20FactoryAddress = await deploy(SeedERC20Factory, signer, []);
-    console.log('- SeedERC20Factory deployed to: ', seedERC20FactoryAddress);
-
+    // const seedERC20FactoryAddress = await deploy(SeedERC20Factory, signer, []);
+    // console.log('- SeedERC20Factory deployed to: ', seedERC20FactoryAddress);
+    const redeemableERC20FactoryAddress = "0xc8433b84b4aE18c40ce4E147340a559feC07f4f3"
+    const redeemableERC20PoolFactoryAddress = "0x17A14D62c54938b27B1410484524098d52fd5af5"
+    const seedERC20FactoryAddress = "0xD2DC543F144b2BB49080696Df9e8b992110Ba1FB"
     const trustFactoryAddress = await deploy(TrustFactory, signer, [
       redeemableERC20FactoryAddress,
       redeemableERC20PoolFactoryAddress,
       seedERC20FactoryAddress
     ]);
-    exportArguments(
-      TrustFactory.contractName, 
-      [redeemableERC20FactoryAddress, redeemableERC20PoolFactoryAddress, seedERC20FactoryAddress]
-    );
     return {
       redeemableERC20FactoryAddress,
       redeemableERC20PoolFactoryAddress,
@@ -67,25 +60,3 @@ export async function factoriesDeploy(crpFactory: string, balancerFactory: strin
       trustFactoryAddress,
     };
   };
-
-export function editSolc(address: string[]) {
-  const fileJson = 'scripts/dist/solt/solc-input-crpfactory.json'
-  const content = JSON.parse(fs.readFileSync(fileJson).toString())
-  const keys = Object.keys(content.settings.libraries);
-  for(let i = 0; i < keys.length; i++) {
-    const aux = Object.keys(content.settings.libraries[keys[i]])[0];
-    content.settings.libraries[keys[i]][aux] = address[i];
-  }
-  fs.writeFileSync(fileJson, JSON.stringify(content, null, 4));
-}
-
-export function exportArguments(name:string, args:string[]) {
-  const fileJson = 'scripts/dist/solt/arguments.json'
-  const content = JSON.parse(fs.readFileSync(fileJson).toString())
-  let argumts = "";
-  for (let i = 0; i < args.length; i++) {
-    argumts = argumts.concat("000000000000000000000000").concat(args[i].replace("0x", ""));
-  }
-  content[name]= argumts
-  fs.writeFileSync(fileJson, JSON.stringify(content, null, 4));
-}
