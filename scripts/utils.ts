@@ -6,10 +6,10 @@ const RedeemableERC20PoolFactory = require("./dist/artifact/contracts/rain-proto
 const SeedERC20Factory = require("./dist/artifact/contracts/rain-protocol/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json")
 const TrustFactory = require("./dist/artifact/contracts/rain-protocol/contracts/trust/TrustFactory.sol/TrustFactory.json")
 
-export async function deploy(artifact:any, signer:any, args:any[]) {
+export async function deploy(artifact:any, signer:any, argmts:any[]) {
     const iface = new ethers.utils.Interface(artifact.abi)
     const factory = new ethers.ContractFactory(iface, artifact.bytecode, signer)
-    const contract = await factory.deploy(...args)
+    const contract = await factory.deploy(argmts)
     await contract.deployTransaction.wait()
     return contract.address
 }
@@ -44,7 +44,7 @@ export async function factoriesDeploy(crpFactory: string, balancerFactory: strin
     console.log('- RedeemableERC20PoolFactory deployed to: ', redeemableERC20PoolFactoryAddress);
     
     const seedERC20FactoryAddress = await deploy(SeedERC20Factory, signer, []);
-    // console.log('- SeedERC20Factory deployed to: ', seedERC20FactoryAddress);
+    console.log('- SeedERC20Factory deployed to: ', seedERC20FactoryAddress);
 
     const trustFactoryAddress = await deploy(TrustFactory, signer, [
       redeemableERC20FactoryAddress,
