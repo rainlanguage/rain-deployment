@@ -1,16 +1,16 @@
-import { KeyObject } from "crypto"
-import { ethers } from "hardhat"
+import { EtherscanProvider } from "@ethersproject/providers"
+import { ethers, artifacts, network } from "hardhat"
 const fs = require('fs')
 
-const RedeemableERC20Factory = require("./dist/artifacts/contracts/rain-protocol/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json")
-const RedeemableERC20PoolFactory = require("./dist/artifacts/contracts/rain-protocol/contracts/pool/RedeemableERC20PoolFactory.sol/RedeemableERC20PoolFactory.json")
-const SeedERC20Factory = require("./dist/artifacts/contracts/rain-protocol/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json")
-const TrustFactory = require("./dist/artifacts/contracts/rain-protocol/contracts/trust/TrustFactory.sol/TrustFactory.json")
+const RedeemableERC20Factory = require("./dist/artifact/contracts/rain-protocol/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json")
+const RedeemableERC20PoolFactory = require("./dist/artifact/contracts/rain-protocol/contracts/pool/RedeemableERC20PoolFactory.sol/RedeemableERC20PoolFactory.json")
+const SeedERC20Factory = require("./dist/artifact/contracts/rain-protocol/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json")
+const TrustFactory = require("./dist/artifact/contracts/rain-protocol/contracts/trust/TrustFactory.sol/TrustFactory.json")
 
-export async function deploy(artifact:any, signer:any, args:any[]) {  
+export async function deploy(artifact:any, signer:any, argmts:any[]) {
     const iface = new ethers.utils.Interface(artifact.abi)
     const factory = new ethers.ContractFactory(iface, artifact.bytecode, signer)
-    const contract = await factory.deploy(...args)
+    const contract = await factory.deploy(argmts)
     await contract.deployTransaction.wait()
     return contract.address
 }
@@ -42,10 +42,6 @@ export async function factoriesDeploy(crpFactory: string, balancerFactory: strin
       crpFactory,
       balancerFactory
     ]);
-    exportArguments(
-      RedeemableERC20PoolFactory.contractName, 
-      [crpFactory, balancerFactory]
-    );
     console.log('- RedeemableERC20PoolFactory deployed to: ', redeemableERC20PoolFactoryAddress);
     
     const seedERC20FactoryAddress = await deploy(SeedERC20Factory, signer, []);
@@ -56,10 +52,6 @@ export async function factoriesDeploy(crpFactory: string, balancerFactory: strin
       redeemableERC20PoolFactoryAddress,
       seedERC20FactoryAddress
     ]);
-    exportArguments(
-      TrustFactory.contractName, 
-      [redeemableERC20FactoryAddress, redeemableERC20PoolFactoryAddress, seedERC20FactoryAddress]
-    );
     return {
       redeemableERC20FactoryAddress,
       redeemableERC20PoolFactoryAddress,
@@ -68,24 +60,62 @@ export async function factoriesDeploy(crpFactory: string, balancerFactory: strin
     };
   };
 
-export function editSolc(address: string[]) {
-  const fileJson = 'scripts/dist/solt/solc-input-crpfactory.json'
-  const content = JSON.parse(fs.readFileSync(fileJson).toString())
-  const keys = Object.keys(content.settings.libraries);
-  for(let i = 0; i < keys.length; i++) {
-    const aux = Object.keys(content.settings.libraries[keys[i]])[0];
-    content.settings.libraries[keys[i]][aux] = address[i];
+  export function generateJSONWithLibAddr(addresses: any, deployId:string) {
+    const solcTemplate = `${__dirname}/dist/solt/solc-input-crpfactory.json`;
+    const pathTo = `${__dirname}/verification/${deployId}`;
+    const content = fetchFile(solcTemplate);
+    Object.keys(content.settings.libraries).forEach(library_name => {
+      const key = Object.keys(content.settings.libraries[library_name])[0];
+      content.settings.libraries[library_name][key] = addresses[key];
+    });
+    checkPath(pathTo)
+    writeFile(`${pathTo}/solc-input-crpfactory.json`, JSON.stringify(content, null, 4));
   }
-  fs.writeFileSync(fileJson, JSON.stringify(content, null, 4));
-}
 
-export function exportArguments(name:string, args:string[]) {
-  const fileJson = 'scripts/dist/solt/arguments.json'
-  const content = JSON.parse(fs.readFileSync(fileJson).toString())
-  let argumts = "";
-  for (let i = 0; i < args.length; i++) {
-    argumts = argumts.concat("000000000000000000000000").concat(args[i].replace("0x", ""));
+  export function exportArgs(artifact:any, args:string[], deployId:string) {
+    let pathTo = `${__dirname}/verification/${deployId}`;
+    checkPath(pathTo);
+    pathTo = `${pathTo}/arguments.json`;
+    const content = fs.existsSync(pathTo) ? fetchFile(pathTo) : {};
+    const TwelveBytes = "000000000000000000000000";
+    const encodeABIArgs = args.reduce((prev, current) => {
+      return prev + TwelveBytes + current.replace("0x", "");
+    }, "");
+    content[artifact.contractName] = encodeABIArgs;
+    writeFile(pathTo, JSON.stringify(content, null, 4));
   }
-  content[name]= argumts
-  fs.writeFileSync(fileJson, JSON.stringify(content, null, 4));
-}
+
+  export function getDeployID() {
+    const networkName= network.name ? network.name : "networkName";
+    const date = new Date(Date.now())
+      .toLocaleString('en-GB', {timeStyle:"medium", dateStyle:"medium"})
+      .replace(", ","-").replace(/ /g, "").replace(/:/g, "");
+    return `${networkName}-${date}`;
+  }
+
+  function fetchFile(_path:string) {
+    try {
+      return JSON.parse(fs.readFileSync(_path).toString())
+    } catch (error) {
+      console.log(error)
+      return {}
+    }
+  }
+
+  function writeFile(_path:string, file:any) {
+    try {
+      fs.writeFileSync(_path, file);
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  function checkPath(_path:string) {
+    if(!fs.existsSync(_path)) {
+      try {
+        fs.mkdirSync(_path);
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }

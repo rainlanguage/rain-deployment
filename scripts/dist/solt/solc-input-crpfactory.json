@@ -47,13 +47,13 @@
         },
         "libraries": {
             "./contracts/configurable-rights-pool/libraries/SmartPoolManager.sol": {
-                "SmartPoolManager": "0xF722747736b0baf01a03F37f0e6441547c902F97"
-            },
-            "./contracts/configurable-rights-pool/libraries/RightsManager.sol": {
-                "RightsManager": "0x863807e51041cF16C99F4138de75cED64e925753"
+                "SmartPoolManager": "__SmartPoolManager______________________"
             },
             "./contracts/configurable-rights-pool/libraries/BalancerSafeMath.sol": {
-                "BalancerSafeMath": "0x874bF4414Cd5f4b90Ed2eE302af2952B2953D7c1"
+                "BalancerSafeMath": "__BalancerSafeMath______________________"
+            },
+            "./contracts/configurable-rights-pool/libraries/RightsManager.sol": {
+                "RightsManager": "__RightsManager_________________________"
             }
         },
         "optimizer": {
@@ -66,7 +66,8 @@
                     "abi",
                     "evm.bytecode",
                     "evm.deployedBytecode",
-                    "evm.methodIdentifiers"
+                    "evm.methodIdentifiers",
+                    "metadata"
                 ],
                 "": [
                     "id",
