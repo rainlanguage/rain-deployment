@@ -1,4 +1,5 @@
-import { ethers } from "hardhat"
+import { EtherscanProvider } from "@ethersproject/providers"
+import { ethers, artifacts, network } from "hardhat"
 const fs = require('fs')
 
 const RedeemableERC20Factory = require("./dist/artifact/contracts/rain-protocol/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json")
@@ -58,3 +59,63 @@ export async function factoriesDeploy(crpFactory: string, balancerFactory: strin
       trustFactoryAddress,
     };
   };
+
+  export function generateJSONWithLibAddr(addresses: any, deployId:string) {
+    const solcTemplate = `${__dirname}/dist/solt/solc-input-crpfactory.json`;
+    const pathTo = `${__dirname}/verification/${deployId}`;
+    const content = fetchFile(solcTemplate);
+    Object.keys(content.settings.libraries).forEach(library_name => {
+      const key = Object.keys(content.settings.libraries[library_name])[0];
+      content.settings.libraries[library_name][key] = addresses[key];
+    });
+    checkPath(pathTo)
+    writeFile(`${pathTo}/solc-input-crpfactory.json`, JSON.stringify(content, null, 4));
+  }
+
+  export function exportArgs(artifact:any, args:string[], deployId:string) {
+    let pathTo = `${__dirname}/verification/${deployId}`;
+    checkPath(pathTo);
+    pathTo = `${pathTo}/arguments.json`;
+    const content = fs.existsSync(pathTo) ? fetchFile(pathTo) : {};
+    const TwelveBytes = "000000000000000000000000";
+    const encodeABIArgs = args.reduce((prev, current) => {
+      return prev + TwelveBytes + current.replace("0x", "");
+    }, "");
+    content[artifact.contractName] = encodeABIArgs;
+    writeFile(pathTo, JSON.stringify(content, null, 4));
+  }
+
+  export function getDeployID() {
+    const networkName= network.name ? network.name : "networkName";
+    const date = new Date(Date.now())
+      .toLocaleString('en-GB', {timeStyle:"medium", dateStyle:"medium"})
+      .replace(", ","-").replace(/ /g, "").replace(/:/g, "");
+    return `${networkName}-${date}`;
+  }
+
+  function fetchFile(_path:string) {
+    try {
+      return JSON.parse(fs.readFileSync(_path).toString())
+    } catch (error) {
+      console.log(error)
+      return {}
+    }
+  }
+
+  function writeFile(_path:string, file:any) {
+    try {
+      fs.writeFileSync(_path, file);
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  function checkPath(_path:string) {
+    if(!fs.existsSync(_path)) {
+      try {
+        fs.mkdirSync(_path);
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
