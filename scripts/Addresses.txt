@@ -21,15 +21,15 @@ SeedERC20Factory deployed to:  0xD2DC543F144b2BB49080696Df9e8b992110Ba1FB (verif
 Trustfactory deployed to:  0xB087a34B2deBB0f893147A8c9eC7c192D10EDf18 (verified) - etherscan and sourcify
 
 - Fuji
-BFactory deployed to:  
-SmartPoolManager deployed to:  
-BalancerSafeMath deployed to:  
-RightsManager deployed to:  
-CRPFactory deployed to:  
-RedeemableERC20Factory deployed to:  
-RedeemableERC20PoolFactory deployed to:  
-SeedERC20Factory deployed to:  
-Trust factory deployed to:  
+BFactory deployed to:  0xC6A8DA983f47E9c444Dac0b1881253bf8848a117 (verified) - sourcify
+SmartPoolManager deployed to:  0xCbCC5582A9dF57067105b350757430a37E2479aa (verified) - sourcify
+BalancerSafeMath deployed to:  0x8a28BD4F8F210e6BE7Ee83f06b310Fe89A72c142 (verified) - sourcify
+RightsManager deployed to:  0xa6703bAC5A591fa7f59B1aF76060D4c34c7DaAaB (verified) - sourcify
+CRPFactory deployed to:  0x125102a6Fa1f8E83Cc5329F03f179E165eF623d5 (verified) - sourcify
+RedeemableERC20Factory deployed to:  0xCB265d72a2669F1fA587327Ddb809dc5A4a6E45a (verified) - sourcify
+RedeemableERC20PoolFactory deployed to:  0xbBEB09Fe86536d66C43f76BFdc30e8802Fb7e6C5 (verified) - sourcify
+SeedERC20Factory deployed to:  0xd1db393d3dEdE96ECF48CFED9De5f5ebE2df7d6F (verified) - sourcify
+Trust factory deployed to:  0x1E4432F8d3f16A41c79640a93dF221dEAa022f50 (verified) - sourcify
 
 - Ropsten:
 BFactory deployed to:  0xf4e8CeCC75280b1AEA8d6D37c88A1EeE7940b4e6 (verified) - etherscan and sourcify

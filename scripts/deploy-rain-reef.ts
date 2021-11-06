@@ -54,7 +54,10 @@ async function main() {
     const RedeemableERC20FactoryAddress = await deploy(RedeemableERC20Factory, signer, []);
     console.log('- RedeemableERC20Factory deployed to: ', RedeemableERC20FactoryAddress);
 
-    const ReedERC20PoolFactArgs = [CRPFactoryAddress, BFactoryAddress];
+    const ReedERC20PoolFactArgs = [
+        CRPFactoryAddress, 
+        BFactoryAddress
+    ];
     const RedeemableERC20PoolFactoryAddress = (
         await deploy(RedeemableERC20PoolFactory, signer, ReedERC20PoolFactArgs)
     );
