@@ -40,7 +40,7 @@ CRPFactory deployed to:  0x24D051624A41049A2e2ecbeC39eBEBA5001bF910 (verified) -
 RedeemableERC20Factory deployed to:  0xA278f4C5b91386acB6899052e0bD93CC7aDa03Bf (verified) - etherscan and sourcify
 RedeemableERC20PoolFactory deployed to:  0xA5171C2bdb7f3862a44Af3cd4d30848CA78E0461 (verified) - etherscan and sourcify
 SeedERC20Factory deployed to:  0xc984859b5667E8abd95C6534cC6490199B51732D (verified) - etherscan and sourcify
-Trust factory deployed to:  0x565F26BfF52ecBF11336C022633d0B2E49Cd0bcc
+Trust factory deployed to:  0x565F26BfF52ecBF11336C022633d0B2E49Cd0bcc (verified) - etherscan and sourcify
 
 - Rinkeby 
 BFactory deployed to:  0xfc8d6a2f19Ec0f1C381c06162473Ee40aC1A360F (verified) - etherscan and sourcify
