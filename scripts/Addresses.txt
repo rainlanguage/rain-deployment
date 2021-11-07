@@ -1,15 +1,17 @@
 - Reef testnet (using flat contracts):
-BFac    tory deployed to:  0xf73A7298892886658b49EA7cFD5dC4e4CBB2F41f (Reef removed the old compiler version. Work now with >=0.6.0)
-SmartPoolManager deployed to:  0x8e930df4109630B7F7df112B071afc8D538De867 (verified)
-BalancerSafeMath deployed to:  0x81b0d62E4AE8Ec94B0e46dC379C3f268d03973eC (verified)
-RightsManager deployed to:  0x02B59ac6B6a98c2d83F48aF98a8BAae0ccE841fB (verified)
-CRPFactory deployed to:  0x71eE964267cD390B90af0E38a3dBDD905797dcAe (cannot)
-RedeemableERC20Factory deployed to:  0xdEdfF7c77C069d2CdfDC293a72cc00f717d14c43 (cannot)
-RedeemableERC20PoolFactory deployed to:  0x933165018d5f1eC2ef7F10C327130218a8c4c81D (cannot)
-SeedERC20Factory deployed to:  0x06dFA1525B87790fca056B43057C6E47Eb70b375 (cannot)
-Trust factory deployed to:  0xB3B43BA5407814E792d111e7DAf3529f0d81d150 (cannot)
+BFactory deployed to:  0x6a4DaB9E7a5e5546321A393ee49C6cCd03Bf7850
+SmartPoolManager deployed to:  0x17FCd44Fd7bd4bb2CAD71ec5BA803EE1cA5CE478
+BalancerSafeMath deployed to:  0x9dFD788554909CcA1AD3ccEA64b2e5f67261D86C
+RightsManager deployed to:  0x881277b9855f904d24988366370Ea3F5627Cb559
+CRPFactory deployed to:  0xDe2b252a7B36f7C0796b054009c6049e9B4F2F78
+RedeemableERC20Factory deployed to:  0xbba2a11Cf36c48e695CE35fA75B4B4f6BCA9b4EC
+RedeemableERC20PoolFactory deployed to:  0x720B8826C14948E13dbdeb6cA0150Ba588a081e7
+SeedERC20Factory deployed to:  0xEb0Aa264A2EA9F9791C6D8178Aca4b7F35a21b1F
+Trust factory deployed to:  0xd06980A3e097D25a28f3B2b913D348909F38C54B
+-- aux --
 Verify deployed to:  0x7BfB61DEE58C3C8D0b64B4Fa4002FC407FA0c0b4
 VerifyTier deployed to:  0x0A8547A3D1C711461F9da9370558ed946B705FF8
+___________________
 
 - Mumbai:
 BFactory deployed to: 0x82E13C2a3bc68597C02e816d1aF65ADd8763E130 (verified) - etherscan and sourcify
