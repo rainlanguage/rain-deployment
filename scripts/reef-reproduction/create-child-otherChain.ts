@@ -20,19 +20,19 @@ async function main() {
 
   // Deploying balancer
   // const SmartPoolManagerAddress = await deploy(SmartPoolManager, signer, []);
-  const SmartPoolManagerAddress = "0xE7ddBB172f4Be8e0BeF04a8d970CEC50AD826581";
+  const SmartPoolManagerAddress = "0xCbCC5582A9dF57067105b350757430a37E2479aa";
   console.log('- SmartPoolManager deployed to: ', SmartPoolManagerAddress);
 
   // const BalancerSafeMathAddress = await deploy(BalancerSafeMath, signer, []);
-  const BalancerSafeMathAddress = "0x370F01122c33E1d4D0fA724C0427F8A6aDFD12be";
+  const BalancerSafeMathAddress = "0x8a28BD4F8F210e6BE7Ee83f06b310Fe89A72c142";
   console.log('- BalancerSafeMath deployed to: ', BalancerSafeMathAddress);
 
   // const RightsManagerAddress = await deploy(RightsManager, signer, []);
-  const RightsManagerAddress = "0xC2F0CEa575fc8d5c17688ecE2CFAd2daf4e08aA5";
+  const RightsManagerAddress = "0xa6703bAC5A591fa7f59B1aF76060D4c34c7DaAaB";
   console.log('- RightsManager deployed to: ', RightsManagerAddress);
 
   // const BFactoryAddress = await deploy(BFactory, signer, []);
-  const BFactoryAddress = "0x9C93b33883EDD4C8b3455E28B69b9D9D7d8591af";
+  const BFactoryAddress = "0xC6A8DA983f47E9c444Dac0b1881253bf8848a117";
   console.log('- BFactory deployed to: ', BFactoryAddress);
 
   // let _CRPFactory = CRPFactory;
@@ -42,13 +42,13 @@ async function main() {
   //     "BalancerSafeMath" : BalancerSafeMathAddress
   // });
   // const CRPFactoryAddress = await deploy(_CRPFactory, signer, []);
-  const CRPFactoryAddress = "0xDFaB95E5B4336e14188E6AcccF9425158Eb47C95";
+  const CRPFactoryAddress = "0x125102a6Fa1f8E83Cc5329F03f179E165eF623d5";
   console.log('- CRPFactory deployed to: ', CRPFactoryAddress);
 
   // Deploying trust factory
   // const  addresses = await factoriesDeploy(CRPFactoryAddress, BFactoryAddress, signer);
   // const trustFactoryAddress = addresses.trustFactoryAddress;
-  const trustFactoryAddress = "0x7BEa937390B1AEc9C81bfB93CA35A06668E3f3Ef";
+  const trustFactoryAddress = "0x1E4432F8d3f16A41c79640a93dF221dEAa022f50";
   console.log('- Trust factory deployed to: ', trustFactoryAddress);
   const trustFactory = await ethers.getContractAt("TrustFactory", trustFactoryAddress, signer);
 
