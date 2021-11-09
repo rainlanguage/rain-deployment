@@ -98,7 +98,7 @@ const config:any = {
     },
     fuji: {
       url: 'https://api.avax-test.network/ext/bc/C/rpc',
-      gasPrice: 225000000000,
+      gasPrice: 25000000000,
       chainId: 43113,
       accounts: process.env.AVALANCHE_PRIVATE_KEY !== undefined ? [process.env.AVALANCHE_PRIVATE_KEY] : [],
     },
