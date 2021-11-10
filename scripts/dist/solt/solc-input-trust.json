@@ -94,7 +94,7 @@
     },
     "settings": {
         "metadata": {
-            "useLiteralContent": true
+            "useLiteralContent": false
         },
         "optimizer": {
             "enabled": true,

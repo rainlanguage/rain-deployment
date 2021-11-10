@@ -1,3 +1,7 @@
+# Tools used in this repo
+Node: `v14.17.4`
+Yarn: `v1.22.10`
+
 # Advanced Sample Hardhat Project
 
 This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
