@@ -45,20 +45,9 @@
         "metadata": {
             "useLiteralContent": true
         },
-        "libraries": {
-            "./contracts/configurable-rights-pool/libraries/SmartPoolManager.sol": {
-                "SmartPoolManager": "__SmartPoolManager______________________"
-            },
-            "./contracts/configurable-rights-pool/libraries/BalancerSafeMath.sol": {
-                "BalancerSafeMath": "__BalancerSafeMath______________________"
-            },
-            "./contracts/configurable-rights-pool/libraries/RightsManager.sol": {
-                "RightsManager": "__RightsManager_________________________"
-            }
-        },
         "optimizer": {
             "enabled": true,
-            "runs": 200
+            "runs": 100000
         },
         "outputSelection": {
             "*": {
@@ -66,8 +55,7 @@
                     "abi",
                     "evm.bytecode",
                     "evm.deployedBytecode",
-                    "evm.methodIdentifiers",
-                    "metadata"
+                    "evm.methodIdentifiers"
                 ],
                 "": [
                     "id",

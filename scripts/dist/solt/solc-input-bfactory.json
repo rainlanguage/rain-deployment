@@ -29,7 +29,7 @@
         },
         "optimizer": {
             "enabled": true,
-            "runs": 100
+            "runs": 100000
         },
         "outputSelection": {
             "*": {
@@ -37,8 +37,7 @@
                     "abi",
                     "evm.bytecode",
                     "evm.deployedBytecode",
-                    "evm.methodIdentifiers",
-                    "metadata"
+                    "evm.methodIdentifiers"
                 ],
                 "": [
                     "id",

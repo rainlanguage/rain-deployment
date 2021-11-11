@@ -1,6 +1,7 @@
 # Tools used in this repo
 Node: `v14.17.4`
 Yarn: `v1.22.10`
+Solt: `0.5.2`
 
 # Advanced Sample Hardhat Project
 
