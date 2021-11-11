@@ -20,19 +20,19 @@ async function main() {
 
   // Deploying balancer
   // const SmartPoolManagerAddress = await deploy(SmartPoolManager, signer, []);
-  const SmartPoolManagerAddress = "0xCbCC5582A9dF57067105b350757430a37E2479aa";
+  const SmartPoolManagerAddress = "0xCE5Ded96347fde5447b97036605e83Bb0Ca4412E";
   console.log('- SmartPoolManager deployed to: ', SmartPoolManagerAddress);
 
   // const BalancerSafeMathAddress = await deploy(BalancerSafeMath, signer, []);
-  const BalancerSafeMathAddress = "0x8a28BD4F8F210e6BE7Ee83f06b310Fe89A72c142";
+  const BalancerSafeMathAddress = "0xe34C092b84838241B302bf70506EB357AAd65555";
   console.log('- BalancerSafeMath deployed to: ', BalancerSafeMathAddress);
 
   // const RightsManagerAddress = await deploy(RightsManager, signer, []);
-  const RightsManagerAddress = "0xa6703bAC5A591fa7f59B1aF76060D4c34c7DaAaB";
+  const RightsManagerAddress = "0x3d7FbCf57Af825Bccc3990094b159aBF5349e410";
   console.log('- RightsManager deployed to: ', RightsManagerAddress);
 
   // const BFactoryAddress = await deploy(BFactory, signer, []);
-  const BFactoryAddress = "0xC6A8DA983f47E9c444Dac0b1881253bf8848a117";
+  const BFactoryAddress = "0x5b40ecEB5E63e392d7a7e900E0fB850E43D9e003";
   console.log('- BFactory deployed to: ', BFactoryAddress);
 
   // let _CRPFactory = CRPFactory;
@@ -42,13 +42,13 @@ async function main() {
   //     "BalancerSafeMath" : BalancerSafeMathAddress
   // });
   // const CRPFactoryAddress = await deploy(_CRPFactory, signer, []);
-  const CRPFactoryAddress = "0x125102a6Fa1f8E83Cc5329F03f179E165eF623d5";
+  const CRPFactoryAddress = "0xA35B482452062FC14F5f9eeEaFE892e7C6E171a9";
   console.log('- CRPFactory deployed to: ', CRPFactoryAddress);
 
   // Deploying trust factory
   // const  addresses = await factoriesDeploy(CRPFactoryAddress, BFactoryAddress, signer);
   // const trustFactoryAddress = addresses.trustFactoryAddress;
-  const trustFactoryAddress = "0x1E4432F8d3f16A41c79640a93dF221dEAa022f50";
+  const trustFactoryAddress = "0x96f999f904f88EF394250B67A60F920F9CbC44b3";
   console.log('- Trust factory deployed to: ', trustFactoryAddress);
   const trustFactory = await ethers.getContractAt("TrustFactory", trustFactoryAddress, signer);
 
@@ -57,14 +57,14 @@ async function main() {
   // const TierFactory = await ethers.getContractFactory("ReadWriteTier", signer);
   // const readWriteTier = await TierFactory.deploy()
   // const tierAddress = readWriteTier.address;
-  const tierAddress = "0xd29a4d7A382EBF6EF33e1D6D1c579194964E451f";
+  const tierAddress = "0x539bb75e5F830F7b7BA49C29644c2F295f71e1AD";
   console.log('- ReadWriteTier deployed to: ', tierAddress);
   
   // A reserve token to the trust
   // const ReserveTokenFactory = await ethers.getContractFactory("ReserveToken", signer);
   // const reserveToken = await ReserveTokenFactory.deploy()
   // const tokenReserveAddress = reserveToken.address 
-  const tokenReserveAddress = "0x6eF5De553D524f6C4ba71A1c4785c600fbfcA2c9"
+  const tokenReserveAddress = "0x50cf093EF9bD0466cdE391d43C76D3497e3EeFc0"
   console.log('- ReserveToken deployed to: ', tokenReserveAddress);
 
 
@@ -115,7 +115,7 @@ async function main() {
       finalValuation: successLevel,
       minimumTradingDuration,
     },
-    { gasLimit: 8000000 }
+    { gasLimit: 15000000  }
   );
 
   if (await trustFactory.isChild(trust.address)) {
