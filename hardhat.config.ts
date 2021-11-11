@@ -87,7 +87,7 @@ const config:any = {
     },
     mumbai: {
       url: "https://rpc-mumbai.maticvigil.com",
-      accounts: process.env.MUMBAI_PRIVATE_KEY !== undefined ? [process.env.MUMBAI_PRIVATE_KEY] : [],
+      accounts: process.env.MNEMONIC !== undefined ? {mnemonic: process.env.MNEMONIC} : [process.env.MUMBAI_PRIVATE_KEY],
       gasPrice: 10e9,
     },
     avalanche: {

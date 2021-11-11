@@ -1,60 +1,58 @@
 - Reef testnet (using flat contracts):
-SmartPoolManager deployed to:  0x8e930df4109630B7F7df112B071afc8D538De867 (verified)
-BalancerSafeMath deployed to:  0x81b0d62E4AE8Ec94B0e46dC379C3f268d03973eC (verified)
-RightsManager deployed to:  0x02B59ac6B6a98c2d83F48aF98a8BAae0ccE841fB (verified)
-BFactory deployed to:  0xf73A7298892886658b49EA7cFD5dC4e4CBB2F41f (Cannot verify, have compiler version of 0.5.12)
-CRPFactory deployed to:  0x71eE964267cD390B90af0E38a3dBDD905797dcAe (Cannot verify)
-RedeemableERC20Factory deployed to:  0xdEdfF7c77C069d2CdfDC293a72cc00f717d14c43 (Cannot verify)
-RedeemableERC20PoolFactory deployed to:  0x933165018d5f1eC2ef7F10C327130218a8c4c81D (Cannot verify)
-SeedERC20Factory deployed to:  0x06dFA1525B87790fca056B43057C6E47Eb70b375 (Cannot verify)
-Trust factory deployed to:  0xB3B43BA5407814E792d111e7DAf3529f0d81d150 (Cannot verify)
+BFactory deployed to:  0xCA660c3A29870B90cadaB79126475c44DA991Bd5
+SmartPoolManager deployed to:  0x7bea09A4351951210E7d02879c10FB9d780aB1d3
+BalancerSafeMath deployed to:  0x021DC89ed51Da7CAf6c63b84E0eFb0c1345068a1
+RightsManager deployed to:  0x2b60b657aea3EA8c2d0854519A6c884479A2A1EB
+CRPFactory deployed to:  0xb6065c7bC0fD4311A803F921F749b67015ee1BaE
+RedeemableERC20Factory deployed to:  0x0380FbB43f33d65343968ee791D97E632eed863F
+RedeemableERC20PoolFactory deployed to:  0x869BFc0b572E274EDB5a8a53cA24D9A26D9d28be
+SeedERC20Factory deployed to:  0x9cb4a856D8F698B4e4551340b120D8af51af0F81
+Trust factory deployed to:  0x3b9a6AB0530Bf453a24E6f83e09b96af68269F6d
+-- aux --
+Verify deployed to:  0x7BfB61DEE58C3C8D0b64B4Fa4002FC407FA0c0b4
+VerifyTier deployed to:  0x0A8547A3D1C711461F9da9370558ed946B705FF8
+___________________
 
--- New Reef addresses
-SmartPoolManager deployed to:  0x40C798Be570c9Ca4a28faD8Cfe148F02b5935874
-BalancerSafeMath deployed to:  0xf42e022649F4e713944cb8B84A66B88Cde1b3880
-RightsManager deployed to:  0xCD883DB238e0FeE72D5A301C62f0df601D97E620
-BFactory deployed to:  0x42a3A62675bC5D226805fA615318ECd6F897320D
-CRPFactory deployed to:  0xB14C4eFb72aE6B69C8083305Ce7DDf3dFDED9Aa9
-RedeemableERC20Factory deployed to:  0xF935e310738A741bcd582DfB7eD6874571ECae08
-RedeemableERC20PoolFactory deployed to:  0xcEc47C7Ab1C2842450c8CF2d463F39b6C8728131
-SeedERC20Factory deployed to:  0xdD5df329e73b3C2F5bd2b11C8C44BdB70B76b73c
-Trust factory deployed to:  0x97283C6b8BF4508338c6615E5a26BAEC19006fdd
-
----- Necessary o deploy a trust on Reef ----
--Tier read/write deployed to:  0x8aCfce346D72e7b7cD9C0E15e088FEad17927e62
--ReserveToken deployed to:  0xC2BC4a05931D583Bad998cDc52E6c560BD0035A8 
-
-
----- Checking the verificacion on etherscan ----
 - Mumbai:
-SmartPoolManager deployed to:  0xddf904662e4A4F114d4a3Dc385cA9E47C36C160A (verified)
-BalancerSafeMath deployed to:  0xE914e4658B6e7661682afA8fB440f2070e707C7C (verified)
-RightsManager deployed to:  0x9967A6484F6506c93bA01B0aa2060A01722C7899 (verified)
-BFactory deployed to:  0x3403376167567b72E45C819eEb7F4710cc92289a (verified)
-CRPFactory deployed to:  0x717482409C0bbdaFD3080475ac4311bd13c5c006 (verified)
-RedeemableERC20Factory deployed to:  0x828BfCbEFDe4480Ec5d6EC78f44BDa5aA6C0A730 (verified)
-RedeemableERC20PoolFactory deployed to:  0x4CFB630217a116A62d9E9e115956D24b130C94b8 (verified)
-SeedERC20Factory deployed to:  0x96abf42D4058c0DC0Ff67c72fCb274Ec1ff006B3 (verified)
-Trust factory deployed to:  0x9dB7b997d5a2bf2454Bdd407421aFa666DCB1a80 (verified)
+BFactory deployed to:  0x5b40ecEB5E63e392d7a7e900E0fB850E43D9e003 (verified) - etherscan
+SmartPoolManager deployed to:  0xCE5Ded96347fde5447b97036605e83Bb0Ca4412E (verified) - etherscan
+BalancerSafeMath deployed to:  0xe34C092b84838241B302bf70506EB357AAd65555 (verified) - etherscan
+RightsManager deployed to:  0x3d7FbCf57Af825Bccc3990094b159aBF5349e410 (verified) - etherscan
+CRPFactory deployed to:  0xA35B482452062FC14F5f9eeEaFE892e7C6E171a9 (verified) - etherscan
+RedeemableERC20Factory deployed to:  0xE42e869743aaC201ABAd9dD6D3e14Fd6878f9F89 (verified) - etherscan
+RedeemableERC20PoolFactory deployed to:  0xC2363B6a0460C7dD0e1540778FcB65F35Ebda108 (verified) - etherscan
+SeedERC20Factory deployed to:  0x0c76ae02BCBb6e542c7Af60d53e0620BbdA13512 (verified) - etherscan
+Trust factory deployed to:  0x96f999f904f88EF394250B67A60F920F9CbC44b3 (verified) - etherscan
+
+- Fuji
+BFactory deployed to:  0xC6A8DA983f47E9c444Dac0b1881253bf8848a117 (verified) - sourcify
+SmartPoolManager deployed to:  0xCbCC5582A9dF57067105b350757430a37E2479aa (verified) - sourcify
+BalancerSafeMath deployed to:  0x8a28BD4F8F210e6BE7Ee83f06b310Fe89A72c142 (verified) - sourcify
+RightsManager deployed to:  0xa6703bAC5A591fa7f59B1aF76060D4c34c7DaAaB (verified) - sourcify
+CRPFactory deployed to:  0x125102a6Fa1f8E83Cc5329F03f179E165eF623d5 (verified) - sourcify
+RedeemableERC20Factory deployed to:  0xCB265d72a2669F1fA587327Ddb809dc5A4a6E45a (verified) - sourcify
+RedeemableERC20PoolFactory deployed to:  0xbBEB09Fe86536d66C43f76BFdc30e8802Fb7e6C5 (verified) - sourcify
+SeedERC20Factory deployed to:  0xd1db393d3dEdE96ECF48CFED9De5f5ebE2df7d6F (verified) - sourcify
+Trust factory deployed to:  0x1E4432F8d3f16A41c79640a93dF221dEAa022f50 (verified) - sourcify
 
 - Ropsten:
-SmartPoolManager deployed to:  0x370F01122c33E1d4D0fA724C0427F8A6aDFD12be (verified)
-BalancerSafeMath deployed to:  0xC2F0CEa575fc8d5c17688ecE2CFAd2daf4e08aA5  (verified)
-RightsManager deployed to:  0x9C93b33883EDD4C8b3455E28B69b9D9D7d8591af (verified)
-BFactory deployed to:  0xDFaB95E5B4336e14188E6AcccF9425158Eb47C95 (verified)
-CRPFactory deployed to:  0x56d0A23dB2e526a20364283196F8f388A15ffFa4 (verified)
-RedeemableERC20Factory deployed to:  0xBf8D6bf3Bb1E16416CbB9B577dcF4A96073E13B0 (verified)
-RedeemableERC20PoolFactory deployed to:  0xc0Eba9F321C6094FC04a4100c678FD51a77Dca4F (verified)
-SeedERC20Factory deployed to:  0xaDBa8E791153b93D9E0ECd5027dCFe6e20e1C791 (verified)
-Trust factory deployed to:  0xB3030e420999303F2F16eb28DFAE317d8738fCA5 (verified)
+BFactory deployed to:  0xf4e8CeCC75280b1AEA8d6D37c88A1EeE7940b4e6 (verified) - etherscan and sourcify
+SmartPoolManager deployed to:  0x0C98Cb0d611F9Ba63034F1efd70aFEC1566F202E (verified) - etherscan and sourcify
+BalancerSafeMath deployed to:  0xdeDC4c86FbdFc14A543f15371579cbDD698377Fe (verified) - etherscan and sourcify
+RightsManager deployed to:  0xf1ce093711B6C60735AcfAAf924bb49d6791fA1D (verified) - etherscan and sourcify
+CRPFactory deployed to:  0x24D051624A41049A2e2ecbeC39eBEBA5001bF910 (verified) - etherscan and sourcify
+RedeemableERC20Factory deployed to:  0xA278f4C5b91386acB6899052e0bD93CC7aDa03Bf (verified) - etherscan and sourcify
+RedeemableERC20PoolFactory deployed to:  0xA5171C2bdb7f3862a44Af3cd4d30848CA78E0461 (verified) - etherscan and sourcify
+SeedERC20Factory deployed to:  0xc984859b5667E8abd95C6534cC6490199B51732D (verified) - etherscan and sourcify
+Trust factory deployed to:  0x565F26BfF52ecBF11336C022633d0B2E49Cd0bcc (verified) - etherscan and sourcify
 
-- Rinkeby
-SmartPoolManager deployed to:  0x863807e51041cF16C99F4138de75cED64e925753 (verified)
-BalancerSafeMath deployed to:  0x874bF4414Cd5f4b90Ed2eE302af2952B2953D7c1
-RightsManager deployed to:  0xF722747736b0baf01a03F37f0e6441547c902F97
-BFactory deployed to:  0x1A95C2FF348415d2f26F696278221382134B060D
-CRPFactory deployed to:  0x443638ea3a337bBf7f57c093171347673Fb4ECF1
-RedeemableERC20Factory deployed to:  0x4c784A049c4F3058F83a6a58b94c0B17a6F27E76
-RedeemableERC20PoolFactory deployed to:  0x6F6aFBd167eE532A17085367Ba3f0677fE141188
-SeedERC20Factory deployed to:  0x25b597DbeF33De4939ecF6411c3A247efDf44Ef7
-Trust factory deployed to:  0xDd70b5E6eF5365AA9F2D9B096472BCcA32713B76
+- Rinkeby 
+BFactory deployed to:  0xfc8d6a2f19Ec0f1C381c06162473Ee40aC1A360F (verified) - etherscan and sourcify
+SmartPoolManager deployed to:  0xFb4489D263b903E14E8706B42938d53BD636AE49 (verified) - etherscan and sourcify
+BalancerSafeMath deployed to:  0x93ccf2fca66F1135239873f51cCca91fD9C5Af6e (verified) - etherscan and sourcify
+RightsManager deployed to:  0x35e7b1C4cF02555Ab12f608DF15220A441b488F3 (verified) - etherscan and sourcify
+CRPFactory deployed to:  0x9dcFF52074943e29e0Ae9C5e484ddc5881aed8A2 (verified) - etherscan and sourcify
+RedeemableERC20Factory deployed to:  0xd0A109EC3a3094352654Fe7e1c486A50d4e976cd (verified) - etherscan and sourcify
+RedeemableERC20PoolFactory deployed to:  0xD8de02E1b85Ef954F938EE6dabeDa7b2241663B4 (verified) - etherscan and sourcify
+SeedERC20Factory deployed to:  0xEB3e554C121C481541989Ed96dEdf9457632fA3d (verified) - etherscan and sourcify
+Trust factory deployed to:  0x50385fD9C47fC33964438699542330Df4813c11c (verified) - etherscan and sourcify
