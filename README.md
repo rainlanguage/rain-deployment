@@ -3,34 +3,42 @@ Node: `v14.17.4`
 Yarn: `v1.22.10`
 Solt: `0.5.2`
 
-# Advanced Sample Hardhat Project
-
-This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
-
-The project comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts. It also comes with a variety of other tools, preconfigured to work with the project code.
-
-Try running some of the following tasks:
-
+Before start to deployments fill your own enviroment file, the repository provide a template. Next, check that you already installed all the dependencies to run the deployments scripts with yarn: 
+``` yarn install```
+# Deployment of rain contracts to EVM networks
+The repository provide two types of scripts. One of them is fully compatible with networks availables in https://chainlist.org/ like Ethereum, Polygon, Avalanche, Binance, etc. To deploy the rain contracts to a network with this script, you should check that is added to your hardhat config correctly and run:
 ```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-npx hardhat help
-REPORT_GAS=true npx hardhat test
-npx hardhat coverage
-npx hardhat run scripts/deploy.ts
-TS_NODE_FILES=true npx ts-node scripts/deploy.ts
-npx eslint '**/*.{js,ts}'
-npx eslint '**/*.{js,ts}' --fix
-npx prettier '**/*.{json,sol,md}' --check
-npx prettier '**/*.{json,sol,md}' --write
-npx solhint 'contracts/**/*.sol'
-npx solhint 'contracts/**/*.sol' --fix
+yarn deploy-rain --network <NETWORK_NAME>
 ```
+This command will start the deployment, and will show on console the address of each contract. Ex:
+```shell
 
-# Etherscan verification
+- BFactory deployed to:  0x5b40ecEB5E63e392d7a7e900E0fB850E43D9e003
+- SmartPoolManager deployed to:  0xCE5Ded96347fde5447b97036605e83Bb0Ca4412E
+- BalancerSafeMath deployed to:  0xe34C092b84838241B302bf70506EB357AAd65555
+- RightsManager deployed to:  0x3d7FbCf57Af825Bccc3990094b159aBF5349e410
+- CRPFactory deployed to:  0xA35B482452062FC14F5f9eeEaFE892e7C6E171a9
+- RedeemableERC20Factory deployed to:  0xE42e869743aaC201ABAd9dD6D3e14Fd6878f9F89
+- RedeemableERC20PoolFactory deployed to:  0xC2363B6a0460C7dD0e1540778FcB65F35Ebda108
+- SeedERC20Factory deployed to:  0x0c76ae02BCBb6e542c7Af60d53e0620BbdA13512
+- Trust factory deployed to:  0x96f999f904f88EF394250B67A60F920F9CbC44b3
+```
+# Deployment of rain contracts to Reef Chain
+The other script type that the repo provide is a specific script to deploy in the Reef mainnet and Reef testnet. To deploy in these networks the reposity have the default properties that Reef provide, you only should provide your deployment account. You can run the script with:
+```shell
+yarn deploy-rain-reef --network <NETWORK_NAME>
+```
+The deployment will start and show in the console the address of each contract as in the example above.
+# Contract verification in Etherscan
+This way will work in [Etherscan](https://etherscan.io/) and with others "Etherscan compatibles" like [Polygonscan](https://polygonscan.com/) (Polygon) or [Snowtrace](https://snowtrace.io/) (Avalanche)
+
+# Contract verification in Sourcify
+To verify in Sourcify must provide the address and the metadata for each contract. The metadata is located inside the distribution folder. TThe interface is quite intuitive, the steps to verify are as follows::
+  - Go to [Sourcify](https://sourcify.dev/)
+  - Select the network where the contract was deployed. Ex: *Mumbai Testnet (Polygon/Matic)*
+  - Paste the contract address to verify in *contract address* field. Ex: *0x96f999f904f88EF394250B67A60F920F9CbC44b3*
+  - Upload the corresponding contract metada. Ex: *TrustFactory_meta.json*
+  - Click verify, wait and DONE!
 
 To try out Etherscan verification, you first need to deploy a contract to an Ethereum network that's supported by Etherscan, such as Ropsten.
 
