@@ -4,7 +4,8 @@ coverage
 coverage.json
 typechain
 .vscode
-contracts
+/contracts
+
 
 #Hardhat files
 cache
