@@ -350,6 +350,7 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
   ): Result;
 
   events: {
+    "AddRedeemable(address)": EventFragment;
     "Approval(address,address,uint256)": EventFragment;
     "PhaseShiftScheduled(uint32)": EventFragment;
     "Redeem(address,address,uint256[2])": EventFragment;
@@ -359,6 +360,7 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
     "Transfer(address,address,uint256)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "AddRedeemable"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PhaseShiftScheduled"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Redeem"): EventFragment;
@@ -367,6 +369,10 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
+
+export type AddRedeemableEvent = TypedEvent<
+  [string] & { newRedeemable: string }
+>;
 
 export type ApprovalEvent = TypedEvent<
   [string, string, BigNumber] & {
@@ -1006,6 +1012,14 @@ export class RedeemableERC20 extends BaseContract {
   };
 
   filters: {
+    "AddRedeemable(address)"(
+      newRedeemable?: string | null
+    ): TypedEventFilter<[string], { newRedeemable: string }>;
+
+    AddRedeemable(
+      newRedeemable?: string | null
+    ): TypedEventFilter<[string], { newRedeemable: string }>;
+
     "Approval(address,address,uint256)"(
       owner?: string | null,
       spender?: string | null,

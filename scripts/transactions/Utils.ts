@@ -24,7 +24,7 @@ export const sixZeros = "000000";
 export async function deploy(artifact:any, signer:any, argmts:any[]) {
   const iface = new ethers.utils.Interface(artifact.abi)
   const factory = new ethers.ContractFactory(iface, artifact.bytecode, signer)
-  const contract = await factory.deploy(argmts)
+  const contract = await factory.deploy(...argmts)
   await contract.deployTransaction.wait()
   return contract.address
 }
@@ -78,7 +78,7 @@ export const poolContracts = async (
   ) as ConfigurableRightsPool;
   const bPool = new ethers.Contract(
     await crp.bPool(),
-    (await artifacts.readArtifact("@beehiveinnovation/configurable-rights-pool/contracts/test/BPool.sol:BPool")).abi,
+    (await artifacts.readArtifact("contracts/configurable-rights-pool/contracts/test/BPool.sol:BPool")).abi,
     signers[0]
   ) as BPool;
   return [crp, bPool];

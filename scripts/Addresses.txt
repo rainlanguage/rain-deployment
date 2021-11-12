@@ -23,7 +23,7 @@ CRPFactory deployed to:  0xDCf8AEC97284BE6e46Fd2Ba0C8Cb1f8dEaeBAdf1 (verified) -
 RedeemableERC20Factory deployed to:  0x5fe0bdD15aEc86ce3bd23FF11ECaAD24bDa6Ed23 (verified) - etherscan
 RedeemableERC20PoolFactory deployed to:  0x607A93e1a9121E9D8Dc2a92fa63BeF080c1a60dA (verified) - etherscan
 SeedERC20Factory deployed to:  0x9be53905D40DcF103Dc3c2FC16D4904F128B1aD0 (verified) - etherscan
-Trust factory deployed to:  0x636E07cBe4A2F5e9F5eE234D4D6581761fD945FC
+Trust factory deployed to:  0x636E07cBe4A2F5e9F5eE234D4D6581761fD945FC (verified) - etherscan
 
 - Fuji
 BFactory deployed to:  0xC6A8DA983f47E9c444Dac0b1881253bf8848a117 (verified) - sourcify
