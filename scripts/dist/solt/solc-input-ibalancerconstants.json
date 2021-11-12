@@ -19,8 +19,7 @@
                     "abi",
                     "evm.bytecode",
                     "evm.deployedBytecode",
-                    "evm.methodIdentifiers",
-                    "metadata"
+                    "evm.methodIdentifiers"
                 ],
                 "": [
                     "id",
