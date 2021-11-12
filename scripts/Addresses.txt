@@ -15,15 +15,15 @@ ___________________
 
 - Mumbai:
 (verified) - etherscan
-BFactory deployed to:  0x14141a6B1ce8C92732193fC10b0c1CbCf67024e6 (verified) - etherscan
-SmartPoolManager deployed to:  0x34f1593E0Bf0e7D40b19A9aBFE4c940d7D9f7039 (verified) - etherscan
-BalancerSafeMath deployed to:  0xf790f96739Da030E710B8C7E14ddE1eca5Bc5416 (verified) - etherscan
-RightsManager deployed to:  0x23F751EDA5fC5691074e7ABe44Ce2288f7bB2c70 (verified) - etherscan
-CRPFactory deployed to:  0xDCf8AEC97284BE6e46Fd2Ba0C8Cb1f8dEaeBAdf1 (verified) - etherscan
-RedeemableERC20Factory deployed to:  0x5fe0bdD15aEc86ce3bd23FF11ECaAD24bDa6Ed23 (verified) - etherscan
-RedeemableERC20PoolFactory deployed to:  0x607A93e1a9121E9D8Dc2a92fa63BeF080c1a60dA (verified) - etherscan
-SeedERC20Factory deployed to:  0x9be53905D40DcF103Dc3c2FC16D4904F128B1aD0 (verified) - etherscan
-Trust factory deployed to:  0x636E07cBe4A2F5e9F5eE234D4D6581761fD945FC (verified) - etherscan
+BFactory deployed to:  0x1F0D30987B1f015754dfD29364bE71254223F850 (verified) - etherscan
+SmartPoolManager deployed to:  0x9a99f6DA678F774ea666250836ae3B3878aFDc90 (verified) - etherscan
+BalancerSafeMath deployed to:  0x2679827A73192945AC6148FA1B868274F33A1A16 (verified) - etherscan
+RightsManager deployed to:  0x2fB12397575281Bac059f94F3A67479B23850600 (verified) - etherscan
+CRPFactory deployed to:  0x5a6AE41cC2103Be993B10708Cc0De15fBc222ed8 (verified) - etherscan
+RedeemableERC20Factory deployed to:  0xEC13FFd3C78dcaDA0dCA8C44dF5d90C29e92e1e8 (verified) - etherscan
+RedeemableERC20PoolFactory deployed to:  0xd9aB7aE2Ee63e04BE8D431239078643BF85Cc94A (verified) - etherscan
+SeedERC20Factory deployed to:  0x1bcF37F15c9db41cA4635a9bE7166a10F5003Ddd (verified) - etherscan
+Trust factory deployed to:  0x2C407b4A7bdbf8F7f7EBed807677356E99e5901b (verified) - etherscan
 
 - Fuji
 BFactory deployed to:  0xC6A8DA983f47E9c444Dac0b1881253bf8848a117 (verified) - sourcify
