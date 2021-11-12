@@ -1,7 +1,8 @@
 import { ethers, artifacts } from "hardhat";
 import type { Trust } from "../dist/typechains/Trust";
 import TrustJson from "../dist/artifact/contracts/rain-protocol/contracts/trust/Trust.sol/Trust.json";
-
+import ConfigurableRightsPoolJson from "../dist/artifact/contracts/configurable-rights-pool/contracts/ConfigurableRightsPool.sol/ConfigurableRightsPool.json";
+import BPoolJson from "../dist/artifact/contracts/configurable-rights-pool/contracts/test/BPool.sol/BPool.json";
 import type { RedeemableERC20Pool } from "../dist/typechains/RedeemableERC20Pool";
 import type { ConfigurableRightsPool } from "../dist/typechains/ConfigurableRightsPool";
 import type { BPool } from "../dist/typechains/BPool";
@@ -73,12 +74,12 @@ export const poolContracts = async (
 ): Promise<[ConfigurableRightsPool, BPool]> => {
   const crp = new ethers.Contract(
     await pool.crp(),
-    (await artifacts.readArtifact("@beehiveinnovation/configurable-rights-pool/contracts/ConfigurableRightsPool.sol:ConfigurableRightsPool")).abi,
+    ConfigurableRightsPoolJson.abi,
     signers[0]
   ) as ConfigurableRightsPool;
   const bPool = new ethers.Contract(
     await crp.bPool(),
-    (await artifacts.readArtifact("contracts/configurable-rights-pool/contracts/test/BPool.sol:BPool")).abi,
+    BPoolJson.abi,
     signers[0]
   ) as BPool;
   return [crp, bPool];
