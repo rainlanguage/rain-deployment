@@ -1,35 +1,23 @@
 let
  pkgs = import <nixpkgs> {};
 
- mnemonic = pkgs.writeShellScriptBin "mnemonic" ''
-  mnemonics
+ solt-the-earth = pkgs.writeShellScriptBin "solt-the-earth" ''
+  mkdir -p solt
+  find contracts/rain-protocol -type f -not -path 'contracts/test/*' | xargs -i solt write '{}' --npm --runs 100000
+  mv solc-* solt
  '';
 
- local-node = pkgs.writeShellScriptBin "local-node" ''
-  cd balancer-local-dev && npx hardhat node
+ compile = pkgs.writeShellScriptBin "compile" ''
+  yarn compile --force
  '';
-
- local-fork = pkgs.writeShellScriptBin "local-fork" ''
- hardhat node --fork https://eth-mainnet.alchemyapi.io/v2/G0Vg_iZFiAuUD6hjXqcVg-Nys-NGiTQy --fork-block-number 11833335
- '';
-
- local-test = pkgs.writeShellScriptBin "local-test" ''
- hardhat test --network localhost
- '';
-
- local-deploy = pkgs.writeShellScriptBin "local-deploy" ''
-  cd balancer-local-dev && npx hardhat run --network localhost scripts/deploy-local.ts
- '';
+  
 in
 pkgs.stdenv.mkDerivation {
  name = "shell";
  buildInputs = [
   pkgs.nodejs-14_x
-  mnemonic
-  local-node
-  local-deploy
-  local-test
-  local-fork
+  solt-the-earth
+  compile
  ];
 
  shellHook = ''

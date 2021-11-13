@@ -107,32 +107,6 @@ const config:any = {
           }
         }
       },
-      "contracts/configurable-rights-pool/contracts/CRPFactory.sol": {
-        version: "0.6.12",
-        "settings": {
-          "metadata": {
-            "useLiteralContent": true
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "id",
-                "ast"
-              ]
-            }
-          }
-        }
-      },
       "@beehiveinnovation/configurable-rights-pool/contracts/CRPFactory.sol": {
         version: "0.6.12",
         "settings": {
