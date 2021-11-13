@@ -28,40 +28,135 @@ const config:any = {
     compilers: [
       {
         version: "0.6.12",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 100000,
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
           },
-        },
+          "optimizer": {
+            "enabled": true,
+            "runs": 100000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "id",
+                "ast"
+              ]
+            }
+          }
+        }
       },
       {
         version: "0.5.12",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 100,
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
           },
-        },
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          evmVersion: "byzantium",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "id",
+                "ast"
+              ]
+            }
+          }
+        }
       },
     ],
     overrides: {
       "contracts/configurable-rights-pool/contracts/CRPFactory.sol": {
         version: "0.6.12",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 200,
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
           },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "id",
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "contracts/configurable-rights-pool/contracts/CRPFactory.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "id",
+                "ast"
+              ]
+            }
+          }
         }
       },
       "@beehiveinnovation/configurable-rights-pool/contracts/CRPFactory.sol": {
         version: "0.6.12",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 200,
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
           },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "id",
+                "ast"
+              ]
+            }
+          }
         }
       }
     }
