@@ -7,11 +7,11 @@ import {
 
 import {Tier, eighteenZeros, sixZeros, trustDeploy} from "./Utils"
 
-const BFactory = require(`../dist/artifact/contracts/balancer-core/contracts/BFactory.sol/BFactory.json`);
-const CRPFactory = require(`../dist/artifact/contracts/configurable-rights-pool/contracts/CRPFactory.sol/CRPFactory.json`); 
-const RightsManager = require(`../dist/artifact/contracts/configurable-rights-pool/libraries/RightsManager.sol/RightsManager.json`);
-const SmartPoolManager = require(`../dist/artifact/contracts/configurable-rights-pool/libraries/SmartPoolManager.sol/SmartPoolManager.json`);
-const BalancerSafeMath = require(`../dist/artifact/contracts/configurable-rights-pool/libraries/BalancerSafeMath.sol/BalancerSafeMath.json`);
+const BFactory = require(`../dist/artifacts/contracts/balancer-core/contracts/BFactory.sol/BFactory.json`);
+const CRPFactory = require(`../dist/artifacts/contracts/configurable-rights-pool/contracts/CRPFactory.sol/CRPFactory.json`); 
+const RightsManager = require(`../dist/artifacts/contracts/configurable-rights-pool/libraries/RightsManager.sol/RightsManager.json`);
+const SmartPoolManager = require(`../dist/artifacts/contracts/configurable-rights-pool/libraries/SmartPoolManager.sol/SmartPoolManager.json`);
+const BalancerSafeMath = require(`../dist/artifacts/contracts/configurable-rights-pool/libraries/BalancerSafeMath.sol/BalancerSafeMath.json`);
 
 async function main() {
   const signers = await ethers.getSigners();

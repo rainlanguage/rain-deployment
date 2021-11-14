@@ -36,20 +36,7 @@ const config:any = {
             "enabled": true,
             "runs": 100000
           },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "id",
-                "ast"
-              ]
-            }
-          }
+          "evmVersion": 'istanbul'
         }
       },
       {
@@ -62,26 +49,12 @@ const config:any = {
             "enabled": true,
             "runs": 100
           },
-          evmVersion: "byzantium",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "id",
-                "ast"
-              ]
-            }
-          }
+          evmVersion: "byzantium"
         }
       },
     ],
     overrides: {
-      "contracts/configurable-rights-pool/contracts/CRPFactory.sol": {
+      "contracts/configurable-rights-pool": {
         version: "0.6.12",
         "settings": {
           "metadata": {
@@ -91,23 +64,10 @@ const config:any = {
             "enabled": true,
             "runs": 200
           },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "id",
-                "ast"
-              ]
-            }
-          }
+          evmVersion: 'istanbul'
         }
       },
-      "@beehiveinnovation/configurable-rights-pool/contracts/CRPFactory.sol": {
+      "@beehiveinnovation/configurable-rights-pool": {
         version: "0.6.12",
         "settings": {
           "metadata": {
@@ -117,20 +77,7 @@ const config:any = {
             "enabled": true,
             "runs": 200
           },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "id",
-                "ast"
-              ]
-            }
-          }
+          evmVersion: 'istanbul'
         }
       }
     }

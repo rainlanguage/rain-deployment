@@ -13,16 +13,16 @@ import type { RedeemableERC20 } from "../dist/typechains/RedeemableERC20";
 import type { TrustFactory } from "../dist/typechains/TrustFactory";
 import type { Trust } from "../dist/typechains/Trust";
 
-const TRUSTFACTORY = require("../dist/artifact/contracts/rain-protocol/contracts/trust/TrustFactory.sol/TrustFactory.json");
-const TRUST = require("../dist/artifact/contracts/rain-protocol/contracts/trust/Trust.sol/Trust.json");
-const SEED = require("../dist/artifact/contracts/rain-protocol/contracts/seed/SeedERC20.sol/SeedERC20.json");
-const POOL = require("../dist/artifact/contracts/rain-protocol/contracts/pool/RedeemableERC20Pool.sol/RedeemableERC20Pool.json");
-const REDEEMABLEERC20 = require("../dist/artifact/contracts/rain-protocol/contracts/redeemableERC20/RedeemableERC20.sol/RedeemableERC20.json");
+const TRUSTFACTORY = require("../dist/artifacts/contracts/rain-protocol/contracts/trust/TrustFactory.sol/TrustFactory.json");
+const TRUST = require("../dist/artifacts/contracts/rain-protocol/contracts/trust/Trust.sol/Trust.json");
+const SEED = require("../dist/artifacts/contracts/rain-protocol/contracts/seed/SeedERC20.sol/SeedERC20.json");
+const POOL = require("../dist/artifacts/contracts/rain-protocol/contracts/pool/RedeemableERC20Pool.sol/RedeemableERC20Pool.json");
+const REDEEMABLEERC20 = require("../dist/artifacts/contracts/rain-protocol/contracts/redeemableERC20/RedeemableERC20.sol/RedeemableERC20.json");
 
 //
-const RESERVE_TOKEN = require("../dist/artifact/contracts/rain-protocol/contracts/test/ReserveToken.sol/ReserveToken.json");
-const READWRITE_TIER = require("../dist/artifact/contracts/rain-protocol/contracts/tier/ReadWriteTier.sol/ReadWriteTier.json");
-const TIERBYCONSTRUCTION = require("../dist/artifact/contracts/rain-protocol/contracts/claim/TierByConstructionClaim.sol/TierByConstructionClaim.json");
+const RESERVE_TOKEN = require("../dist/artifacts/contracts/rain-protocol/contracts/test/ReserveToken.sol/ReserveToken.json");
+const READWRITE_TIER = require("../dist/artifacts/contracts/rain-protocol/contracts/tier/ReadWriteTier.sol/ReadWriteTier.json");
+const TIERBYCONSTRUCTION = require("../dist/artifacts/contracts/rain-protocol/contracts/claim/TierByConstructionClaim.sol/TierByConstructionClaim.json");
 
 
 enum Tier {

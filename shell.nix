@@ -1,13 +1,15 @@
 let
  pkgs = import <nixpkgs> {};
 
- solt-the-earth = pkgs.writeShellScriptBin "solt-the-earth" ''
+  build-solt = pkgs.writeShellScriptBin "build-solt" ''
   mkdir -p solt
-  find contracts/rain-protocol -type f -not -path 'contracts/test/*' | xargs -i solt write '{}' --npm --runs 100000
+  find contracts/balancer-core -type f -not -path 'contracts/balancer-core/contracts/test/*' | xargs -i solt write '{}' --npm --runs 100
+  find contracts/configurable-rights-pool -type f -not -path 'contracts/configurable-rights-pool/contracts/test/*' | xargs -i solt write '{}' --npm --runs 200
+  find contracts/rain-protocol -type f -not -path 'contracts/rain-protocol/contracts/test/*' | xargs -i solt write '{}' --npm --runs 100000
   mv solc-* solt
  '';
 
- build-solt = pkgs.writeShellScriptBin "build-solt" ''
+ json-compile = pkgs.writeShellScriptBin "json-compile" ''
   mkdir -p new
   solc --standard-json scripts/dist/solt/solc-input-redeemableerc20factory.json | cat > data-redeemableerc20factory.json
   solc --standard-json scripts/dist/solt/solc-input-redeemableerc20poolfactory.json | cat > data-redeemableerc20poolfactory.json
@@ -25,7 +27,7 @@ pkgs.stdenv.mkDerivation {
  name = "shell";
  buildInputs = [
   pkgs.nodejs-14_x
-  solt-the-earth
+  json-compile
   compile
   build-solt
  ];
