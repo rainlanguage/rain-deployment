@@ -2,7 +2,7 @@ import { ethers } from "hardhat";
 import { expect } from "chai";
 import * as Util from "./Utils"
 
-const FACTORY_ADDRESS = "0x2C407b4A7bdbf8F7f7EBed807677356E99e5901b";
+const FACTORY_ADDRESS = "0x4C91F1DEE2681aCe4ae1cDF90Dba0BD2263B11DE";
 
 import type { TierByConstructionClaim } from "../dist/typechain/TierByConstructionClaim";
 import type { ReadWriteTier } from "../dist/typechain/ReadWriteTier";
