@@ -54,7 +54,7 @@ const config:any = {
       },
     ],
     overrides: {
-      "contracts/configurable-rights-pool": {
+      "contracts/configurable-rights-pool/contracts/utils/BalancerOwnable.sol": {
         version: "0.6.12",
         "settings": {
           "metadata": {
@@ -67,7 +67,163 @@ const config:any = {
           evmVersion: 'istanbul'
         }
       },
-      "@beehiveinnovation/configurable-rights-pool": {
+      "contracts/configurable-rights-pool/contracts/utils/BalancerReentrancyGuard.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/configurable-rights-pool/contracts/ConfigurableRightsPool.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/configurable-rights-pool/contracts/CRPFactory.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/configurable-rights-pool/contracts/IBFactory.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/configurable-rights-pool/contracts/Migrations.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/configurable-rights-pool/contracts/PCToken.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/configurable-rights-pool/interfaces/IConfigurableRightsPool.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/configurable-rights-pool/interfaces/IERC20.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/configurable-rights-pool/libraries/BalancerConstants.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/configurable-rights-pool/libraries/BalancerSafeMath.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/configurable-rights-pool/libraries/RightsManager.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/configurable-rights-pool/libraries/SafeApprove.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/configurable-rights-pool/libraries/SmartPoolManager.sol": {
         version: "0.6.12",
         "settings": {
           "metadata": {
