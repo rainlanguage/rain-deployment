@@ -235,6 +235,201 @@ const config:any = {
           },
           evmVersion: 'istanbul'
         }
+      },
+      "contracts/rain-protocol/contracts/test/BalancerCoreImports.sol": {
+        version: "0.5.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          evmVersion: "byzantium"
+        }
+      },
+      "contracts/rain-protocol/contracts/test/ClaimERC1155Test.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/rain-protocol/contracts/test/ConfigurableRightsPoolImports.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/rain-protocol/contracts/test/PhasedScheduleTest.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/rain-protocol/contracts/test/PhasedTest.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/rain-protocol/contracts/test/RedeemableERC20Reentrant.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/rain-protocol/contracts/test/ReserveToken.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/rain-protocol/contracts/test/ReserveTokenTest.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/rain-protocol/contracts/test/SeedERC20ForceSendEther.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/rain-protocol/contracts/test/SeedERC20Reentrant.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/rain-protocol/contracts/test/TierByConstructionClaimTest.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/rain-protocol/contracts/test/TierByConstructionTest.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/rain-protocol/contracts/test/TierUtilTest.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/rain-protocol/contracts/test/TrustReentrant.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/rain-protocol/contracts/test/ValueTierTest.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
       }
     }
   },
