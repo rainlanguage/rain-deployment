@@ -4,14 +4,14 @@ import * as Util from "./Utils"
 
 const FACTORY_ADDRESS = "0x2C407b4A7bdbf8F7f7EBed807677356E99e5901b";
 
-import type { TierByConstructionClaim } from "../dist/typechains/TierByConstructionClaim";
-import type { ReadWriteTier } from "../dist/typechains/ReadWriteTier";
-import type { ReserveToken } from "../dist/typechains/ReserveToken";
-import type { SeedERC20 } from "../dist/typechains/SeedERC20";
-import type { RedeemableERC20Pool } from "../dist/typechains/RedeemableERC20Pool";
-import type { RedeemableERC20 } from "../dist/typechains/RedeemableERC20";
-import type { TrustFactory } from "../dist/typechains/TrustFactory";
-import type { Trust } from "../dist/typechains/Trust";
+import type { TierByConstructionClaim } from "../dist/typechain/TierByConstructionClaim";
+import type { ReadWriteTier } from "../dist/typechain/ReadWriteTier";
+import type { ReserveToken } from "../dist/typechain/ReserveToken";
+import type { SeedERC20 } from "../dist/typechain/SeedERC20";
+import type { RedeemableERC20Pool } from "../dist/typechain/RedeemableERC20Pool";
+import type { RedeemableERC20 } from "../dist/typechain/RedeemableERC20";
+import type { TrustFactory } from "../dist/typechain/TrustFactory";
+import type { Trust } from "../dist/typechain/Trust";
 
 const TRUSTFACTORY = require("../dist/artifacts/contracts/rain-protocol/contracts/trust/TrustFactory.sol/TrustFactory.json");
 const TRUST = require("../dist/artifacts/contracts/rain-protocol/contracts/trust/Trust.sol/Trust.json");

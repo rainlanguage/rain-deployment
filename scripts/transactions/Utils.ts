@@ -1,11 +1,11 @@
 import { ethers, artifacts } from "hardhat";
-import type { Trust } from "../dist/typechains/Trust";
+import type { Trust } from "../dist/typechain/Trust";
 import TrustJson from "../dist/artifacts/contracts/rain-protocol/contracts/trust/Trust.sol/Trust.json";
 import ConfigurableRightsPoolJson from "../dist/artifacts/contracts/configurable-rights-pool/contracts/ConfigurableRightsPool.sol/ConfigurableRightsPool.json";
-import BPoolJson from "../dist/artifacts/contracts/configurable-rights-pool/contracts/test/BPool.sol/BPool.json";
-import type { RedeemableERC20Pool } from "../dist/typechains/RedeemableERC20Pool";
-import type { ConfigurableRightsPool } from "../dist/typechains/ConfigurableRightsPool";
-import type { BPool } from "../dist/typechains/BPool";
+import BPoolJson from "@beehiveinnovation/configurable-rights-pool/artifacts/BPool.json";
+import type { RedeemableERC20Pool } from "../dist/typechain/RedeemableERC20Pool";
+import type { ConfigurableRightsPool } from "../dist/typechain/ConfigurableRightsPool";
+import type { BPool } from "../dist/typechain/BPool";
 
 export enum Tier {
   NIL,
