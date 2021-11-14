@@ -5,7 +5,6 @@ let
   mkdir -p solt
   solt write contracts/balancer-core/contracts/BFactory.sol --npm --runs 100
   find contracts/configurable-rights-pool -type f -not -path 'contracts/configurable-rights-pool/contracts/test/*' | xargs -i solt write '{}' --npm --runs 200
-  find contracts/rain-protocol -type f -not -path 'contracts/rain-protocol/contracts/test/*' | xargs -i solt write '{}' --npm --runs 100000
   mv solc-* solt
  '';
 
