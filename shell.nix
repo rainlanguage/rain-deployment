@@ -1,7 +1,7 @@
 let
  pkgs = import <nixpkgs> {};
 
-  build-solt = pkgs.writeShellScriptBin "build-solt" ''
+ build-solt = pkgs.writeShellScriptBin "build-solt" ''
   mkdir -p solt
   solt write contracts/balancer-core/contracts/BFactory.sol --npm --runs 100
   find contracts/configurable-rights-pool -type f -not -path 'contracts/configurable-rights-pool/contracts/test/*' | xargs -i solt write '{}' --npm --runs 200
@@ -20,6 +20,18 @@ let
  compile = pkgs.writeShellScriptBin "compile" ''
   yarn compile
  '';
+
+ deploy-rain = pkgs.writeShellScriptBin "deploy-rain" ''
+  yarn deploy-rain
+ '';
+
+ deploy-rain-mumbai = pkgs.writeShellScriptBin "deploy-rain-mumbai" ''
+  yarn deploy-rain --network mumbai
+ '';
+ 
+ deploy-rain-reef-testnet = pkgs.writeShellScriptBin "deploy-rain-reef-testnet" ''
+  yarn deploy-rain-reef --network reef_testnet
+ '';
   
 in
 pkgs.stdenv.mkDerivation {
@@ -29,6 +41,9 @@ pkgs.stdenv.mkDerivation {
   json-compile
   compile
   build-solt
+  deploy-rain-mumbai
+  deploy-rain-reef-testnet
+  deploy-rain
  ];
 
  shellHook = ''
