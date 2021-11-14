@@ -1,8 +1,9 @@
 import { ethers } from "hardhat";
 import { expect } from "chai";
 import * as Util from "./Utils"
+const checkSumAddress = ethers.utils.getAddress;
 
-const FACTORY_ADDRESS = "0x4C91F1DEE2681aCe4ae1cDF90Dba0BD2263B11DE";
+const FACTORY_ADDRESS = "0x189fa3395F099111F924a405563a4C1b9F9c1f9e";
 
 import type { TierByConstructionClaim } from "../dist/typechain/TierByConstructionClaim";
 import type { ReadWriteTier } from "../dist/typechain/ReadWriteTier";
@@ -156,11 +157,13 @@ enum Tier {
        creator
     ) as RedeemableERC20;
     
-    // Checking the AddRedeemable event
-    const eventFilter = redeemableERC20.filters.AddRedeemable(); 
+    // Checking the TreasuryAsset event
+    const eventFilter = redeemableERC20.filters.TreasuryAsset(); 
     const event = await redeemableERC20.queryFilter(eventFilter, blockBeforeTrust);
-    const newRedeemableAdded = event[0].args[0];
-    expect(newRedeemableAdded).to.be.equal(reserveAddress);
+    const emitter = checkSumAddress(event[0].args.emitter)
+    const asset = checkSumAddress(event[0].args.asset)
+    expect(emitter).to.be.equal(checkSumAddress(trust.address));
+    expect(asset).to.be.equal(reserveAddress);
     console.log("New redeemableERC20: " + await trust.token())
 
     const seedERC20Address = await trust.seeder();
@@ -238,7 +241,7 @@ enum Tier {
   
     await redeemableERC20
       .connect(trader1)
-      .redeem(await redeemableERC20.balanceOf(trader1.address),config);
+      .redeem([reserveAddress], await redeemableERC20.balanceOf(trader1.address),config);
   
     console.log("RedeemableERC20 redeemed")
 }
