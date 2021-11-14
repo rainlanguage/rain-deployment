@@ -23,13 +23,10 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
   functions: {
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
     "DISTRIBUTOR_BURNER()": FunctionFragment;
-    "MAX_REDEEMABLES()": FunctionFragment;
     "MINIMUM_INITIAL_SUPPLY()": FunctionFragment;
     "RECEIVER()": FunctionFragment;
-    "REDEEMABLE_ADDER()": FunctionFragment;
     "SENDER()": FunctionFragment;
     "UNINITIALIZED()": FunctionFragment;
-    "addRedeemable(address)": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
@@ -41,7 +38,6 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
     "currentPhase()": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
-    "getRedeemables()": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
     "getRoleMember(bytes32,uint256)": FunctionFragment;
     "getRoleMemberCount(bytes32)": FunctionFragment;
@@ -51,10 +47,10 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
     "isTier(address,uint8)": FunctionFragment;
     "minimumTier()": FunctionFragment;
     "name()": FunctionFragment;
+    "newTreasuryAsset(address)": FunctionFragment;
     "phaseAtBlockNumber(uint32[8],uint32)": FunctionFragment;
     "phaseBlocks(uint256)": FunctionFragment;
-    "redeem(uint256)": FunctionFragment;
-    "redeemSpecific(address[],uint256)": FunctionFragment;
+    "redeem(address[],uint256)": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
     "symbol()": FunctionFragment;
@@ -73,26 +69,14 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "MAX_REDEEMABLES",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "MINIMUM_INITIAL_SUPPLY",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "RECEIVER", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "REDEEMABLE_ADDER",
-    values?: undefined
-  ): string;
   encodeFunctionData(functionFragment: "SENDER", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "UNINITIALIZED",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "addRedeemable",
-    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "allowance",
@@ -142,10 +126,6 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "getRedeemables",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "getRoleAdmin",
     values: [BytesLike]
   ): string;
@@ -179,6 +159,10 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "newTreasuryAsset",
+    values: [string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "phaseAtBlockNumber",
     values: [
       [
@@ -200,10 +184,6 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "redeem",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "redeemSpecific",
     values: [string[], BigNumberish]
   ): string;
   encodeFunctionData(
@@ -241,25 +221,13 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "MAX_REDEEMABLES",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "MINIMUM_INITIAL_SUPPLY",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "RECEIVER", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "REDEEMABLE_ADDER",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "SENDER", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "UNINITIALIZED",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "addRedeemable",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
@@ -289,10 +257,6 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getRedeemables",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "getRoleAdmin",
     data: BytesLike
   ): Result;
@@ -317,6 +281,10 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "newTreasuryAsset",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "phaseAtBlockNumber",
     data: BytesLike
   ): Result;
@@ -325,10 +293,6 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "redeem", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "redeemSpecific",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceRole",
     data: BytesLike
@@ -350,7 +314,6 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
   ): Result;
 
   events: {
-    "AddRedeemable(address)": EventFragment;
     "Approval(address,address,uint256)": EventFragment;
     "PhaseShiftScheduled(uint32)": EventFragment;
     "Redeem(address,address,uint256[2])": EventFragment;
@@ -358,9 +321,9 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
+    "TreasuryAsset(address,address)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "AddRedeemable"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PhaseShiftScheduled"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Redeem"): EventFragment;
@@ -368,11 +331,8 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TreasuryAsset"): EventFragment;
 }
-
-export type AddRedeemableEvent = TypedEvent<
-  [string] & { newRedeemable: string }
->;
 
 export type ApprovalEvent = TypedEvent<
   [string, string, BigNumber] & {
@@ -389,7 +349,7 @@ export type PhaseShiftScheduledEvent = TypedEvent<
 export type RedeemEvent = TypedEvent<
   [string, string, [BigNumber, BigNumber]] & {
     redeemer: string;
-    redeemable: string;
+    treasuryAsset: string;
     redeemAmounts: [BigNumber, BigNumber];
   }
 >;
@@ -412,6 +372,10 @@ export type RoleRevokedEvent = TypedEvent<
 
 export type TransferEvent = TypedEvent<
   [string, string, BigNumber] & { from: string; to: string; value: BigNumber }
+>;
+
+export type TreasuryAssetEvent = TypedEvent<
+  [string, string] & { emitter: string; asset: string }
 >;
 
 export class RedeemableERC20 extends BaseContract {
@@ -462,22 +426,13 @@ export class RedeemableERC20 extends BaseContract {
 
     DISTRIBUTOR_BURNER(overrides?: CallOverrides): Promise<[string]>;
 
-    MAX_REDEEMABLES(overrides?: CallOverrides): Promise<[number]>;
-
     MINIMUM_INITIAL_SUPPLY(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     RECEIVER(overrides?: CallOverrides): Promise<[string]>;
 
-    REDEEMABLE_ADDER(overrides?: CallOverrides): Promise<[string]>;
-
     SENDER(overrides?: CallOverrides): Promise<[string]>;
 
     UNINITIALIZED(overrides?: CallOverrides): Promise<[number]>;
-
-    addRedeemable(
-      newRedeemable_: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
 
     allowance(
       owner: string,
@@ -536,12 +491,6 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    getRedeemables(
-      overrides?: CallOverrides
-    ): Promise<
-      [[string, string, string, string, string, string, string, string]]
-    >;
-
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<[string]>;
 
     getRoleMember(
@@ -583,6 +532,11 @@ export class RedeemableERC20 extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
+    newTreasuryAsset(
+      newTreasuryAsset_: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     phaseAtBlockNumber(
       phaseBlocks_: [
         BigNumberish,
@@ -604,12 +558,7 @@ export class RedeemableERC20 extends BaseContract {
     ): Promise<[number]>;
 
     redeem(
-      redeemAmount_: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    redeemSpecific(
-      specificRedeemables_: string[],
+      treasuryAssets_: string[],
       redeemAmount_: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -650,22 +599,13 @@ export class RedeemableERC20 extends BaseContract {
 
   DISTRIBUTOR_BURNER(overrides?: CallOverrides): Promise<string>;
 
-  MAX_REDEEMABLES(overrides?: CallOverrides): Promise<number>;
-
   MINIMUM_INITIAL_SUPPLY(overrides?: CallOverrides): Promise<BigNumber>;
 
   RECEIVER(overrides?: CallOverrides): Promise<string>;
 
-  REDEEMABLE_ADDER(overrides?: CallOverrides): Promise<string>;
-
   SENDER(overrides?: CallOverrides): Promise<string>;
 
   UNINITIALIZED(overrides?: CallOverrides): Promise<number>;
-
-  addRedeemable(
-    newRedeemable_: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
 
   allowance(
     owner: string,
@@ -724,10 +664,6 @@ export class RedeemableERC20 extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  getRedeemables(
-    overrides?: CallOverrides
-  ): Promise<[string, string, string, string, string, string, string, string]>;
-
   getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
   getRoleMember(
@@ -769,6 +705,11 @@ export class RedeemableERC20 extends BaseContract {
 
   name(overrides?: CallOverrides): Promise<string>;
 
+  newTreasuryAsset(
+    newTreasuryAsset_: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   phaseAtBlockNumber(
     phaseBlocks_: [
       BigNumberish,
@@ -787,12 +728,7 @@ export class RedeemableERC20 extends BaseContract {
   phaseBlocks(arg0: BigNumberish, overrides?: CallOverrides): Promise<number>;
 
   redeem(
-    redeemAmount_: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  redeemSpecific(
-    specificRedeemables_: string[],
+    treasuryAssets_: string[],
     redeemAmount_: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -833,22 +769,13 @@ export class RedeemableERC20 extends BaseContract {
 
     DISTRIBUTOR_BURNER(overrides?: CallOverrides): Promise<string>;
 
-    MAX_REDEEMABLES(overrides?: CallOverrides): Promise<number>;
-
     MINIMUM_INITIAL_SUPPLY(overrides?: CallOverrides): Promise<BigNumber>;
 
     RECEIVER(overrides?: CallOverrides): Promise<string>;
 
-    REDEEMABLE_ADDER(overrides?: CallOverrides): Promise<string>;
-
     SENDER(overrides?: CallOverrides): Promise<string>;
 
     UNINITIALIZED(overrides?: CallOverrides): Promise<number>;
-
-    addRedeemable(
-      newRedeemable_: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     allowance(
       owner: string,
@@ -904,12 +831,6 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    getRedeemables(
-      overrides?: CallOverrides
-    ): Promise<
-      [string, string, string, string, string, string, string, string]
-    >;
-
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
     getRoleMember(
@@ -951,6 +872,11 @@ export class RedeemableERC20 extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<string>;
 
+    newTreasuryAsset(
+      newTreasuryAsset_: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     phaseAtBlockNumber(
       phaseBlocks_: [
         BigNumberish,
@@ -969,12 +895,7 @@ export class RedeemableERC20 extends BaseContract {
     phaseBlocks(arg0: BigNumberish, overrides?: CallOverrides): Promise<number>;
 
     redeem(
-      redeemAmount_: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    redeemSpecific(
-      specificRedeemables_: string[],
+      treasuryAssets_: string[],
       redeemAmount_: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -1012,14 +933,6 @@ export class RedeemableERC20 extends BaseContract {
   };
 
   filters: {
-    "AddRedeemable(address)"(
-      newRedeemable?: string | null
-    ): TypedEventFilter<[string], { newRedeemable: string }>;
-
-    AddRedeemable(
-      newRedeemable?: string | null
-    ): TypedEventFilter<[string], { newRedeemable: string }>;
-
     "Approval(address,address,uint256)"(
       owner?: string | null,
       spender?: string | null,
@@ -1048,26 +961,26 @@ export class RedeemableERC20 extends BaseContract {
 
     "Redeem(address,address,uint256[2])"(
       redeemer?: string | null,
-      redeemable?: string | null,
+      treasuryAsset?: string | null,
       redeemAmounts?: null
     ): TypedEventFilter<
       [string, string, [BigNumber, BigNumber]],
       {
         redeemer: string;
-        redeemable: string;
+        treasuryAsset: string;
         redeemAmounts: [BigNumber, BigNumber];
       }
     >;
 
     Redeem(
       redeemer?: string | null,
-      redeemable?: string | null,
+      treasuryAsset?: string | null,
       redeemAmounts?: null
     ): TypedEventFilter<
       [string, string, [BigNumber, BigNumber]],
       {
         redeemer: string;
-        redeemable: string;
+        treasuryAsset: string;
         redeemAmounts: [BigNumber, BigNumber];
       }
     >;
@@ -1143,6 +1056,16 @@ export class RedeemableERC20 extends BaseContract {
       [string, string, BigNumber],
       { from: string; to: string; value: BigNumber }
     >;
+
+    "TreasuryAsset(address,address)"(
+      emitter?: string | null,
+      asset?: string | null
+    ): TypedEventFilter<[string, string], { emitter: string; asset: string }>;
+
+    TreasuryAsset(
+      emitter?: string | null,
+      asset?: string | null
+    ): TypedEventFilter<[string, string], { emitter: string; asset: string }>;
   };
 
   estimateGas: {
@@ -1150,22 +1073,13 @@ export class RedeemableERC20 extends BaseContract {
 
     DISTRIBUTOR_BURNER(overrides?: CallOverrides): Promise<BigNumber>;
 
-    MAX_REDEEMABLES(overrides?: CallOverrides): Promise<BigNumber>;
-
     MINIMUM_INITIAL_SUPPLY(overrides?: CallOverrides): Promise<BigNumber>;
 
     RECEIVER(overrides?: CallOverrides): Promise<BigNumber>;
 
-    REDEEMABLE_ADDER(overrides?: CallOverrides): Promise<BigNumber>;
-
     SENDER(overrides?: CallOverrides): Promise<BigNumber>;
 
     UNINITIALIZED(overrides?: CallOverrides): Promise<BigNumber>;
-
-    addRedeemable(
-      newRedeemable_: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
 
     allowance(
       owner: string,
@@ -1224,8 +1138,6 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    getRedeemables(overrides?: CallOverrides): Promise<BigNumber>;
-
     getRoleAdmin(
       role: BytesLike,
       overrides?: CallOverrides
@@ -1270,6 +1182,11 @@ export class RedeemableERC20 extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
+    newTreasuryAsset(
+      newTreasuryAsset_: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     phaseAtBlockNumber(
       phaseBlocks_: [
         BigNumberish,
@@ -1291,12 +1208,7 @@ export class RedeemableERC20 extends BaseContract {
     ): Promise<BigNumber>;
 
     redeem(
-      redeemAmount_: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    redeemSpecific(
-      specificRedeemables_: string[],
+      treasuryAssets_: string[],
       redeemAmount_: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -1342,24 +1254,15 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    MAX_REDEEMABLES(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     MINIMUM_INITIAL_SUPPLY(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     RECEIVER(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    REDEEMABLE_ADDER(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     SENDER(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     UNINITIALIZED(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    addRedeemable(
-      newRedeemable_: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
 
     allowance(
       owner: string,
@@ -1421,8 +1324,6 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    getRedeemables(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     getRoleAdmin(
       role: BytesLike,
       overrides?: CallOverrides
@@ -1467,6 +1368,11 @@ export class RedeemableERC20 extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    newTreasuryAsset(
+      newTreasuryAsset_: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     phaseAtBlockNumber(
       phaseBlocks_: [
         BigNumberish,
@@ -1488,12 +1394,7 @@ export class RedeemableERC20 extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     redeem(
-      redeemAmount_: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    redeemSpecific(
-      specificRedeemables_: string[],
+      treasuryAssets_: string[],
       redeemAmount_: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
