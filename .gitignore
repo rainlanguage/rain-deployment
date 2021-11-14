@@ -4,6 +4,7 @@ coverage
 coverage.json
 typechain
 /new
+/solt
 
 #Hardhat files
 cache
