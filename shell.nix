@@ -7,8 +7,17 @@ let
   mv solc-* solt
  '';
 
+ build-solt = pkgs.writeShellScriptBin "build-solt" ''
+  mkdir -p new
+  solc --standard-json scripts/dist/solt/solc-input-redeemableerc20factory.json | cat > data-redeemableerc20factory.json
+  solc --standard-json scripts/dist/solt/solc-input-redeemableerc20poolfactory.json | cat > data-redeemableerc20poolfactory.json
+  solc --standard-json scripts/dist/solt/solc-input-seederc20factory.json | cat > data-seederc20factory.json
+  solc --standard-json scripts/dist/solt/solc-input-trustfactory.json | cat > data-trustfactory.json
+  mv data-* new
+ '';
+
  compile = pkgs.writeShellScriptBin "compile" ''
-  yarn compile --force
+  yarn compile
  '';
   
 in
@@ -18,6 +27,7 @@ pkgs.stdenv.mkDerivation {
   pkgs.nodejs-14_x
   solt-the-earth
   compile
+  build-solt
  ];
 
  shellHook = ''
