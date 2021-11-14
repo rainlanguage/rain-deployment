@@ -8,7 +8,7 @@ build solt
 ```
 
 # Compile from solt JSON
-This is a custom script to compile from Solt files. It is for testing purpose and must be ignored. You should have the correct solc version in you computer to run it. It is specific only for the target contracts on the script. In nix-shell run:
+This is a custom script to compile from Solt files. It is for testing purpose and must be ignored. You should have the correct solc version in you computer to run it. It is specific only for the target contracts on the script with the solc compiler v0.6.12+commit.27d51765. In nix-shell run:
 ```shel
 json-compile
 ```
