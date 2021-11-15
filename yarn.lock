@@ -1071,10 +1071,10 @@
     truffle-plugin-verify "^0.4.0"
     yarn "^1.22.5"
 
-"@beehiveinnovation/rain-protocol@^0.0.13":
-  version "0.0.13"
-  resolved "https://registry.yarnpkg.com/@beehiveinnovation/rain-protocol/-/rain-protocol-0.0.13.tgz#2a900ef39dbc425400554b55f276a6a1abe3d80e"
-  integrity sha512-lbo7dQQ4nsVERQEbuTyIXf0B4sTOALdwWv2Q3QBSPKsCYsQOc0OQmjYKF+PjZlla5f7v5rvMTAnTPQ8oQx+6lg==
+"@beehiveinnovation/rain-protocol@^0.0.14":
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/@beehiveinnovation/rain-protocol/-/rain-protocol-0.0.14.tgz#1cc0442b03ff8f9f6ea39dee209c2fb6649baac2"
+  integrity sha512-xYu63IDD4CI6+61JoFsnFQNK/5cq9WOUmuHqb1RzcYX4oAmW8YN6brufYNyJWnjCMYmtKHkCLk6OiQ/hrjUO9g==
   dependencies:
     "@openzeppelin/contracts" "^3.3.0"
 
