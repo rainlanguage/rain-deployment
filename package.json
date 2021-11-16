@@ -5,13 +5,15 @@
     "deploy-rain-reef": "hardhat run scripts/deploy-rain-reef.ts",
     "deploy-verify-tier-reef": "hardhat run scripts/deploy-verify-tier-reef.ts",
     "flat-contracts": "sol-merger \"./contracts/**/*.sol\" ./scripts/dist/flaten-contracts",
-    "compile": "hardhat compile --force"
+    "compile": "hardhat compile --force",
+    "create-child": "hardhat run scripts/transactions/create-child-otherChain.ts",
+    "deploy-child-reef": "hardhat run scripts/transactions/create-child-reef.ts",
+    "emit-events": "hardhat run scripts/transactions/emit-events.ts"
   },
   "dependencies": {
     "@beehiveinnovation/balancer-core": "^0.0.7",
     "@beehiveinnovation/configurable-rights-pool": "^0.0.1",
-    "@beehiveinnovation/rain-protocol": "^0.0.13",
-    "solc": "0.6.12"
+    "@beehiveinnovation/rain-protocol": "^0.0.14"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",

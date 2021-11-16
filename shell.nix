@@ -1,35 +1,64 @@
 let
  pkgs = import <nixpkgs> {};
 
- mnemonic = pkgs.writeShellScriptBin "mnemonic" ''
-  mnemonics
- '';
+   flush-all = pkgs.writeShellScriptBin "flush-all" ''
+    rm -rf artifacts
+    rm -rf cache
+    rm -rf typechain
+    rm -rf bin
+  '';
 
- local-node = pkgs.writeShellScriptBin "local-node" ''
-  cd balancer-local-dev && npx hardhat node
- '';
+  cut-dist = pkgs.writeShellScriptBin "cut-dist" ''
+    flush-all
 
- local-fork = pkgs.writeShellScriptBin "local-fork" ''
- hardhat node --fork https://eth-mainnet.alchemyapi.io/v2/G0Vg_iZFiAuUD6hjXqcVg-Nys-NGiTQy --fork-block-number 11833335
- '';
+    hardhat compile --force
+    rm -rf dist
+    mkdir -p "dist"
+    solt-the-earth
 
- local-test = pkgs.writeShellScriptBin "local-test" ''
- hardhat test --network localhost
- '';
+    cp -r "artifacts" "dist"
+    cp -r "typechain" "dist"
+    cp -r "solt" "dist"
+  '';
 
- local-deploy = pkgs.writeShellScriptBin "local-deploy" ''
-  cd balancer-local-dev && npx hardhat run --network localhost scripts/deploy-local.ts
- '';
+  solt-the-earth = pkgs.writeShellScriptBin "solt-the-earth" ''
+    mkdir -p solt
+    find contracts -type f -not -path 'contracts/test/*' | xargs -i solt write '{}' --npm --runs 100000
+    rain-protocol-solt
+    mv solc-* solt
+  '';
+
+  rain-protocol-solt = pkgs.writeShellScriptBin "rain-protocol-solt" ''
+    buildPath=`cat artifacts/contracts/trust/TrustFactory.sol/TrustFactory.dbg.json | jq '.buildInfo'`
+    buildPath=artifacts/"''${buildPath:10:(''${#buildPath}-11)}"
+    cat "''${buildPath}" | jq '.input' | cat > solc-input-rainprotocol.json
+  '';
+
+  deploy-rain = pkgs.writeShellScriptBin "deploy-rain" ''
+    yarn deploy-rain
+  '';
+
+  deploy-rain-mumbai = pkgs.writeShellScriptBin "deploy-rain-mumbai" ''
+    yarn deploy-rain --network mumbai
+  '';
+
+  deploy-rain-reef-testnet = pkgs.writeShellScriptBin "deploy-rain-reef-testnet" ''
+    yarn deploy-rain-reef --network reef_testnet
+  '';
+  
 in
 pkgs.stdenv.mkDerivation {
  name = "shell";
  buildInputs = [
   pkgs.nodejs-14_x
-  mnemonic
-  local-node
-  local-deploy
-  local-test
-  local-fork
+  pkgs.jq
+  deploy-rain-mumbai
+  deploy-rain-reef-testnet
+  deploy-rain
+  flush-all
+  cut-dist
+  rain-protocol-solt
+  solt-the-earth
  ];
 
  shellHook = ''

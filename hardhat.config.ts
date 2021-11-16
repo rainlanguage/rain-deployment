@@ -28,40 +28,225 @@ const config:any = {
     compilers: [
       {
         version: "0.6.12",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 100000,
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
           },
-        },
+          "optimizer": {
+            "enabled": true,
+            "runs": 100000
+          },
+          "evmVersion": 'istanbul'
+        }
       },
       {
         version: "0.5.12",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 100,
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
           },
-        },
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          evmVersion: "byzantium"
+        }
       },
     ],
     overrides: {
-      "contracts/configurable-rights-pool/contracts/CRPFactory.sol": {
-        version: "0.6.12",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 200,
+      "contracts/test/BalancerCoreImports.sol": {
+        version: "0.5.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
           },
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          evmVersion: "byzantium"
         }
       },
-      "@beehiveinnovation/configurable-rights-pool/contracts/CRPFactory.sol": {
+      "contracts/test/ClaimERC1155Test.sol": {
         version: "0.6.12",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 200,
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
           },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/test/ConfigurableRightsPoolImports.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/test/PhasedScheduleTest.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/test/PhasedTest.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/test/RedeemableERC20Reentrant.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/test/ReserveToken.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/test/ReserveTokenTest.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/test/SeedERC20ForceSendEther.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/test/SeedERC20Reentrant.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/test/TierByConstructionClaimTest.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/test/TierByConstructionTest.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/test/TierUtilTest.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/test/TrustReentrant.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
+        }
+      },
+      "contracts/test/ValueTierTest.sol": {
+        version: "0.6.12",
+        "settings": {
+          "metadata": {
+            "useLiteralContent": true
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          evmVersion: 'istanbul'
         }
       }
     }
@@ -71,6 +256,7 @@ const config:any = {
       url: process.env.ROPSTEN_URL || "",
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+        gasPrice: 10e9,
     },
     reef_mainnet: {
       url: "wss://rpc.reefscan.com/ws",
@@ -86,7 +272,8 @@ const config:any = {
     },
     mumbai: {
       url: "https://rpc-mumbai.maticvigil.com",
-      accounts: process.env.MUMBAI_PRIVATE_KEY !== undefined ? [process.env.MUMBAI_PRIVATE_KEY] : [],
+      accounts: process.env.MNEMONIC !== undefined ? {mnemonic: process.env.MNEMONIC} : [process.env.MUMBAI_PRIVATE_KEY],
+      gasPrice: 10e9,
     },
     avalanche: {
       url: 'https://api.avax.network/ext/bc/C/rpc',
@@ -96,13 +283,14 @@ const config:any = {
     },
     fuji: {
       url: 'https://api.avax-test.network/ext/bc/C/rpc',
-      gasPrice: 225000000000,
+      gasPrice: 25000000000,
       chainId: 43113,
       accounts: process.env.AVALANCHE_PRIVATE_KEY !== undefined ? [process.env.AVALANCHE_PRIVATE_KEY] : [],
     },
     rinkeby: {
-      url: `https://eth-rinkeby.alchemyapi.io/v2/osbn9I1B4bzSpo25FcPLC6zM0OyA8_7_`,
+      url: process.env.RINKEBY_URL || "",
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      gasPrice: 10e9,
     },
   },
   gasReporter: {
