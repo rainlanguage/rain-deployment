@@ -3,7 +3,7 @@ import { expect } from "chai";
 import * as Util from "./Utils"
 const checkSumAddress = ethers.utils.getAddress;
 
-const FACTORY_ADDRESS = "0x189fa3395F099111F924a405563a4C1b9F9c1f9e";
+const FACTORY_ADDRESS = "0xb5254bb93572c9F5CF1240E04f6C6F44617bc2Aa"; //mumbai
 
 import type { TierByConstructionClaim } from "../../dist/typechain/TierByConstructionClaim";
 import type { ReadWriteTier } from "../../dist/typechain/ReadWriteTier";
@@ -14,16 +14,18 @@ import type { RedeemableERC20 } from "../../dist/typechain/RedeemableERC20";
 import type { TrustFactory } from "../../dist/typechain/TrustFactory";
 import type { Trust } from "../../dist/typechain/Trust";
 
-const TRUSTFACTORY = require("../dist/artifacts/contracts/rain-protocol/contracts/trust/TrustFactory.sol/TrustFactory.json");
-const TRUST = require("../dist/artifacts/contracts/rain-protocol/contracts/trust/Trust.sol/Trust.json");
-const SEED = require("../dist/artifacts/contracts/rain-protocol/contracts/seed/SeedERC20.sol/SeedERC20.json");
-const POOL = require("../dist/artifacts/contracts/rain-protocol/contracts/pool/RedeemableERC20Pool.sol/RedeemableERC20Pool.json");
-const REDEEMABLEERC20 = require("../dist/artifacts/contracts/rain-protocol/contracts/redeemableERC20/RedeemableERC20.sol/RedeemableERC20.json");
+// Until we get the new version in @beehiveinnovation package or using 
+// directly the sub-module, compile with the new hardhat config, and target to those artifacts
+const TRUSTFACTORY = require("../../dist/artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json");
+const TRUST = require("../../dist/artifacts/contracts/trust/Trust.sol/Trust.json");
+const SEED = require("../../dist/artifacts/contracts/seed/SeedERC20.sol/SeedERC20.json");
+const POOL = require("../../dist/artifacts/contracts/pool/RedeemableERC20Pool.sol/RedeemableERC20Pool.json");
+const REDEEMABLEERC20 = require("../../dist/artifacts/contracts/redeemableERC20/RedeemableERC20.sol/RedeemableERC20.json");
 
 //
-const RESERVE_TOKEN = require("../dist/artifacts/contracts/rain-protocol/contracts/test/ReserveToken.sol/ReserveToken.json");
-const READWRITE_TIER = require("../dist/artifacts/contracts/rain-protocol/contracts/tier/ReadWriteTier.sol/ReadWriteTier.json");
-const TIERBYCONSTRUCTION = require("../dist/artifacts/contracts/rain-protocol/contracts/claim/TierByConstructionClaim.sol/TierByConstructionClaim.json");
+const RESERVE_TOKEN = require("../../dist/artifacts/contracts/test/ReserveToken.sol/ReserveToken.json");
+const READWRITE_TIER = require("../../dist/artifacts/contracts/tier/ReadWriteTier.sol/ReadWriteTier.json");
+const TIERBYCONSTRUCTION = require("../../dist/artifacts/contracts/claim/TierByConstructionClaim.sol/TierByConstructionClaim.json");
 
 
 enum Tier {
