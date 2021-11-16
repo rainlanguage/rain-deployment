@@ -1,7 +1,9 @@
 {
   "scripts": {
     "deploy-rain": "hardhat run scripts/deploy-rain.ts",
+    "deploy-verify-tier": "hardhat run scripts/deploy-verify-tier-reef.ts",
     "deploy-rain-reef": "hardhat run scripts/deploy-rain-reef.ts",
+    "deploy-verify-tier-reef": "hardhat run scripts/deploy-verify-tier-reef.ts",
     "flat-contracts": "sol-merger \"./contracts/**/*.sol\" ./scripts/dist/flaten-contracts",
     "compile": "hardhat compile --force",
     "create-child": "hardhat run scripts/transactions/create-child-otherChain.ts",
