@@ -2,9 +2,36 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Signer, utils, Contract, ContractFactory, Overrides } from "ethers";
+import { Signer } from "ethers";
 import { Provider, TransactionRequest } from "@ethersproject/providers";
-import type { AlwaysTier, AlwaysTierInterface } from "../AlwaysTier";
+import { Contract, ContractFactory, Overrides } from "@ethersproject/contracts";
+
+import type { AlwaysTier } from "../AlwaysTier";
+
+export class AlwaysTier__factory extends ContractFactory {
+  constructor(signer?: Signer) {
+    super(_abi, _bytecode, signer);
+  }
+
+  deploy(overrides?: Overrides): Promise<AlwaysTier> {
+    return super.deploy(overrides || {}) as Promise<AlwaysTier>;
+  }
+  getDeployTransaction(overrides?: Overrides): TransactionRequest {
+    return super.getDeployTransaction(overrides || {});
+  }
+  attach(address: string): AlwaysTier {
+    return super.attach(address) as AlwaysTier;
+  }
+  connect(signer: Signer): AlwaysTier__factory {
+    return super.connect(signer) as AlwaysTier__factory;
+  }
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): AlwaysTier {
+    return new Contract(address, _abi, signerOrProvider) as AlwaysTier;
+  }
+}
 
 const _abi = [
   {
@@ -77,44 +104,4 @@ const _abi = [
 ];
 
 const _bytecode =
-  "0x608060405234801561001057600080fd5b506101f0806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c806352dab69d1461003b578063e053ea3114610108575b600080fd5b6101066004803603606081101561005157600080fd5b73ffffffffffffffffffffffffffffffffffffffff8235169160ff6020820135169181019060608101604082013564010000000081111561009157600080fd5b8201836020820111156100a357600080fd5b803590602001918460018302840111640100000000831117156100c557600080fd5b91908080601f01602080910402602001604051908101604052809392919081815260200183838082843760009201919091525092955061014d945050505050565b005b61013b6004803603602081101561011e57600080fd5b503573ffffffffffffffffffffffffffffffffffffffff166101b4565b60408051918252519081900360200190f35b604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152600860248201527f5345545f54494552000000000000000000000000000000000000000000000000604482015290519081900360640190fd5b5060009056fea2646970667358221220e2126a6d71d7332c1fd02e45013c032f102815390afc17b789123444c3869dd064736f6c634300060c0033";
-
-export class AlwaysTier__factory extends ContractFactory {
-  constructor(
-    ...args: [signer: Signer] | ConstructorParameters<typeof ContractFactory>
-  ) {
-    if (args.length === 1) {
-      super(_abi, _bytecode, args[0]);
-    } else {
-      super(...args);
-    }
-  }
-
-  deploy(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<AlwaysTier> {
-    return super.deploy(overrides || {}) as Promise<AlwaysTier>;
-  }
-  getDeployTransaction(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): TransactionRequest {
-    return super.getDeployTransaction(overrides || {});
-  }
-  attach(address: string): AlwaysTier {
-    return super.attach(address) as AlwaysTier;
-  }
-  connect(signer: Signer): AlwaysTier__factory {
-    return super.connect(signer) as AlwaysTier__factory;
-  }
-  static readonly bytecode = _bytecode;
-  static readonly abi = _abi;
-  static createInterface(): AlwaysTierInterface {
-    return new utils.Interface(_abi) as AlwaysTierInterface;
-  }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): AlwaysTier {
-    return new Contract(address, _abi, signerOrProvider) as AlwaysTier;
-  }
-}
+  "0x608060405234801561001057600080fd5b506101f0806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c806352dab69d1461003b578063e053ea3114610108575b600080fd5b6101066004803603606081101561005157600080fd5b73ffffffffffffffffffffffffffffffffffffffff8235169160ff6020820135169181019060608101604082013564010000000081111561009157600080fd5b8201836020820111156100a357600080fd5b803590602001918460018302840111640100000000831117156100c557600080fd5b91908080601f01602080910402602001604051908101604052809392919081815260200183838082843760009201919091525092955061014d945050505050565b005b61013b6004803603602081101561011e57600080fd5b503573ffffffffffffffffffffffffffffffffffffffff166101b4565b60408051918252519081900360200190f35b604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152600860248201527f5345545f54494552000000000000000000000000000000000000000000000000604482015290519081900360640190fd5b5060009056fea2646970667358221220a24a9dabf42aeee8799c071f4b2233e36f834483dc05126458356132bc64194364736f6c634300060c0033";

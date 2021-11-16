@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IFactory",
-  "sourceName": "contracts/rain-protocol/contracts/factory/IFactory.sol",
+  "sourceName": "contracts/factory/IFactory.sol",
   "abi": [
     {
       "anonymous": false,

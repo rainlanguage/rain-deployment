@@ -2,12 +2,19 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from "ethers";
+import { Contract, Signer } from "ethers";
 import { Provider } from "@ethersproject/providers";
-import type {
-  BalancerOwnable,
-  BalancerOwnableInterface,
-} from "../BalancerOwnable";
+
+import type { BalancerOwnable } from "../BalancerOwnable";
+
+export class BalancerOwnable__factory {
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): BalancerOwnable {
+    return new Contract(address, _abi, signerOrProvider) as BalancerOwnable;
+  }
+}
 
 const _abi = [
   {
@@ -56,16 +63,3 @@ const _abi = [
     type: "function",
   },
 ];
-
-export class BalancerOwnable__factory {
-  static readonly abi = _abi;
-  static createInterface(): BalancerOwnableInterface {
-    return new utils.Interface(_abi) as BalancerOwnableInterface;
-  }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): BalancerOwnable {
-    return new Contract(address, _abi, signerOrProvider) as BalancerOwnable;
-  }
-}

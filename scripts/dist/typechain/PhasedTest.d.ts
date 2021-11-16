@@ -9,15 +9,16 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface PhasedTestInterface extends ethers.utils.Interface {
   functions: {
@@ -146,57 +147,40 @@ interface PhasedTestInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "PhaseShiftScheduled"): EventFragment;
 }
 
-export type PhaseShiftScheduledEvent = TypedEvent<
-  [number] & { newPhaseBlock_: number }
->;
-
-export class PhasedTest extends BaseContract {
+export class PhasedTest extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: PhasedTestInterface;
 
   functions: {
     UNINITIALIZED(overrides?: CallOverrides): Promise<[number]>;
 
+    "UNINITIALIZED()"(overrides?: CallOverrides): Promise<[number]>;
+
     blockNumberForPhase(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[number]>;
+
+    "blockNumberForPhase(uint32[8],uint8)"(
       phaseBlocks_: [
         BigNumberish,
         BigNumberish,
@@ -213,9 +197,28 @@ export class PhasedTest extends BaseContract {
 
     currentPhase(overrides?: CallOverrides): Promise<[number]>;
 
+    "currentPhase()"(overrides?: CallOverrides): Promise<[number]>;
+
     hookCondition(overrides?: CallOverrides): Promise<[boolean]>;
 
+    "hookCondition()"(overrides?: CallOverrides): Promise<[boolean]>;
+
     phaseAtBlockNumber(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      blockNumber_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[number]>;
+
+    "phaseAtBlockNumber(uint32[8],uint32)"(
       phaseBlocks_: [
         BigNumberish,
         BigNumberish,
@@ -235,7 +238,17 @@ export class PhasedTest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[number]>;
 
+    "phaseBlocks(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[number]>;
+
     runsOnlyAtLeastPhase(
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    "runsOnlyAtLeastPhase(uint8)"(
       phase_: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
@@ -245,17 +258,31 @@ export class PhasedTest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    "runsOnlyPhase(uint8)"(
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     testScheduleNextPhase(
       nextPhaseBlock_: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    toggleHookCondition(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "testScheduleNextPhase(uint32)"(
+      nextPhaseBlock_: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    toggleHookCondition(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "toggleHookCondition()"(
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
 
   UNINITIALIZED(overrides?: CallOverrides): Promise<number>;
+
+  "UNINITIALIZED()"(overrides?: CallOverrides): Promise<number>;
 
   blockNumberForPhase(
     phaseBlocks_: [
@@ -272,9 +299,28 @@ export class PhasedTest extends BaseContract {
     overrides?: CallOverrides
   ): Promise<number>;
 
+  "blockNumberForPhase(uint32[8],uint8)"(
+    phaseBlocks_: [
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ],
+    phase_: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<number>;
+
   currentPhase(overrides?: CallOverrides): Promise<number>;
 
+  "currentPhase()"(overrides?: CallOverrides): Promise<number>;
+
   hookCondition(overrides?: CallOverrides): Promise<boolean>;
+
+  "hookCondition()"(overrides?: CallOverrides): Promise<boolean>;
 
   phaseAtBlockNumber(
     phaseBlocks_: [
@@ -291,9 +337,34 @@ export class PhasedTest extends BaseContract {
     overrides?: CallOverrides
   ): Promise<number>;
 
+  "phaseAtBlockNumber(uint32[8],uint32)"(
+    phaseBlocks_: [
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ],
+    blockNumber_: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<number>;
+
   phaseBlocks(arg0: BigNumberish, overrides?: CallOverrides): Promise<number>;
 
+  "phaseBlocks(uint256)"(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<number>;
+
   runsOnlyAtLeastPhase(
+    phase_: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  "runsOnlyAtLeastPhase(uint8)"(
     phase_: BigNumberish,
     overrides?: CallOverrides
   ): Promise<boolean>;
@@ -303,19 +374,46 @@ export class PhasedTest extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  "runsOnlyPhase(uint8)"(
+    phase_: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   testScheduleNextPhase(
     nextPhaseBlock_: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  toggleHookCondition(
-    overrides?: Overrides & { from?: string | Promise<string> }
+  "testScheduleNextPhase(uint32)"(
+    nextPhaseBlock_: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
+
+  toggleHookCondition(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "toggleHookCondition()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   callStatic: {
     UNINITIALIZED(overrides?: CallOverrides): Promise<number>;
 
+    "UNINITIALIZED()"(overrides?: CallOverrides): Promise<number>;
+
     blockNumberForPhase(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<number>;
+
+    "blockNumberForPhase(uint32[8],uint8)"(
       phaseBlocks_: [
         BigNumberish,
         BigNumberish,
@@ -332,7 +430,11 @@ export class PhasedTest extends BaseContract {
 
     currentPhase(overrides?: CallOverrides): Promise<number>;
 
+    "currentPhase()"(overrides?: CallOverrides): Promise<number>;
+
     hookCondition(overrides?: CallOverrides): Promise<boolean>;
+
+    "hookCondition()"(overrides?: CallOverrides): Promise<boolean>;
 
     phaseAtBlockNumber(
       phaseBlocks_: [
@@ -349,9 +451,34 @@ export class PhasedTest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<number>;
 
+    "phaseAtBlockNumber(uint32[8],uint32)"(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      blockNumber_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<number>;
+
     phaseBlocks(arg0: BigNumberish, overrides?: CallOverrides): Promise<number>;
 
+    "phaseBlocks(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<number>;
+
     runsOnlyAtLeastPhase(
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "runsOnlyAtLeastPhase(uint8)"(
       phase_: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
@@ -361,28 +488,51 @@ export class PhasedTest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "runsOnlyPhase(uint8)"(
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     testScheduleNextPhase(
       nextPhaseBlock_: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "testScheduleNextPhase(uint32)"(
+      nextPhaseBlock_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     toggleHookCondition(overrides?: CallOverrides): Promise<void>;
+
+    "toggleHookCondition()"(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
-    "PhaseShiftScheduled(uint32)"(
-      newPhaseBlock_?: BigNumberish | null
-    ): TypedEventFilter<[number], { newPhaseBlock_: number }>;
-
-    PhaseShiftScheduled(
-      newPhaseBlock_?: BigNumberish | null
-    ): TypedEventFilter<[number], { newPhaseBlock_: number }>;
+    PhaseShiftScheduled(newPhaseBlock_: BigNumberish | null): EventFilter;
   };
 
   estimateGas: {
     UNINITIALIZED(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "UNINITIALIZED()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     blockNumberForPhase(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "blockNumberForPhase(uint32[8],uint8)"(
       phaseBlocks_: [
         BigNumberish,
         BigNumberish,
@@ -399,9 +549,28 @@ export class PhasedTest extends BaseContract {
 
     currentPhase(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "currentPhase()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     hookCondition(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "hookCondition()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     phaseAtBlockNumber(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      blockNumber_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "phaseAtBlockNumber(uint32[8],uint32)"(
       phaseBlocks_: [
         BigNumberish,
         BigNumberish,
@@ -421,7 +590,17 @@ export class PhasedTest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "phaseBlocks(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     runsOnlyAtLeastPhase(
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "runsOnlyAtLeastPhase(uint8)"(
       phase_: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -431,18 +610,30 @@ export class PhasedTest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    testScheduleNextPhase(
-      nextPhaseBlock_: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "runsOnlyPhase(uint8)"(
+      phase_: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    toggleHookCondition(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    testScheduleNextPhase(
+      nextPhaseBlock_: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
+
+    "testScheduleNextPhase(uint32)"(
+      nextPhaseBlock_: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    toggleHookCondition(overrides?: Overrides): Promise<BigNumber>;
+
+    "toggleHookCondition()"(overrides?: Overrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
     UNINITIALIZED(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "UNINITIALIZED()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     blockNumberForPhase(
       phaseBlocks_: [
@@ -459,11 +650,45 @@ export class PhasedTest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "blockNumberForPhase(uint32[8],uint8)"(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     currentPhase(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "currentPhase()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     hookCondition(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "hookCondition()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     phaseAtBlockNumber(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      blockNumber_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "phaseAtBlockNumber(uint32[8],uint32)"(
       phaseBlocks_: [
         BigNumberish,
         BigNumberish,
@@ -483,7 +708,17 @@ export class PhasedTest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "phaseBlocks(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     runsOnlyAtLeastPhase(
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "runsOnlyAtLeastPhase(uint8)"(
       phase_: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -493,13 +728,25 @@ export class PhasedTest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    testScheduleNextPhase(
-      nextPhaseBlock_: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "runsOnlyPhase(uint8)"(
+      phase_: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    toggleHookCondition(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    testScheduleNextPhase(
+      nextPhaseBlock_: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "testScheduleNextPhase(uint32)"(
+      nextPhaseBlock_: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    toggleHookCondition(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "toggleHookCondition()"(
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };
 }

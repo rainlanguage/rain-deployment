@@ -9,15 +9,16 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface SeedERC20Interface extends ethers.utils.Interface {
   functions: {
@@ -225,108 +226,41 @@ interface SeedERC20Interface extends ethers.utils.Interface {
     "OwnershipTransferred(address,address)": EventFragment;
     "PhaseShiftScheduled(uint32)": EventFragment;
     "Redeem(address,uint256[2])": EventFragment;
-    "Seed(address,uint256[2])": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
-    "Unseed(address,uint256[2])": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PhaseShiftScheduled"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Redeem"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Seed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Unseed"): EventFragment;
 }
 
-export type ApprovalEvent = TypedEvent<
-  [string, string, BigNumber] & {
-    owner: string;
-    spender: string;
-    value: BigNumber;
-  }
->;
-
-export type OwnershipTransferredEvent = TypedEvent<
-  [string, string] & { previousOwner: string; newOwner: string }
->;
-
-export type PhaseShiftScheduledEvent = TypedEvent<
-  [number] & { newPhaseBlock_: number }
->;
-
-export type RedeemEvent = TypedEvent<
-  [string, [BigNumber, BigNumber]] & {
-    redeemer: string;
-    redeemAmounts: [BigNumber, BigNumber];
-  }
->;
-
-export type SeedEvent = TypedEvent<
-  [string, [BigNumber, BigNumber]] & {
-    seeder: string;
-    seedAmounts: [BigNumber, BigNumber];
-  }
->;
-
-export type TransferEvent = TypedEvent<
-  [string, string, BigNumber] & { from: string; to: string; value: BigNumber }
->;
-
-export type UnseedEvent = TypedEvent<
-  [string, [BigNumber, BigNumber]] & {
-    unseeder: string;
-    unseedAmounts: [BigNumber, BigNumber];
-  }
->;
-
-export class SeedERC20 extends BaseContract {
+export class SeedERC20 extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: SeedERC20Interface;
 
   functions: {
     UNINITIALIZED(overrides?: CallOverrides): Promise<[number]>;
 
+    "UNINITIALIZED()"(overrides?: CallOverrides): Promise<[number]>;
+
     allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -335,12 +269,38 @@ export class SeedERC20 extends BaseContract {
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     blockNumberForPhase(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[number]>;
+
+    "blockNumberForPhase(uint32[8],uint8)"(
       phaseBlocks_: [
         BigNumberish,
         BigNumberish,
@@ -357,29 +317,71 @@ export class SeedERC20 extends BaseContract {
 
     cooldownDuration(overrides?: CallOverrides): Promise<[number]>;
 
+    "cooldownDuration()"(overrides?: CallOverrides): Promise<[number]>;
+
     cooldowns(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "cooldowns(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     currentPhase(overrides?: CallOverrides): Promise<[number]>;
 
+    "currentPhase()"(overrides?: CallOverrides): Promise<[number]>;
+
     decimals(overrides?: CallOverrides): Promise<[number]>;
+
+    "decimals()"(overrides?: CallOverrides): Promise<[number]>;
 
     decreaseAllowance(
       spender: string,
       subtractedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "decreaseAllowance(address,uint256)"(
+      spender: string,
+      subtractedValue: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "increaseAllowance(address,uint256)"(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
+    "name()"(overrides?: CallOverrides): Promise<[string]>;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
 
+    "owner()"(overrides?: CallOverrides): Promise<[string]>;
+
     phaseAtBlockNumber(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      blockNumber_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[number]>;
+
+    "phaseAtBlockNumber(uint32[8],uint32)"(
       phaseBlocks_: [
         BigNumberish,
         BigNumberish,
@@ -399,58 +401,115 @@ export class SeedERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[number]>;
 
+    "phaseBlocks(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[number]>;
+
     recipient(overrides?: CallOverrides): Promise<[string]>;
+
+    "recipient()"(overrides?: CallOverrides): Promise<[string]>;
 
     redeem(
       units_: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "redeem(uint256)"(
+      units_: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
+
+    renounceOwnership(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "renounceOwnership()"(overrides?: Overrides): Promise<ContractTransaction>;
 
     reserve(overrides?: CallOverrides): Promise<[string]>;
+
+    "reserve()"(overrides?: CallOverrides): Promise<[string]>;
 
     seed(
       minimumUnits_: BigNumberish,
       desiredUnits_: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "seed(uint256,uint256)"(
+      minimumUnits_: BigNumberish,
+      desiredUnits_: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     seedPrice(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "seedPrice()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<[string]>;
+
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "transferFrom(address,address,uint256)"(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     transferOwnership(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "transferOwnership(address)"(
+      newOwner: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     unseed(
       units_: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "unseed(uint256)"(
+      units_: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
 
   UNINITIALIZED(overrides?: CallOverrides): Promise<number>;
 
+  "UNINITIALIZED()"(overrides?: CallOverrides): Promise<number>;
+
   allowance(
+    owner: string,
+    spender: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "allowance(address,address)"(
     owner: string,
     spender: string,
     overrides?: CallOverrides
@@ -459,10 +518,21 @@ export class SeedERC20 extends BaseContract {
   approve(
     spender: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "approve(address,uint256)"(
+    spender: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  "balanceOf(address)"(
+    account: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   blockNumberForPhase(
     phaseBlocks_: [
@@ -479,29 +549,71 @@ export class SeedERC20 extends BaseContract {
     overrides?: CallOverrides
   ): Promise<number>;
 
+  "blockNumberForPhase(uint32[8],uint8)"(
+    phaseBlocks_: [
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ],
+    phase_: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<number>;
+
   cooldownDuration(overrides?: CallOverrides): Promise<number>;
+
+  "cooldownDuration()"(overrides?: CallOverrides): Promise<number>;
 
   cooldowns(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+  "cooldowns(address)"(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   currentPhase(overrides?: CallOverrides): Promise<number>;
 
+  "currentPhase()"(overrides?: CallOverrides): Promise<number>;
+
   decimals(overrides?: CallOverrides): Promise<number>;
+
+  "decimals()"(overrides?: CallOverrides): Promise<number>;
 
   decreaseAllowance(
     spender: string,
     subtractedValue: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "decreaseAllowance(address,uint256)"(
+    spender: string,
+    subtractedValue: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   increaseAllowance(
     spender: string,
     addedValue: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "increaseAllowance(address,uint256)"(
+    spender: string,
+    addedValue: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
+  "name()"(overrides?: CallOverrides): Promise<string>;
+
   owner(overrides?: CallOverrides): Promise<string>;
+
+  "owner()"(overrides?: CallOverrides): Promise<string>;
 
   phaseAtBlockNumber(
     phaseBlocks_: [
@@ -518,60 +630,132 @@ export class SeedERC20 extends BaseContract {
     overrides?: CallOverrides
   ): Promise<number>;
 
+  "phaseAtBlockNumber(uint32[8],uint32)"(
+    phaseBlocks_: [
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ],
+    blockNumber_: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<number>;
+
   phaseBlocks(arg0: BigNumberish, overrides?: CallOverrides): Promise<number>;
+
+  "phaseBlocks(uint256)"(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<number>;
 
   recipient(overrides?: CallOverrides): Promise<string>;
 
+  "recipient()"(overrides?: CallOverrides): Promise<string>;
+
   redeem(
     units_: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  renounceOwnership(
-    overrides?: Overrides & { from?: string | Promise<string> }
+  "redeem(uint256)"(
+    units_: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
+
+  renounceOwnership(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "renounceOwnership()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   reserve(overrides?: CallOverrides): Promise<string>;
+
+  "reserve()"(overrides?: CallOverrides): Promise<string>;
 
   seed(
     minimumUnits_: BigNumberish,
     desiredUnits_: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "seed(uint256,uint256)"(
+    minimumUnits_: BigNumberish,
+    desiredUnits_: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   seedPrice(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "seedPrice()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   symbol(overrides?: CallOverrides): Promise<string>;
 
+  "symbol()"(overrides?: CallOverrides): Promise<string>;
+
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   transfer(
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "transfer(address,uint256)"(
+    recipient: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   transferFrom(
     sender: string,
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "transferFrom(address,address,uint256)"(
+    sender: string,
+    recipient: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   transferOwnership(
     newOwner: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "transferOwnership(address)"(
+    newOwner: string,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   unseed(
     units_: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "unseed(uint256)"(
+    units_: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   callStatic: {
     UNINITIALIZED(overrides?: CallOverrides): Promise<number>;
 
+    "UNINITIALIZED()"(overrides?: CallOverrides): Promise<number>;
+
     allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -583,9 +767,35 @@ export class SeedERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     blockNumberForPhase(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<number>;
+
+    "blockNumberForPhase(uint32[8],uint8)"(
       phaseBlocks_: [
         BigNumberish,
         BigNumberish,
@@ -602,13 +812,30 @@ export class SeedERC20 extends BaseContract {
 
     cooldownDuration(overrides?: CallOverrides): Promise<number>;
 
+    "cooldownDuration()"(overrides?: CallOverrides): Promise<number>;
+
     cooldowns(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "cooldowns(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     currentPhase(overrides?: CallOverrides): Promise<number>;
 
+    "currentPhase()"(overrides?: CallOverrides): Promise<number>;
+
     decimals(overrides?: CallOverrides): Promise<number>;
 
+    "decimals()"(overrides?: CallOverrides): Promise<number>;
+
     decreaseAllowance(
+      spender: string,
+      subtractedValue: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "decreaseAllowance(address,uint256)"(
       spender: string,
       subtractedValue: BigNumberish,
       overrides?: CallOverrides
@@ -620,9 +847,19 @@ export class SeedERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "increaseAllowance(address,uint256)"(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     name(overrides?: CallOverrides): Promise<string>;
 
+    "name()"(overrides?: CallOverrides): Promise<string>;
+
     owner(overrides?: CallOverrides): Promise<string>;
+
+    "owner()"(overrides?: CallOverrides): Promise<string>;
 
     phaseAtBlockNumber(
       phaseBlocks_: [
@@ -639,15 +876,46 @@ export class SeedERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<number>;
 
+    "phaseAtBlockNumber(uint32[8],uint32)"(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      blockNumber_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<number>;
+
     phaseBlocks(arg0: BigNumberish, overrides?: CallOverrides): Promise<number>;
+
+    "phaseBlocks(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<number>;
 
     recipient(overrides?: CallOverrides): Promise<string>;
 
+    "recipient()"(overrides?: CallOverrides): Promise<string>;
+
     redeem(units_: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
+    "redeem(uint256)"(
+      units_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
+    "renounceOwnership()"(overrides?: CallOverrides): Promise<void>;
+
     reserve(overrides?: CallOverrides): Promise<string>;
+
+    "reserve()"(overrides?: CallOverrides): Promise<string>;
 
     seed(
       minimumUnits_: BigNumberish,
@@ -655,13 +923,31 @@ export class SeedERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "seed(uint256,uint256)"(
+      minimumUnits_: BigNumberish,
+      desiredUnits_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     seedPrice(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "seedPrice()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<string>;
+
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     transfer(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "transfer(address,uint256)"(
       recipient: string,
       amount: BigNumberish,
       overrides?: CallOverrides
@@ -674,128 +960,62 @@ export class SeedERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "transferFrom(address,address,uint256)"(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     transferOwnership(
       newOwner: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "transferOwnership(address)"(
+      newOwner: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     unseed(units_: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
+    "unseed(uint256)"(
+      units_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
-    "Approval(address,address,uint256)"(
-      owner?: string | null,
-      spender?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { owner: string; spender: string; value: BigNumber }
-    >;
-
     Approval(
-      owner?: string | null,
-      spender?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { owner: string; spender: string; value: BigNumber }
-    >;
-
-    "OwnershipTransferred(address,address)"(
-      previousOwner?: string | null,
-      newOwner?: string | null
-    ): TypedEventFilter<
-      [string, string],
-      { previousOwner: string; newOwner: string }
-    >;
+      owner: string | null,
+      spender: string | null,
+      value: null
+    ): EventFilter;
 
     OwnershipTransferred(
-      previousOwner?: string | null,
-      newOwner?: string | null
-    ): TypedEventFilter<
-      [string, string],
-      { previousOwner: string; newOwner: string }
-    >;
+      previousOwner: string | null,
+      newOwner: string | null
+    ): EventFilter;
 
-    "PhaseShiftScheduled(uint32)"(
-      newPhaseBlock_?: BigNumberish | null
-    ): TypedEventFilter<[number], { newPhaseBlock_: number }>;
+    PhaseShiftScheduled(newPhaseBlock_: BigNumberish | null): EventFilter;
 
-    PhaseShiftScheduled(
-      newPhaseBlock_?: BigNumberish | null
-    ): TypedEventFilter<[number], { newPhaseBlock_: number }>;
+    Redeem(redeemer: string | null, redeemAmounts: null): EventFilter;
 
-    "Redeem(address,uint256[2])"(
-      redeemer?: string | null,
-      redeemAmounts?: null
-    ): TypedEventFilter<
-      [string, [BigNumber, BigNumber]],
-      { redeemer: string; redeemAmounts: [BigNumber, BigNumber] }
-    >;
-
-    Redeem(
-      redeemer?: string | null,
-      redeemAmounts?: null
-    ): TypedEventFilter<
-      [string, [BigNumber, BigNumber]],
-      { redeemer: string; redeemAmounts: [BigNumber, BigNumber] }
-    >;
-
-    "Seed(address,uint256[2])"(
-      seeder?: string | null,
-      seedAmounts?: null
-    ): TypedEventFilter<
-      [string, [BigNumber, BigNumber]],
-      { seeder: string; seedAmounts: [BigNumber, BigNumber] }
-    >;
-
-    Seed(
-      seeder?: string | null,
-      seedAmounts?: null
-    ): TypedEventFilter<
-      [string, [BigNumber, BigNumber]],
-      { seeder: string; seedAmounts: [BigNumber, BigNumber] }
-    >;
-
-    "Transfer(address,address,uint256)"(
-      from?: string | null,
-      to?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { from: string; to: string; value: BigNumber }
-    >;
-
-    Transfer(
-      from?: string | null,
-      to?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { from: string; to: string; value: BigNumber }
-    >;
-
-    "Unseed(address,uint256[2])"(
-      unseeder?: string | null,
-      unseedAmounts?: null
-    ): TypedEventFilter<
-      [string, [BigNumber, BigNumber]],
-      { unseeder: string; unseedAmounts: [BigNumber, BigNumber] }
-    >;
-
-    Unseed(
-      unseeder?: string | null,
-      unseedAmounts?: null
-    ): TypedEventFilter<
-      [string, [BigNumber, BigNumber]],
-      { unseeder: string; unseedAmounts: [BigNumber, BigNumber] }
-    >;
+    Transfer(from: string | null, to: string | null, value: null): EventFilter;
   };
 
   estimateGas: {
     UNINITIALIZED(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "UNINITIALIZED()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -804,10 +1024,21 @@ export class SeedERC20 extends BaseContract {
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     blockNumberForPhase(
       phaseBlocks_: [
@@ -824,31 +1055,88 @@ export class SeedERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "blockNumberForPhase(uint32[8],uint8)"(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     cooldownDuration(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "cooldownDuration()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     cooldowns(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "cooldowns(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     currentPhase(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "currentPhase()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     decreaseAllowance(
       spender: string,
       subtractedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "decreaseAllowance(address,uint256)"(
+      spender: string,
+      subtractedValue: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "increaseAllowance(address,uint256)"(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "name()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "owner()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     phaseAtBlockNumber(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      blockNumber_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "phaseAtBlockNumber(uint32[8],uint32)"(
       phaseBlocks_: [
         BigNumberish,
         BigNumberish,
@@ -868,59 +1156,110 @@ export class SeedERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "phaseBlocks(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     recipient(overrides?: CallOverrides): Promise<BigNumber>;
 
-    redeem(
+    "recipient()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    redeem(units_: BigNumberish, overrides?: Overrides): Promise<BigNumber>;
+
+    "redeem(uint256)"(
       units_: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
-    renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    renounceOwnership(overrides?: Overrides): Promise<BigNumber>;
+
+    "renounceOwnership()"(overrides?: Overrides): Promise<BigNumber>;
 
     reserve(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "reserve()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     seed(
       minimumUnits_: BigNumberish,
       desiredUnits_: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "seed(uint256,uint256)"(
+      minimumUnits_: BigNumberish,
+      desiredUnits_: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     seedPrice(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "seedPrice()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "transferFrom(address,address,uint256)"(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
-    unseed(
+    "transferOwnership(address)"(
+      newOwner: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    unseed(units_: BigNumberish, overrides?: Overrides): Promise<BigNumber>;
+
+    "unseed(uint256)"(
       units_: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     UNINITIALIZED(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "UNINITIALIZED()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -929,10 +1268,21 @@ export class SeedERC20 extends BaseContract {
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     balanceOf(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "balanceOf(address)"(
       account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -952,34 +1302,93 @@ export class SeedERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "blockNumberForPhase(uint32[8],uint8)"(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     cooldownDuration(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "cooldownDuration()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     cooldowns(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "cooldowns(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     currentPhase(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "currentPhase()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "decimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     decreaseAllowance(
       spender: string,
       subtractedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "decreaseAllowance(address,uint256)"(
+      spender: string,
+      subtractedValue: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "increaseAllowance(address,uint256)"(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "owner()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     phaseAtBlockNumber(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      blockNumber_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "phaseAtBlockNumber(uint32[8],uint32)"(
       phaseBlocks_: [
         BigNumberish,
         BigNumberish,
@@ -999,52 +1408,101 @@ export class SeedERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "phaseBlocks(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     recipient(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "recipient()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     redeem(
       units_: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "redeem(uint256)"(
+      units_: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
+
+    renounceOwnership(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "renounceOwnership()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     reserve(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "reserve()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     seed(
       minimumUnits_: BigNumberish,
       desiredUnits_: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "seed(uint256,uint256)"(
+      minimumUnits_: BigNumberish,
+      desiredUnits_: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     seedPrice(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "seedPrice()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "transferFrom(address,address,uint256)"(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     transferOwnership(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "transferOwnership(address)"(
+      newOwner: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     unseed(
       units_: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "unseed(uint256)"(
+      units_: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };
 }

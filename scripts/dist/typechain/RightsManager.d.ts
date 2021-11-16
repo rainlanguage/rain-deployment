@@ -9,14 +9,15 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface RightsManagerInterface extends ethers.utils.Interface {
   functions: {
@@ -27,8 +28,8 @@ interface RightsManagerInterface extends ethers.utils.Interface {
     "DEFAULT_CAN_PAUSE_SWAPPING()": FunctionFragment;
     "DEFAULT_CAN_WHITELIST_LPS()": FunctionFragment;
     "constructRights(bool[])": FunctionFragment;
-    "convertRights((bool,bool,bool,bool,bool,bool))": FunctionFragment;
-    "hasPermission((bool,bool,bool,bool,bool,bool),uint8)": FunctionFragment;
+    "convertRights(tuple)": FunctionFragment;
+    "hasPermission(tuple,uint8)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -127,46 +128,16 @@ interface RightsManagerInterface extends ethers.utils.Interface {
   events: {};
 }
 
-export class RightsManager extends BaseContract {
+export class RightsManager extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: RightsManagerInterface;
 
@@ -175,17 +146,55 @@ export class RightsManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    "DEFAULT_CAN_ADD_REMOVE_TOKENS()"(
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     DEFAULT_CAN_CHANGE_CAP(overrides?: CallOverrides): Promise<[boolean]>;
+
+    "DEFAULT_CAN_CHANGE_CAP()"(overrides?: CallOverrides): Promise<[boolean]>;
 
     DEFAULT_CAN_CHANGE_SWAP_FEE(overrides?: CallOverrides): Promise<[boolean]>;
 
+    "DEFAULT_CAN_CHANGE_SWAP_FEE()"(
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     DEFAULT_CAN_CHANGE_WEIGHTS(overrides?: CallOverrides): Promise<[boolean]>;
+
+    "DEFAULT_CAN_CHANGE_WEIGHTS()"(
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     DEFAULT_CAN_PAUSE_SWAPPING(overrides?: CallOverrides): Promise<[boolean]>;
 
+    "DEFAULT_CAN_PAUSE_SWAPPING()"(
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     DEFAULT_CAN_WHITELIST_LPS(overrides?: CallOverrides): Promise<[boolean]>;
 
+    "DEFAULT_CAN_WHITELIST_LPS()"(
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     constructRights(
+      a: boolean[],
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        [boolean, boolean, boolean, boolean, boolean, boolean] & {
+          canPauseSwapping: boolean;
+          canChangeSwapFee: boolean;
+          canChangeWeights: boolean;
+          canAddRemoveTokens: boolean;
+          canWhitelistLPs: boolean;
+          canChangeCap: boolean;
+        }
+      ]
+    >;
+
+    "constructRights(bool[])"(
       a: boolean[],
       overrides?: CallOverrides
     ): Promise<
@@ -213,7 +222,32 @@ export class RightsManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean[]]>;
 
+    "convertRights(tuple)"(
+      rights: {
+        canPauseSwapping: boolean;
+        canChangeSwapFee: boolean;
+        canChangeWeights: boolean;
+        canAddRemoveTokens: boolean;
+        canWhitelistLPs: boolean;
+        canChangeCap: boolean;
+      },
+      overrides?: CallOverrides
+    ): Promise<[boolean[]]>;
+
     hasPermission(
+      self: {
+        canPauseSwapping: boolean;
+        canChangeSwapFee: boolean;
+        canChangeWeights: boolean;
+        canAddRemoveTokens: boolean;
+        canWhitelistLPs: boolean;
+        canChangeCap: boolean;
+      },
+      permission: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    "hasPermission(tuple,uint8)"(
       self: {
         canPauseSwapping: boolean;
         canChangeSwapFee: boolean;
@@ -229,17 +263,45 @@ export class RightsManager extends BaseContract {
 
   DEFAULT_CAN_ADD_REMOVE_TOKENS(overrides?: CallOverrides): Promise<boolean>;
 
+  "DEFAULT_CAN_ADD_REMOVE_TOKENS()"(
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   DEFAULT_CAN_CHANGE_CAP(overrides?: CallOverrides): Promise<boolean>;
+
+  "DEFAULT_CAN_CHANGE_CAP()"(overrides?: CallOverrides): Promise<boolean>;
 
   DEFAULT_CAN_CHANGE_SWAP_FEE(overrides?: CallOverrides): Promise<boolean>;
 
+  "DEFAULT_CAN_CHANGE_SWAP_FEE()"(overrides?: CallOverrides): Promise<boolean>;
+
   DEFAULT_CAN_CHANGE_WEIGHTS(overrides?: CallOverrides): Promise<boolean>;
+
+  "DEFAULT_CAN_CHANGE_WEIGHTS()"(overrides?: CallOverrides): Promise<boolean>;
 
   DEFAULT_CAN_PAUSE_SWAPPING(overrides?: CallOverrides): Promise<boolean>;
 
+  "DEFAULT_CAN_PAUSE_SWAPPING()"(overrides?: CallOverrides): Promise<boolean>;
+
   DEFAULT_CAN_WHITELIST_LPS(overrides?: CallOverrides): Promise<boolean>;
 
+  "DEFAULT_CAN_WHITELIST_LPS()"(overrides?: CallOverrides): Promise<boolean>;
+
   constructRights(
+    a: boolean[],
+    overrides?: CallOverrides
+  ): Promise<
+    [boolean, boolean, boolean, boolean, boolean, boolean] & {
+      canPauseSwapping: boolean;
+      canChangeSwapFee: boolean;
+      canChangeWeights: boolean;
+      canAddRemoveTokens: boolean;
+      canWhitelistLPs: boolean;
+      canChangeCap: boolean;
+    }
+  >;
+
+  "constructRights(bool[])"(
     a: boolean[],
     overrides?: CallOverrides
   ): Promise<
@@ -265,7 +327,32 @@ export class RightsManager extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean[]>;
 
+  "convertRights(tuple)"(
+    rights: {
+      canPauseSwapping: boolean;
+      canChangeSwapFee: boolean;
+      canChangeWeights: boolean;
+      canAddRemoveTokens: boolean;
+      canWhitelistLPs: boolean;
+      canChangeCap: boolean;
+    },
+    overrides?: CallOverrides
+  ): Promise<boolean[]>;
+
   hasPermission(
+    self: {
+      canPauseSwapping: boolean;
+      canChangeSwapFee: boolean;
+      canChangeWeights: boolean;
+      canAddRemoveTokens: boolean;
+      canWhitelistLPs: boolean;
+      canChangeCap: boolean;
+    },
+    permission: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  "hasPermission(tuple,uint8)"(
     self: {
       canPauseSwapping: boolean;
       canChangeSwapFee: boolean;
@@ -281,17 +368,47 @@ export class RightsManager extends BaseContract {
   callStatic: {
     DEFAULT_CAN_ADD_REMOVE_TOKENS(overrides?: CallOverrides): Promise<boolean>;
 
+    "DEFAULT_CAN_ADD_REMOVE_TOKENS()"(
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     DEFAULT_CAN_CHANGE_CAP(overrides?: CallOverrides): Promise<boolean>;
+
+    "DEFAULT_CAN_CHANGE_CAP()"(overrides?: CallOverrides): Promise<boolean>;
 
     DEFAULT_CAN_CHANGE_SWAP_FEE(overrides?: CallOverrides): Promise<boolean>;
 
+    "DEFAULT_CAN_CHANGE_SWAP_FEE()"(
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     DEFAULT_CAN_CHANGE_WEIGHTS(overrides?: CallOverrides): Promise<boolean>;
+
+    "DEFAULT_CAN_CHANGE_WEIGHTS()"(overrides?: CallOverrides): Promise<boolean>;
 
     DEFAULT_CAN_PAUSE_SWAPPING(overrides?: CallOverrides): Promise<boolean>;
 
+    "DEFAULT_CAN_PAUSE_SWAPPING()"(overrides?: CallOverrides): Promise<boolean>;
+
     DEFAULT_CAN_WHITELIST_LPS(overrides?: CallOverrides): Promise<boolean>;
 
+    "DEFAULT_CAN_WHITELIST_LPS()"(overrides?: CallOverrides): Promise<boolean>;
+
     constructRights(
+      a: boolean[],
+      overrides?: CallOverrides
+    ): Promise<
+      [boolean, boolean, boolean, boolean, boolean, boolean] & {
+        canPauseSwapping: boolean;
+        canChangeSwapFee: boolean;
+        canChangeWeights: boolean;
+        canAddRemoveTokens: boolean;
+        canWhitelistLPs: boolean;
+        canChangeCap: boolean;
+      }
+    >;
+
+    "constructRights(bool[])"(
       a: boolean[],
       overrides?: CallOverrides
     ): Promise<
@@ -317,7 +434,32 @@ export class RightsManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean[]>;
 
+    "convertRights(tuple)"(
+      rights: {
+        canPauseSwapping: boolean;
+        canChangeSwapFee: boolean;
+        canChangeWeights: boolean;
+        canAddRemoveTokens: boolean;
+        canWhitelistLPs: boolean;
+        canChangeCap: boolean;
+      },
+      overrides?: CallOverrides
+    ): Promise<boolean[]>;
+
     hasPermission(
+      self: {
+        canPauseSwapping: boolean;
+        canChangeSwapFee: boolean;
+        canChangeWeights: boolean;
+        canAddRemoveTokens: boolean;
+        canWhitelistLPs: boolean;
+        canChangeCap: boolean;
+      },
+      permission: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "hasPermission(tuple,uint8)"(
       self: {
         canPauseSwapping: boolean;
         canChangeSwapFee: boolean;
@@ -338,22 +480,61 @@ export class RightsManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "DEFAULT_CAN_ADD_REMOVE_TOKENS()"(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     DEFAULT_CAN_CHANGE_CAP(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "DEFAULT_CAN_CHANGE_CAP()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     DEFAULT_CAN_CHANGE_SWAP_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "DEFAULT_CAN_CHANGE_SWAP_FEE()"(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     DEFAULT_CAN_CHANGE_WEIGHTS(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "DEFAULT_CAN_CHANGE_WEIGHTS()"(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     DEFAULT_CAN_PAUSE_SWAPPING(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "DEFAULT_CAN_PAUSE_SWAPPING()"(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     DEFAULT_CAN_WHITELIST_LPS(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "DEFAULT_CAN_WHITELIST_LPS()"(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     constructRights(
       a: boolean[],
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "constructRights(bool[])"(
+      a: boolean[],
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     convertRights(
+      rights: {
+        canPauseSwapping: boolean;
+        canChangeSwapFee: boolean;
+        canChangeWeights: boolean;
+        canAddRemoveTokens: boolean;
+        canWhitelistLPs: boolean;
+        canChangeCap: boolean;
+      },
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "convertRights(tuple)"(
       rights: {
         canPauseSwapping: boolean;
         canChangeSwapFee: boolean;
@@ -377,6 +558,19 @@ export class RightsManager extends BaseContract {
       permission: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    "hasPermission(tuple,uint8)"(
+      self: {
+        canPauseSwapping: boolean;
+        canChangeSwapFee: boolean;
+        canChangeWeights: boolean;
+        canAddRemoveTokens: boolean;
+        canWhitelistLPs: boolean;
+        canChangeCap: boolean;
+      },
+      permission: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -384,7 +578,15 @@ export class RightsManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "DEFAULT_CAN_ADD_REMOVE_TOKENS()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     DEFAULT_CAN_CHANGE_CAP(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "DEFAULT_CAN_CHANGE_CAP()"(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -392,7 +594,15 @@ export class RightsManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "DEFAULT_CAN_CHANGE_SWAP_FEE()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     DEFAULT_CAN_CHANGE_WEIGHTS(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "DEFAULT_CAN_CHANGE_WEIGHTS()"(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -400,11 +610,24 @@ export class RightsManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "DEFAULT_CAN_PAUSE_SWAPPING()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     DEFAULT_CAN_WHITELIST_LPS(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "DEFAULT_CAN_WHITELIST_LPS()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     constructRights(
+      a: boolean[],
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "constructRights(bool[])"(
       a: boolean[],
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -421,7 +644,32 @@ export class RightsManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "convertRights(tuple)"(
+      rights: {
+        canPauseSwapping: boolean;
+        canChangeSwapFee: boolean;
+        canChangeWeights: boolean;
+        canAddRemoveTokens: boolean;
+        canWhitelistLPs: boolean;
+        canChangeCap: boolean;
+      },
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     hasPermission(
+      self: {
+        canPauseSwapping: boolean;
+        canChangeSwapFee: boolean;
+        canChangeWeights: boolean;
+        canAddRemoveTokens: boolean;
+        canWhitelistLPs: boolean;
+        canChangeCap: boolean;
+      },
+      permission: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "hasPermission(tuple,uint8)"(
       self: {
         canPauseSwapping: boolean;
         canChangeSwapFee: boolean;

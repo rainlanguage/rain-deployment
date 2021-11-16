@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "ITier",
-  "sourceName": "contracts/rain-protocol/contracts/tier/ITier.sol",
+  "sourceName": "contracts/tier/ITier.sol",
   "abi": [
     {
       "anonymous": false,

@@ -9,14 +9,15 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface TierByConstructionTestInterface extends ethers.utils.Interface {
   functions: {
@@ -81,69 +82,59 @@ interface TierByConstructionTestInterface extends ethers.utils.Interface {
   events: {};
 }
 
-export class TierByConstructionTest extends BaseContract {
+export class TierByConstructionTest extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: TierByConstructionTestInterface;
 
   functions: {
     constructionBlock(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "constructionBlock()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     ifEight(overrides?: CallOverrides): Promise<[void]>;
+
+    "ifEight()"(overrides?: CallOverrides): Promise<[void]>;
 
     ifFive(overrides?: CallOverrides): Promise<[void]>;
 
+    "ifFive()"(overrides?: CallOverrides): Promise<[void]>;
+
     ifFour(overrides?: CallOverrides): Promise<[void]>;
+
+    "ifFour()"(overrides?: CallOverrides): Promise<[void]>;
 
     ifOne(overrides?: CallOverrides): Promise<[void]>;
 
+    "ifOne()"(overrides?: CallOverrides): Promise<[void]>;
+
     ifSeven(overrides?: CallOverrides): Promise<[void]>;
+
+    "ifSeven()"(overrides?: CallOverrides): Promise<[void]>;
 
     ifSix(overrides?: CallOverrides): Promise<[void]>;
 
+    "ifSix()"(overrides?: CallOverrides): Promise<[void]>;
+
     ifThree(overrides?: CallOverrides): Promise<[void]>;
+
+    "ifThree()"(overrides?: CallOverrides): Promise<[void]>;
 
     ifTwo(overrides?: CallOverrides): Promise<[void]>;
 
+    "ifTwo()"(overrides?: CallOverrides): Promise<[void]>;
+
     ifZero(overrides?: CallOverrides): Promise<[void]>;
+
+    "ifZero()"(overrides?: CallOverrides): Promise<[void]>;
 
     isTier(
       account_: string,
@@ -151,30 +142,60 @@ export class TierByConstructionTest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    "isTier(address,uint8)"(
+      account_: string,
+      minimumTier_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     tierContract(overrides?: CallOverrides): Promise<[string]>;
 
+    "tierContract()"(overrides?: CallOverrides): Promise<[string]>;
+
     unlimited(overrides?: CallOverrides): Promise<[void]>;
+
+    "unlimited()"(overrides?: CallOverrides): Promise<[void]>;
   };
 
   constructionBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "constructionBlock()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   ifEight(overrides?: CallOverrides): Promise<void>;
+
+  "ifEight()"(overrides?: CallOverrides): Promise<void>;
 
   ifFive(overrides?: CallOverrides): Promise<void>;
 
+  "ifFive()"(overrides?: CallOverrides): Promise<void>;
+
   ifFour(overrides?: CallOverrides): Promise<void>;
+
+  "ifFour()"(overrides?: CallOverrides): Promise<void>;
 
   ifOne(overrides?: CallOverrides): Promise<void>;
 
+  "ifOne()"(overrides?: CallOverrides): Promise<void>;
+
   ifSeven(overrides?: CallOverrides): Promise<void>;
+
+  "ifSeven()"(overrides?: CallOverrides): Promise<void>;
 
   ifSix(overrides?: CallOverrides): Promise<void>;
 
+  "ifSix()"(overrides?: CallOverrides): Promise<void>;
+
   ifThree(overrides?: CallOverrides): Promise<void>;
+
+  "ifThree()"(overrides?: CallOverrides): Promise<void>;
 
   ifTwo(overrides?: CallOverrides): Promise<void>;
 
+  "ifTwo()"(overrides?: CallOverrides): Promise<void>;
+
   ifZero(overrides?: CallOverrides): Promise<void>;
+
+  "ifZero()"(overrides?: CallOverrides): Promise<void>;
 
   isTier(
     account_: string,
@@ -182,30 +203,60 @@ export class TierByConstructionTest extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  "isTier(address,uint8)"(
+    account_: string,
+    minimumTier_: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   tierContract(overrides?: CallOverrides): Promise<string>;
 
+  "tierContract()"(overrides?: CallOverrides): Promise<string>;
+
   unlimited(overrides?: CallOverrides): Promise<void>;
+
+  "unlimited()"(overrides?: CallOverrides): Promise<void>;
 
   callStatic: {
     constructionBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "constructionBlock()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     ifEight(overrides?: CallOverrides): Promise<void>;
+
+    "ifEight()"(overrides?: CallOverrides): Promise<void>;
 
     ifFive(overrides?: CallOverrides): Promise<void>;
 
+    "ifFive()"(overrides?: CallOverrides): Promise<void>;
+
     ifFour(overrides?: CallOverrides): Promise<void>;
+
+    "ifFour()"(overrides?: CallOverrides): Promise<void>;
 
     ifOne(overrides?: CallOverrides): Promise<void>;
 
+    "ifOne()"(overrides?: CallOverrides): Promise<void>;
+
     ifSeven(overrides?: CallOverrides): Promise<void>;
+
+    "ifSeven()"(overrides?: CallOverrides): Promise<void>;
 
     ifSix(overrides?: CallOverrides): Promise<void>;
 
+    "ifSix()"(overrides?: CallOverrides): Promise<void>;
+
     ifThree(overrides?: CallOverrides): Promise<void>;
+
+    "ifThree()"(overrides?: CallOverrides): Promise<void>;
 
     ifTwo(overrides?: CallOverrides): Promise<void>;
 
+    "ifTwo()"(overrides?: CallOverrides): Promise<void>;
+
     ifZero(overrides?: CallOverrides): Promise<void>;
+
+    "ifZero()"(overrides?: CallOverrides): Promise<void>;
 
     isTier(
       account_: string,
@@ -213,9 +264,19 @@ export class TierByConstructionTest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "isTier(address,uint8)"(
+      account_: string,
+      minimumTier_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     tierContract(overrides?: CallOverrides): Promise<string>;
 
+    "tierContract()"(overrides?: CallOverrides): Promise<string>;
+
     unlimited(overrides?: CallOverrides): Promise<void>;
+
+    "unlimited()"(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {};
@@ -223,23 +284,43 @@ export class TierByConstructionTest extends BaseContract {
   estimateGas: {
     constructionBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "constructionBlock()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     ifEight(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "ifEight()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     ifFive(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "ifFive()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     ifFour(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "ifFour()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     ifOne(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "ifOne()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     ifSeven(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "ifSeven()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     ifSix(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "ifSix()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     ifThree(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "ifThree()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     ifTwo(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "ifTwo()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     ifZero(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "ifZero()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     isTier(
       account_: string,
@@ -247,31 +328,63 @@ export class TierByConstructionTest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "isTier(address,uint8)"(
+      account_: string,
+      minimumTier_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     tierContract(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "tierContract()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     unlimited(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "unlimited()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
     constructionBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "constructionBlock()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     ifEight(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "ifEight()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     ifFive(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "ifFive()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     ifFour(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "ifFour()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     ifOne(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "ifOne()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     ifSeven(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "ifSeven()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     ifSix(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "ifSix()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     ifThree(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "ifThree()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     ifTwo(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "ifTwo()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     ifZero(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "ifZero()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     isTier(
       account_: string,
@@ -279,8 +392,18 @@ export class TierByConstructionTest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "isTier(address,uint8)"(
+      account_: string,
+      minimumTier_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     tierContract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "tierContract()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     unlimited(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "unlimited()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

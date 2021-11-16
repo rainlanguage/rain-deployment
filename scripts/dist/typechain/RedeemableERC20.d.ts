@@ -9,24 +9,28 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface RedeemableERC20Interface extends ethers.utils.Interface {
   functions: {
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
     "DISTRIBUTOR_BURNER()": FunctionFragment;
+    "MAX_REDEEMABLES()": FunctionFragment;
     "MINIMUM_INITIAL_SUPPLY()": FunctionFragment;
     "RECEIVER()": FunctionFragment;
+    "REDEEMABLE_ADDER()": FunctionFragment;
     "SENDER()": FunctionFragment;
     "UNINITIALIZED()": FunctionFragment;
+    "addRedeemable(address)": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
@@ -38,6 +42,7 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
     "currentPhase()": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
+    "getRedeemables()": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
     "getRoleMember(bytes32,uint256)": FunctionFragment;
     "getRoleMemberCount(bytes32)": FunctionFragment;
@@ -47,10 +52,10 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
     "isTier(address,uint8)": FunctionFragment;
     "minimumTier()": FunctionFragment;
     "name()": FunctionFragment;
-    "newTreasuryAsset(address)": FunctionFragment;
     "phaseAtBlockNumber(uint32[8],uint32)": FunctionFragment;
     "phaseBlocks(uint256)": FunctionFragment;
-    "redeem(address[],uint256)": FunctionFragment;
+    "redeem(uint256)": FunctionFragment;
+    "redeemSpecific(address[],uint256)": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
     "symbol()": FunctionFragment;
@@ -69,14 +74,26 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "MAX_REDEEMABLES",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "MINIMUM_INITIAL_SUPPLY",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "RECEIVER", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "REDEEMABLE_ADDER",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "SENDER", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "UNINITIALIZED",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "addRedeemable",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "allowance",
@@ -126,6 +143,10 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "getRedeemables",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "getRoleAdmin",
     values: [BytesLike]
   ): string;
@@ -159,10 +180,6 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "newTreasuryAsset",
-    values: [string]
-  ): string;
-  encodeFunctionData(
     functionFragment: "phaseAtBlockNumber",
     values: [
       [
@@ -184,6 +201,10 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "redeem",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "redeemSpecific",
     values: [string[], BigNumberish]
   ): string;
   encodeFunctionData(
@@ -221,13 +242,25 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "MAX_REDEEMABLES",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "MINIMUM_INITIAL_SUPPLY",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "RECEIVER", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "REDEEMABLE_ADDER",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "SENDER", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "UNINITIALIZED",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "addRedeemable",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
@@ -257,6 +290,10 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getRedeemables",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getRoleAdmin",
     data: BytesLike
   ): Result;
@@ -281,10 +318,6 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "newTreasuryAsset",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "phaseAtBlockNumber",
     data: BytesLike
   ): Result;
@@ -293,6 +326,10 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "redeem", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "redeemSpecific",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceRole",
     data: BytesLike
@@ -321,7 +358,6 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
-    "TreasuryAsset(address,address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
@@ -331,110 +367,71 @@ interface RedeemableERC20Interface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "TreasuryAsset"): EventFragment;
 }
 
-export type ApprovalEvent = TypedEvent<
-  [string, string, BigNumber] & {
-    owner: string;
-    spender: string;
-    value: BigNumber;
-  }
->;
-
-export type PhaseShiftScheduledEvent = TypedEvent<
-  [number] & { newPhaseBlock_: number }
->;
-
-export type RedeemEvent = TypedEvent<
-  [string, string, [BigNumber, BigNumber]] & {
-    redeemer: string;
-    treasuryAsset: string;
-    redeemAmounts: [BigNumber, BigNumber];
-  }
->;
-
-export type RoleAdminChangedEvent = TypedEvent<
-  [string, string, string] & {
-    role: string;
-    previousAdminRole: string;
-    newAdminRole: string;
-  }
->;
-
-export type RoleGrantedEvent = TypedEvent<
-  [string, string, string] & { role: string; account: string; sender: string }
->;
-
-export type RoleRevokedEvent = TypedEvent<
-  [string, string, string] & { role: string; account: string; sender: string }
->;
-
-export type TransferEvent = TypedEvent<
-  [string, string, BigNumber] & { from: string; to: string; value: BigNumber }
->;
-
-export type TreasuryAssetEvent = TypedEvent<
-  [string, string] & { emitter: string; asset: string }
->;
-
-export class RedeemableERC20 extends BaseContract {
+export class RedeemableERC20 extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: RedeemableERC20Interface;
 
   functions: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
+    "DEFAULT_ADMIN_ROLE()"(overrides?: CallOverrides): Promise<[string]>;
+
     DISTRIBUTOR_BURNER(overrides?: CallOverrides): Promise<[string]>;
+
+    "DISTRIBUTOR_BURNER()"(overrides?: CallOverrides): Promise<[string]>;
+
+    MAX_REDEEMABLES(overrides?: CallOverrides): Promise<[number]>;
+
+    "MAX_REDEEMABLES()"(overrides?: CallOverrides): Promise<[number]>;
 
     MINIMUM_INITIAL_SUPPLY(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "MINIMUM_INITIAL_SUPPLY()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     RECEIVER(overrides?: CallOverrides): Promise<[string]>;
+
+    "RECEIVER()"(overrides?: CallOverrides): Promise<[string]>;
+
+    REDEEMABLE_ADDER(overrides?: CallOverrides): Promise<[string]>;
+
+    "REDEEMABLE_ADDER()"(overrides?: CallOverrides): Promise<[string]>;
 
     SENDER(overrides?: CallOverrides): Promise<[string]>;
 
+    "SENDER()"(overrides?: CallOverrides): Promise<[string]>;
+
     UNINITIALIZED(overrides?: CallOverrides): Promise<[number]>;
 
+    "UNINITIALIZED()"(overrides?: CallOverrides): Promise<[number]>;
+
+    addRedeemable(
+      newRedeemable_: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "addRedeemable(address)"(
+      newRedeemable_: string,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
     allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -443,10 +440,21 @@ export class RedeemableERC20 extends BaseContract {
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     blockNumberForPhase(
       phaseBlocks_: [
@@ -463,37 +471,103 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[number]>;
 
+    "blockNumberForPhase(uint32[8],uint8)"(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[number]>;
+
     burn(
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "burn(uint256)"(
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     burnDistributor(
       distributorAccount_: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "burnDistributor(address)"(
+      distributorAccount_: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     burnFrom(
       account: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "burnFrom(address,uint256)"(
+      account: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     constructionBlock(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "constructionBlock()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     currentPhase(overrides?: CallOverrides): Promise<[number]>;
 
+    "currentPhase()"(overrides?: CallOverrides): Promise<[number]>;
+
     decimals(overrides?: CallOverrides): Promise<[number]>;
+
+    "decimals()"(overrides?: CallOverrides): Promise<[number]>;
 
     decreaseAllowance(
       spender: string,
       subtractedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
+
+    "decreaseAllowance(address,uint256)"(
+      spender: string,
+      subtractedValue: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    getRedeemables(
+      overrides?: CallOverrides
+    ): Promise<
+      [[string, string, string, string, string, string, string, string]]
+    >;
+
+    "getRedeemables()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [[string, string, string, string, string, string, string, string]]
+    >;
 
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<[string]>;
 
+    "getRoleAdmin(bytes32)"(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     getRoleMember(
+      role: BytesLike,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    "getRoleMember(bytes32,uint256)"(
       role: BytesLike,
       index: BigNumberish,
       overrides?: CallOverrides
@@ -504,10 +578,21 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    "getRoleMemberCount(bytes32)"(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     grantRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "grantRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     hasRole(
@@ -516,10 +601,22 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    "hasRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "increaseAllowance(address,uint256)"(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     isTier(
@@ -528,16 +625,36 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    "isTier(address,uint8)"(
+      account_: string,
+      minimumTier_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     minimumTier(overrides?: CallOverrides): Promise<[number]>;
+
+    "minimumTier()"(overrides?: CallOverrides): Promise<[number]>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
-    newTreasuryAsset(
-      newTreasuryAsset_: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    "name()"(overrides?: CallOverrides): Promise<[string]>;
 
     phaseAtBlockNumber(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      blockNumber_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[number]>;
+
+    "phaseAtBlockNumber(uint32[8],uint32)"(
       phaseBlocks_: [
         BigNumberish,
         BigNumberish,
@@ -557,57 +674,145 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[number]>;
 
+    "phaseBlocks(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[number]>;
+
     redeem(
-      treasuryAssets_: string[],
       redeemAmount_: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "redeem(uint256)"(
+      redeemAmount_: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    redeemSpecific(
+      specificRedeemables_: string[],
+      redeemAmount_: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "redeemSpecific(address[],uint256)"(
+      specificRedeemables_: string[],
+      redeemAmount_: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     renounceRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "renounceRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     revokeRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "revokeRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<[string]>;
+
     tierContract(overrides?: CallOverrides): Promise<[string]>;
 
+    "tierContract()"(overrides?: CallOverrides): Promise<[string]>;
+
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "transferFrom(address,address,uint256)"(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
 
   DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
+  "DEFAULT_ADMIN_ROLE()"(overrides?: CallOverrides): Promise<string>;
+
   DISTRIBUTOR_BURNER(overrides?: CallOverrides): Promise<string>;
+
+  "DISTRIBUTOR_BURNER()"(overrides?: CallOverrides): Promise<string>;
+
+  MAX_REDEEMABLES(overrides?: CallOverrides): Promise<number>;
+
+  "MAX_REDEEMABLES()"(overrides?: CallOverrides): Promise<number>;
 
   MINIMUM_INITIAL_SUPPLY(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "MINIMUM_INITIAL_SUPPLY()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   RECEIVER(overrides?: CallOverrides): Promise<string>;
+
+  "RECEIVER()"(overrides?: CallOverrides): Promise<string>;
+
+  REDEEMABLE_ADDER(overrides?: CallOverrides): Promise<string>;
+
+  "REDEEMABLE_ADDER()"(overrides?: CallOverrides): Promise<string>;
 
   SENDER(overrides?: CallOverrides): Promise<string>;
 
+  "SENDER()"(overrides?: CallOverrides): Promise<string>;
+
   UNINITIALIZED(overrides?: CallOverrides): Promise<number>;
 
+  "UNINITIALIZED()"(overrides?: CallOverrides): Promise<number>;
+
+  addRedeemable(
+    newRedeemable_: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "addRedeemable(address)"(
+    newRedeemable_: string,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
   allowance(
+    owner: string,
+    spender: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "allowance(address,address)"(
     owner: string,
     spender: string,
     overrides?: CallOverrides
@@ -616,10 +821,21 @@ export class RedeemableERC20 extends BaseContract {
   approve(
     spender: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "approve(address,uint256)"(
+    spender: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  "balanceOf(address)"(
+    account: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   blockNumberForPhase(
     phaseBlocks_: [
@@ -636,37 +852,99 @@ export class RedeemableERC20 extends BaseContract {
     overrides?: CallOverrides
   ): Promise<number>;
 
+  "blockNumberForPhase(uint32[8],uint8)"(
+    phaseBlocks_: [
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ],
+    phase_: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<number>;
+
   burn(
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "burn(uint256)"(
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   burnDistributor(
     distributorAccount_: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "burnDistributor(address)"(
+    distributorAccount_: string,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   burnFrom(
     account: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "burnFrom(address,uint256)"(
+    account: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   constructionBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "constructionBlock()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   currentPhase(overrides?: CallOverrides): Promise<number>;
 
+  "currentPhase()"(overrides?: CallOverrides): Promise<number>;
+
   decimals(overrides?: CallOverrides): Promise<number>;
+
+  "decimals()"(overrides?: CallOverrides): Promise<number>;
 
   decreaseAllowance(
     spender: string,
     subtractedValue: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
+
+  "decreaseAllowance(address,uint256)"(
+    spender: string,
+    subtractedValue: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  getRedeemables(
+    overrides?: CallOverrides
+  ): Promise<[string, string, string, string, string, string, string, string]>;
+
+  "getRedeemables()"(
+    overrides?: CallOverrides
+  ): Promise<[string, string, string, string, string, string, string, string]>;
 
   getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
+  "getRoleAdmin(bytes32)"(
+    role: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   getRoleMember(
+    role: BytesLike,
+    index: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  "getRoleMember(bytes32,uint256)"(
     role: BytesLike,
     index: BigNumberish,
     overrides?: CallOverrides
@@ -677,10 +955,21 @@ export class RedeemableERC20 extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  "getRoleMemberCount(bytes32)"(
+    role: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   grantRole(
     role: BytesLike,
     account: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "grantRole(bytes32,address)"(
+    role: BytesLike,
+    account: string,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   hasRole(
@@ -689,10 +978,22 @@ export class RedeemableERC20 extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  "hasRole(bytes32,address)"(
+    role: BytesLike,
+    account: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   increaseAllowance(
     spender: string,
     addedValue: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "increaseAllowance(address,uint256)"(
+    spender: string,
+    addedValue: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   isTier(
@@ -701,14 +1002,19 @@ export class RedeemableERC20 extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  "isTier(address,uint8)"(
+    account_: string,
+    minimumTier_: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   minimumTier(overrides?: CallOverrides): Promise<number>;
+
+  "minimumTier()"(overrides?: CallOverrides): Promise<number>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
-  newTreasuryAsset(
-    newTreasuryAsset_: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  "name()"(overrides?: CallOverrides): Promise<string>;
 
   phaseAtBlockNumber(
     phaseBlocks_: [
@@ -725,59 +1031,162 @@ export class RedeemableERC20 extends BaseContract {
     overrides?: CallOverrides
   ): Promise<number>;
 
+  "phaseAtBlockNumber(uint32[8],uint32)"(
+    phaseBlocks_: [
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ],
+    blockNumber_: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<number>;
+
   phaseBlocks(arg0: BigNumberish, overrides?: CallOverrides): Promise<number>;
 
+  "phaseBlocks(uint256)"(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<number>;
+
   redeem(
-    treasuryAssets_: string[],
     redeemAmount_: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "redeem(uint256)"(
+    redeemAmount_: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  redeemSpecific(
+    specificRedeemables_: string[],
+    redeemAmount_: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "redeemSpecific(address[],uint256)"(
+    specificRedeemables_: string[],
+    redeemAmount_: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   renounceRole(
     role: BytesLike,
     account: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "renounceRole(bytes32,address)"(
+    role: BytesLike,
+    account: string,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   revokeRole(
     role: BytesLike,
     account: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "revokeRole(bytes32,address)"(
+    role: BytesLike,
+    account: string,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
 
+  "symbol()"(overrides?: CallOverrides): Promise<string>;
+
   tierContract(overrides?: CallOverrides): Promise<string>;
 
+  "tierContract()"(overrides?: CallOverrides): Promise<string>;
+
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   transfer(
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "transfer(address,uint256)"(
+    recipient: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   transferFrom(
     sender: string,
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "transferFrom(address,address,uint256)"(
+    sender: string,
+    recipient: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   callStatic: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
+    "DEFAULT_ADMIN_ROLE()"(overrides?: CallOverrides): Promise<string>;
+
     DISTRIBUTOR_BURNER(overrides?: CallOverrides): Promise<string>;
+
+    "DISTRIBUTOR_BURNER()"(overrides?: CallOverrides): Promise<string>;
+
+    MAX_REDEEMABLES(overrides?: CallOverrides): Promise<number>;
+
+    "MAX_REDEEMABLES()"(overrides?: CallOverrides): Promise<number>;
 
     MINIMUM_INITIAL_SUPPLY(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MINIMUM_INITIAL_SUPPLY()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     RECEIVER(overrides?: CallOverrides): Promise<string>;
+
+    "RECEIVER()"(overrides?: CallOverrides): Promise<string>;
+
+    REDEEMABLE_ADDER(overrides?: CallOverrides): Promise<string>;
+
+    "REDEEMABLE_ADDER()"(overrides?: CallOverrides): Promise<string>;
 
     SENDER(overrides?: CallOverrides): Promise<string>;
 
+    "SENDER()"(overrides?: CallOverrides): Promise<string>;
+
     UNINITIALIZED(overrides?: CallOverrides): Promise<number>;
 
+    "UNINITIALIZED()"(overrides?: CallOverrides): Promise<number>;
+
+    addRedeemable(
+      newRedeemable_: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "addRedeemable(address)"(
+      newRedeemable_: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -789,9 +1198,35 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     blockNumberForPhase(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<number>;
+
+    "blockNumberForPhase(uint32[8],uint8)"(
       phaseBlocks_: [
         BigNumberish,
         BigNumberish,
@@ -808,7 +1243,17 @@ export class RedeemableERC20 extends BaseContract {
 
     burn(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
+    "burn(uint256)"(
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     burnDistributor(
+      distributorAccount_: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "burnDistributor(address)"(
       distributorAccount_: string,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -819,11 +1264,23 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "burnFrom(address,uint256)"(
+      account: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     constructionBlock(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "constructionBlock()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     currentPhase(overrides?: CallOverrides): Promise<number>;
 
+    "currentPhase()"(overrides?: CallOverrides): Promise<number>;
+
     decimals(overrides?: CallOverrides): Promise<number>;
+
+    "decimals()"(overrides?: CallOverrides): Promise<number>;
 
     decreaseAllowance(
       spender: string,
@@ -831,9 +1288,38 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "decreaseAllowance(address,uint256)"(
+      spender: string,
+      subtractedValue: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    getRedeemables(
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, string, string, string, string, string, string]
+    >;
+
+    "getRedeemables()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, string, string, string, string, string, string]
+    >;
+
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
+    "getRoleAdmin(bytes32)"(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
     getRoleMember(
+      role: BytesLike,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    "getRoleMember(bytes32,uint256)"(
       role: BytesLike,
       index: BigNumberish,
       overrides?: CallOverrides
@@ -844,7 +1330,18 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "getRoleMemberCount(bytes32)"(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     grantRole(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "grantRole(bytes32,address)"(
       role: BytesLike,
       account: string,
       overrides?: CallOverrides
@@ -856,7 +1353,19 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "hasRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     increaseAllowance(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "increaseAllowance(address,uint256)"(
       spender: string,
       addedValue: BigNumberish,
       overrides?: CallOverrides
@@ -868,14 +1377,19 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "isTier(address,uint8)"(
+      account_: string,
+      minimumTier_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     minimumTier(overrides?: CallOverrides): Promise<number>;
+
+    "minimumTier()"(overrides?: CallOverrides): Promise<number>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
-    newTreasuryAsset(
-      newTreasuryAsset_: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    "name()"(overrides?: CallOverrides): Promise<string>;
 
     phaseAtBlockNumber(
       phaseBlocks_: [
@@ -892,15 +1406,57 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<number>;
 
+    "phaseAtBlockNumber(uint32[8],uint32)"(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      blockNumber_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<number>;
+
     phaseBlocks(arg0: BigNumberish, overrides?: CallOverrides): Promise<number>;
 
+    "phaseBlocks(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<number>;
+
     redeem(
-      treasuryAssets_: string[],
+      redeemAmount_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "redeem(uint256)"(
+      redeemAmount_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    redeemSpecific(
+      specificRedeemables_: string[],
+      redeemAmount_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "redeemSpecific(address[],uint256)"(
+      specificRedeemables_: string[],
       redeemAmount_: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     renounceRole(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "renounceRole(bytes32,address)"(
       role: BytesLike,
       account: string,
       overrides?: CallOverrides
@@ -912,11 +1468,23 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "revokeRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     symbol(overrides?: CallOverrides): Promise<string>;
+
+    "symbol()"(overrides?: CallOverrides): Promise<string>;
 
     tierContract(overrides?: CallOverrides): Promise<string>;
 
+    "tierContract()"(overrides?: CallOverrides): Promise<string>;
+
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
       recipient: string,
@@ -924,7 +1492,20 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     transferFrom(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "transferFrom(address,address,uint256)"(
       sender: string,
       recipient: string,
       amount: BigNumberish,
@@ -933,155 +1514,91 @@ export class RedeemableERC20 extends BaseContract {
   };
 
   filters: {
-    "Approval(address,address,uint256)"(
-      owner?: string | null,
-      spender?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { owner: string; spender: string; value: BigNumber }
-    >;
-
     Approval(
-      owner?: string | null,
-      spender?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { owner: string; spender: string; value: BigNumber }
-    >;
+      owner: string | null,
+      spender: string | null,
+      value: null
+    ): EventFilter;
 
-    "PhaseShiftScheduled(uint32)"(
-      newPhaseBlock_?: BigNumberish | null
-    ): TypedEventFilter<[number], { newPhaseBlock_: number }>;
-
-    PhaseShiftScheduled(
-      newPhaseBlock_?: BigNumberish | null
-    ): TypedEventFilter<[number], { newPhaseBlock_: number }>;
-
-    "Redeem(address,address,uint256[2])"(
-      redeemer?: string | null,
-      treasuryAsset?: string | null,
-      redeemAmounts?: null
-    ): TypedEventFilter<
-      [string, string, [BigNumber, BigNumber]],
-      {
-        redeemer: string;
-        treasuryAsset: string;
-        redeemAmounts: [BigNumber, BigNumber];
-      }
-    >;
+    PhaseShiftScheduled(newPhaseBlock_: BigNumberish | null): EventFilter;
 
     Redeem(
-      redeemer?: string | null,
-      treasuryAsset?: string | null,
-      redeemAmounts?: null
-    ): TypedEventFilter<
-      [string, string, [BigNumber, BigNumber]],
-      {
-        redeemer: string;
-        treasuryAsset: string;
-        redeemAmounts: [BigNumber, BigNumber];
-      }
-    >;
-
-    "RoleAdminChanged(bytes32,bytes32,bytes32)"(
-      role?: BytesLike | null,
-      previousAdminRole?: BytesLike | null,
-      newAdminRole?: BytesLike | null
-    ): TypedEventFilter<
-      [string, string, string],
-      { role: string; previousAdminRole: string; newAdminRole: string }
-    >;
+      redeemer: string | null,
+      redeemable: string | null,
+      redeemAmounts: null
+    ): EventFilter;
 
     RoleAdminChanged(
-      role?: BytesLike | null,
-      previousAdminRole?: BytesLike | null,
-      newAdminRole?: BytesLike | null
-    ): TypedEventFilter<
-      [string, string, string],
-      { role: string; previousAdminRole: string; newAdminRole: string }
-    >;
-
-    "RoleGranted(bytes32,address,address)"(
-      role?: BytesLike | null,
-      account?: string | null,
-      sender?: string | null
-    ): TypedEventFilter<
-      [string, string, string],
-      { role: string; account: string; sender: string }
-    >;
+      role: BytesLike | null,
+      previousAdminRole: BytesLike | null,
+      newAdminRole: BytesLike | null
+    ): EventFilter;
 
     RoleGranted(
-      role?: BytesLike | null,
-      account?: string | null,
-      sender?: string | null
-    ): TypedEventFilter<
-      [string, string, string],
-      { role: string; account: string; sender: string }
-    >;
-
-    "RoleRevoked(bytes32,address,address)"(
-      role?: BytesLike | null,
-      account?: string | null,
-      sender?: string | null
-    ): TypedEventFilter<
-      [string, string, string],
-      { role: string; account: string; sender: string }
-    >;
+      role: BytesLike | null,
+      account: string | null,
+      sender: string | null
+    ): EventFilter;
 
     RoleRevoked(
-      role?: BytesLike | null,
-      account?: string | null,
-      sender?: string | null
-    ): TypedEventFilter<
-      [string, string, string],
-      { role: string; account: string; sender: string }
-    >;
+      role: BytesLike | null,
+      account: string | null,
+      sender: string | null
+    ): EventFilter;
 
-    "Transfer(address,address,uint256)"(
-      from?: string | null,
-      to?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { from: string; to: string; value: BigNumber }
-    >;
-
-    Transfer(
-      from?: string | null,
-      to?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { from: string; to: string; value: BigNumber }
-    >;
-
-    "TreasuryAsset(address,address)"(
-      emitter?: string | null,
-      asset?: string | null
-    ): TypedEventFilter<[string, string], { emitter: string; asset: string }>;
-
-    TreasuryAsset(
-      emitter?: string | null,
-      asset?: string | null
-    ): TypedEventFilter<[string, string], { emitter: string; asset: string }>;
+    Transfer(from: string | null, to: string | null, value: null): EventFilter;
   };
 
   estimateGas: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "DEFAULT_ADMIN_ROLE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     DISTRIBUTOR_BURNER(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "DISTRIBUTOR_BURNER()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    MAX_REDEEMABLES(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MAX_REDEEMABLES()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MINIMUM_INITIAL_SUPPLY(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MINIMUM_INITIAL_SUPPLY()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     RECEIVER(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "RECEIVER()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    REDEEMABLE_ADDER(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "REDEEMABLE_ADDER()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     SENDER(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "SENDER()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     UNINITIALIZED(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "UNINITIALIZED()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    addRedeemable(
+      newRedeemable_: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "addRedeemable(address)"(
+      newRedeemable_: string,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
     allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -1090,10 +1607,21 @@ export class RedeemableERC20 extends BaseContract {
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     blockNumberForPhase(
       phaseBlocks_: [
@@ -1110,35 +1638,84 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    burn(
+    "blockNumberForPhase(uint32[8],uint8)"(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    burn(amount: BigNumberish, overrides?: Overrides): Promise<BigNumber>;
+
+    "burn(uint256)"(
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     burnDistributor(
       distributorAccount_: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "burnDistributor(address)"(
+      distributorAccount_: string,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     burnFrom(
       account: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "burnFrom(address,uint256)"(
+      account: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     constructionBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "constructionBlock()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     currentPhase(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "currentPhase()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     decreaseAllowance(
       spender: string,
       subtractedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
+    "decreaseAllowance(address,uint256)"(
+      spender: string,
+      subtractedValue: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    getRedeemables(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getRedeemables()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getRoleAdmin(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getRoleAdmin(bytes32)"(
       role: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -1149,7 +1726,18 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "getRoleMember(bytes32,uint256)"(
+      role: BytesLike,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getRoleMemberCount(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getRoleMemberCount(bytes32)"(
       role: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -1157,7 +1745,13 @@ export class RedeemableERC20 extends BaseContract {
     grantRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "grantRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     hasRole(
@@ -1166,10 +1760,22 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "hasRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "increaseAllowance(address,uint256)"(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     isTier(
@@ -1178,16 +1784,36 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "isTier(address,uint8)"(
+      account_: string,
+      minimumTier_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     minimumTier(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "minimumTier()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
-    newTreasuryAsset(
-      newTreasuryAsset_: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    "name()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     phaseAtBlockNumber(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      blockNumber_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "phaseAtBlockNumber(uint32[8],uint32)"(
       phaseBlocks_: [
         BigNumberish,
         BigNumberish,
@@ -1207,41 +1833,93 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "phaseBlocks(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     redeem(
-      treasuryAssets_: string[],
       redeemAmount_: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "redeem(uint256)"(
+      redeemAmount_: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    redeemSpecific(
+      specificRedeemables_: string[],
+      redeemAmount_: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "redeemSpecific(address[],uint256)"(
+      specificRedeemables_: string[],
+      redeemAmount_: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     renounceRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "renounceRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     revokeRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "revokeRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     tierContract(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "tierContract()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "transferFrom(address,address,uint256)"(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
   };
 
@@ -1250,7 +1928,21 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "DEFAULT_ADMIN_ROLE()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     DISTRIBUTOR_BURNER(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "DISTRIBUTOR_BURNER()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    MAX_REDEEMABLES(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "MAX_REDEEMABLES()"(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1258,13 +1950,45 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "MINIMUM_INITIAL_SUPPLY()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     RECEIVER(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "RECEIVER()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    REDEEMABLE_ADDER(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "REDEEMABLE_ADDER()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     SENDER(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "SENDER()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     UNINITIALIZED(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "UNINITIALIZED()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    addRedeemable(
+      newRedeemable_: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "addRedeemable(address)"(
+      newRedeemable_: string,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
     allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "allowance(address,address)"(
       owner: string,
       spender: string,
       overrides?: CallOverrides
@@ -1273,10 +1997,21 @@ export class RedeemableERC20 extends BaseContract {
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     balanceOf(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "balanceOf(address)"(
       account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1296,35 +2031,91 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "blockNumberForPhase(uint32[8],uint8)"(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     burn(
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "burn(uint256)"(
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     burnDistributor(
       distributorAccount_: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "burnDistributor(address)"(
+      distributorAccount_: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     burnFrom(
       account: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "burnFrom(address,uint256)"(
+      account: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     constructionBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "constructionBlock()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     currentPhase(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "currentPhase()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "decimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     decreaseAllowance(
       spender: string,
       subtractedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "decreaseAllowance(address,uint256)"(
+      spender: string,
+      subtractedValue: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    getRedeemables(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getRedeemables()"(
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getRoleAdmin(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getRoleAdmin(bytes32)"(
       role: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1335,7 +2126,18 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "getRoleMember(bytes32,uint256)"(
+      role: BytesLike,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getRoleMemberCount(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getRoleMemberCount(bytes32)"(
       role: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1343,7 +2145,13 @@ export class RedeemableERC20 extends BaseContract {
     grantRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "grantRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     hasRole(
@@ -1352,10 +2160,22 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "hasRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "increaseAllowance(address,uint256)"(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     isTier(
@@ -1364,16 +2184,36 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "isTier(address,uint8)"(
+      account_: string,
+      minimumTier_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     minimumTier(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "minimumTier()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    newTreasuryAsset(
-      newTreasuryAsset_: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     phaseAtBlockNumber(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      blockNumber_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "phaseAtBlockNumber(uint32[8],uint32)"(
       phaseBlocks_: [
         BigNumberish,
         BigNumberish,
@@ -1393,41 +2233,93 @@ export class RedeemableERC20 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "phaseBlocks(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     redeem(
-      treasuryAssets_: string[],
       redeemAmount_: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "redeem(uint256)"(
+      redeemAmount_: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    redeemSpecific(
+      specificRedeemables_: string[],
+      redeemAmount_: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "redeemSpecific(address[],uint256)"(
+      specificRedeemables_: string[],
+      redeemAmount_: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     renounceRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "renounceRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     revokeRole(
       role: BytesLike,
       account: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "revokeRole(bytes32,address)"(
+      role: BytesLike,
+      account: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     tierContract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "tierContract()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "transferFrom(address,address,uint256)"(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };
 }

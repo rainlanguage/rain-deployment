@@ -9,15 +9,16 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface RedeemableERC20PoolInterface extends ethers.utils.Interface {
   functions: {
@@ -205,65 +206,50 @@ interface RedeemableERC20PoolInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "PhaseShiftScheduled"): EventFragment;
 }
 
-export type OwnershipTransferredEvent = TypedEvent<
-  [string, string] & { previousOwner: string; newOwner: string }
->;
-
-export type PhaseShiftScheduledEvent = TypedEvent<
-  [number] & { newPhaseBlock_: number }
->;
-
-export class RedeemableERC20Pool extends BaseContract {
+export class RedeemableERC20Pool extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: RedeemableERC20PoolInterface;
 
   functions: {
     MIN_BALANCER_POOL_BALANCE(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "MIN_BALANCER_POOL_BALANCE()"(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     MIN_RESERVE_INIT(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "MIN_RESERVE_INIT()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     UNINITIALIZED(overrides?: CallOverrides): Promise<[number]>;
 
+    "UNINITIALIZED()"(overrides?: CallOverrides): Promise<[number]>;
+
     blockNumberForPhase(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[number]>;
+
+    "blockNumberForPhase(uint32[8],uint8)"(
       phaseBlocks_: [
         BigNumberish,
         BigNumberish,
@@ -280,21 +266,50 @@ export class RedeemableERC20Pool extends BaseContract {
 
     crp(overrides?: CallOverrides): Promise<[string]>;
 
+    "crp()"(overrides?: CallOverrides): Promise<[string]>;
+
     currentPhase(overrides?: CallOverrides): Promise<[number]>;
+
+    "currentPhase()"(overrides?: CallOverrides): Promise<[number]>;
 
     finalValuation(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "finalValuation()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     finalWeight(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "finalWeight()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     minimumTradingDuration(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "minimumTradingDuration()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
 
-    ownerEndDutchAuction(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "owner()"(overrides?: CallOverrides): Promise<[string]>;
+
+    ownerEndDutchAuction(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "ownerEndDutchAuction()"(
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     phaseAtBlockNumber(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      blockNumber_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[number]>;
+
+    "phaseAtBlockNumber(uint32[8],uint32)"(
       phaseBlocks_: [
         BigNumberish,
         BigNumberish,
@@ -314,31 +329,53 @@ export class RedeemableERC20Pool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[number]>;
 
-    renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    "phaseBlocks(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[number]>;
+
+    renounceOwnership(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "renounceOwnership()"(overrides?: Overrides): Promise<ContractTransaction>;
 
     reserve(overrides?: CallOverrides): Promise<[string]>;
 
+    "reserve()"(overrides?: CallOverrides): Promise<[string]>;
+
     reserveInit(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    startDutchAuction(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    "reserveInit()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    startDutchAuction(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "startDutchAuction()"(overrides?: Overrides): Promise<ContractTransaction>;
 
     token(overrides?: CallOverrides): Promise<[string]>;
 
+    "token()"(overrides?: CallOverrides): Promise<[string]>;
+
     transferOwnership(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "transferOwnership(address)"(
+      newOwner: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
 
   MIN_BALANCER_POOL_BALANCE(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "MIN_BALANCER_POOL_BALANCE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   MIN_RESERVE_INIT(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "MIN_RESERVE_INIT()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   UNINITIALIZED(overrides?: CallOverrides): Promise<number>;
+
+  "UNINITIALIZED()"(overrides?: CallOverrides): Promise<number>;
 
   blockNumberForPhase(
     phaseBlocks_: [
@@ -355,21 +392,48 @@ export class RedeemableERC20Pool extends BaseContract {
     overrides?: CallOverrides
   ): Promise<number>;
 
+  "blockNumberForPhase(uint32[8],uint8)"(
+    phaseBlocks_: [
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ],
+    phase_: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<number>;
+
   crp(overrides?: CallOverrides): Promise<string>;
+
+  "crp()"(overrides?: CallOverrides): Promise<string>;
 
   currentPhase(overrides?: CallOverrides): Promise<number>;
 
+  "currentPhase()"(overrides?: CallOverrides): Promise<number>;
+
   finalValuation(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "finalValuation()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   finalWeight(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "finalWeight()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   minimumTradingDuration(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "minimumTradingDuration()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
-  ownerEndDutchAuction(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  "owner()"(overrides?: CallOverrides): Promise<string>;
+
+  ownerEndDutchAuction(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "ownerEndDutchAuction()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   phaseAtBlockNumber(
     phaseBlocks_: [
@@ -386,35 +450,89 @@ export class RedeemableERC20Pool extends BaseContract {
     overrides?: CallOverrides
   ): Promise<number>;
 
+  "phaseAtBlockNumber(uint32[8],uint32)"(
+    phaseBlocks_: [
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ],
+    blockNumber_: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<number>;
+
   phaseBlocks(arg0: BigNumberish, overrides?: CallOverrides): Promise<number>;
 
-  renounceOwnership(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  "phaseBlocks(uint256)"(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<number>;
+
+  renounceOwnership(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "renounceOwnership()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   reserve(overrides?: CallOverrides): Promise<string>;
 
+  "reserve()"(overrides?: CallOverrides): Promise<string>;
+
   reserveInit(overrides?: CallOverrides): Promise<BigNumber>;
 
-  startDutchAuction(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  "reserveInit()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+  startDutchAuction(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "startDutchAuction()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   token(overrides?: CallOverrides): Promise<string>;
 
+  "token()"(overrides?: CallOverrides): Promise<string>;
+
   transferOwnership(
     newOwner: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "transferOwnership(address)"(
+    newOwner: string,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   callStatic: {
     MIN_BALANCER_POOL_BALANCE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MIN_BALANCER_POOL_BALANCE()"(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     MIN_RESERVE_INIT(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MIN_RESERVE_INIT()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     UNINITIALIZED(overrides?: CallOverrides): Promise<number>;
 
+    "UNINITIALIZED()"(overrides?: CallOverrides): Promise<number>;
+
     blockNumberForPhase(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<number>;
+
+    "blockNumberForPhase(uint32[8],uint8)"(
       phaseBlocks_: [
         BigNumberish,
         BigNumberish,
@@ -431,17 +549,31 @@ export class RedeemableERC20Pool extends BaseContract {
 
     crp(overrides?: CallOverrides): Promise<string>;
 
+    "crp()"(overrides?: CallOverrides): Promise<string>;
+
     currentPhase(overrides?: CallOverrides): Promise<number>;
+
+    "currentPhase()"(overrides?: CallOverrides): Promise<number>;
 
     finalValuation(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "finalValuation()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     finalWeight(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "finalWeight()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     minimumTradingDuration(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "minimumTradingDuration()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<string>;
 
+    "owner()"(overrides?: CallOverrides): Promise<string>;
+
     ownerEndDutchAuction(overrides?: CallOverrides): Promise<void>;
+
+    "ownerEndDutchAuction()"(overrides?: CallOverrides): Promise<void>;
 
     phaseAtBlockNumber(
       phaseBlocks_: [
@@ -458,58 +590,99 @@ export class RedeemableERC20Pool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<number>;
 
+    "phaseAtBlockNumber(uint32[8],uint32)"(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      blockNumber_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<number>;
+
     phaseBlocks(arg0: BigNumberish, overrides?: CallOverrides): Promise<number>;
+
+    "phaseBlocks(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<number>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
+    "renounceOwnership()"(overrides?: CallOverrides): Promise<void>;
+
     reserve(overrides?: CallOverrides): Promise<string>;
+
+    "reserve()"(overrides?: CallOverrides): Promise<string>;
 
     reserveInit(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "reserveInit()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     startDutchAuction(overrides?: CallOverrides): Promise<void>;
+
+    "startDutchAuction()"(overrides?: CallOverrides): Promise<void>;
 
     token(overrides?: CallOverrides): Promise<string>;
 
+    "token()"(overrides?: CallOverrides): Promise<string>;
+
     transferOwnership(
+      newOwner: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "transferOwnership(address)"(
       newOwner: string,
       overrides?: CallOverrides
     ): Promise<void>;
   };
 
   filters: {
-    "OwnershipTransferred(address,address)"(
-      previousOwner?: string | null,
-      newOwner?: string | null
-    ): TypedEventFilter<
-      [string, string],
-      { previousOwner: string; newOwner: string }
-    >;
-
     OwnershipTransferred(
-      previousOwner?: string | null,
-      newOwner?: string | null
-    ): TypedEventFilter<
-      [string, string],
-      { previousOwner: string; newOwner: string }
-    >;
+      previousOwner: string | null,
+      newOwner: string | null
+    ): EventFilter;
 
-    "PhaseShiftScheduled(uint32)"(
-      newPhaseBlock_?: BigNumberish | null
-    ): TypedEventFilter<[number], { newPhaseBlock_: number }>;
-
-    PhaseShiftScheduled(
-      newPhaseBlock_?: BigNumberish | null
-    ): TypedEventFilter<[number], { newPhaseBlock_: number }>;
+    PhaseShiftScheduled(newPhaseBlock_: BigNumberish | null): EventFilter;
   };
 
   estimateGas: {
     MIN_BALANCER_POOL_BALANCE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MIN_BALANCER_POOL_BALANCE()"(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     MIN_RESERVE_INIT(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MIN_RESERVE_INIT()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     UNINITIALIZED(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "UNINITIALIZED()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     blockNumberForPhase(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "blockNumberForPhase(uint32[8],uint8)"(
       phaseBlocks_: [
         BigNumberish,
         BigNumberish,
@@ -526,21 +699,48 @@ export class RedeemableERC20Pool extends BaseContract {
 
     crp(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "crp()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     currentPhase(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "currentPhase()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     finalValuation(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "finalValuation()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     finalWeight(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "finalWeight()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     minimumTradingDuration(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "minimumTradingDuration()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    ownerEndDutchAuction(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    "owner()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    ownerEndDutchAuction(overrides?: Overrides): Promise<BigNumber>;
+
+    "ownerEndDutchAuction()"(overrides?: Overrides): Promise<BigNumber>;
 
     phaseAtBlockNumber(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      blockNumber_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "phaseAtBlockNumber(uint32[8],uint32)"(
       phaseBlocks_: [
         BigNumberish,
         BigNumberish,
@@ -560,23 +760,39 @@ export class RedeemableERC20Pool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "phaseBlocks(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    renounceOwnership(overrides?: Overrides): Promise<BigNumber>;
+
+    "renounceOwnership()"(overrides?: Overrides): Promise<BigNumber>;
 
     reserve(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "reserve()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     reserveInit(overrides?: CallOverrides): Promise<BigNumber>;
 
-    startDutchAuction(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    "reserveInit()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    startDutchAuction(overrides?: Overrides): Promise<BigNumber>;
+
+    "startDutchAuction()"(overrides?: Overrides): Promise<BigNumber>;
 
     token(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "token()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     transferOwnership(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "transferOwnership(address)"(
+      newOwner: string,
+      overrides?: Overrides
     ): Promise<BigNumber>;
   };
 
@@ -585,9 +801,19 @@ export class RedeemableERC20Pool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "MIN_BALANCER_POOL_BALANCE()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     MIN_RESERVE_INIT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "MIN_RESERVE_INIT()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     UNINITIALIZED(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "UNINITIALIZED()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     blockNumberForPhase(
       phaseBlocks_: [
@@ -604,25 +830,73 @@ export class RedeemableERC20Pool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "blockNumberForPhase(uint32[8],uint8)"(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      phase_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     crp(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "crp()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     currentPhase(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "currentPhase()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     finalValuation(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "finalValuation()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     finalWeight(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "finalWeight()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     minimumTradingDuration(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "minimumTradingDuration()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    ownerEndDutchAuction(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "owner()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    ownerEndDutchAuction(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "ownerEndDutchAuction()"(
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     phaseAtBlockNumber(
+      phaseBlocks_: [
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish,
+        BigNumberish
+      ],
+      blockNumber_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "phaseAtBlockNumber(uint32[8],uint32)"(
       phaseBlocks_: [
         BigNumberish,
         BigNumberish,
@@ -642,23 +916,39 @@ export class RedeemableERC20Pool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "phaseBlocks(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    renounceOwnership(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "renounceOwnership()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     reserve(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "reserve()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     reserveInit(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    startDutchAuction(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    "reserveInit()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    startDutchAuction(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "startDutchAuction()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     token(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "token()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     transferOwnership(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "transferOwnership(address)"(
+      newOwner: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };
 }

@@ -2,9 +2,19 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from "ethers";
+import { Contract, Signer } from "ethers";
 import { Provider } from "@ethersproject/providers";
-import type { IBFactory, IBFactoryInterface } from "../IBFactory";
+
+import type { IBFactory } from "../IBFactory";
+
+export class IBFactory__factory {
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): IBFactory {
+    return new Contract(address, _abi, signerOrProvider) as IBFactory;
+  }
+}
 
 const _abi = [
   {
@@ -79,16 +89,3 @@ const _abi = [
     type: "function",
   },
 ];
-
-export class IBFactory__factory {
-  static readonly abi = _abi;
-  static createInterface(): IBFactoryInterface {
-    return new utils.Interface(_abi) as IBFactoryInterface;
-  }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IBFactory {
-    return new Contract(address, _abi, signerOrProvider) as IBFactory;
-  }
-}

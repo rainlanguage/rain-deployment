@@ -9,14 +9,15 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface BMathInterface extends ethers.utils.Interface {
   functions: {
@@ -255,81 +256,83 @@ interface BMathInterface extends ethers.utils.Interface {
   events: {};
 }
 
-export class BMath extends BaseContract {
+export class BMath extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: BMathInterface;
 
   functions: {
     BONE(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "BONE()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     BPOW_PRECISION(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "BPOW_PRECISION()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     EXIT_FEE(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "EXIT_FEE()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     INIT_POOL_SUPPLY(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "INIT_POOL_SUPPLY()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     MAX_BOUND_TOKENS(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "MAX_BOUND_TOKENS()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     MAX_BPOW_BASE(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "MAX_BPOW_BASE()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     MAX_FEE(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "MAX_FEE()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     MAX_IN_RATIO(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "MAX_IN_RATIO()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     MAX_OUT_RATIO(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "MAX_OUT_RATIO()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     MAX_TOTAL_WEIGHT(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "MAX_TOTAL_WEIGHT()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     MAX_WEIGHT(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "MAX_WEIGHT()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     MIN_BALANCE(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "MIN_BALANCE()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     MIN_BOUND_TOKENS(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "MIN_BOUND_TOKENS()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     MIN_BPOW_BASE(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "MIN_BPOW_BASE()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     MIN_FEE(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "MIN_FEE()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     MIN_WEIGHT(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "MIN_WEIGHT()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     calcInGivenOut(
       tokenBalanceIn: BigNumberish,
@@ -341,7 +344,27 @@ export class BMath extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { tokenAmountIn: BigNumber }>;
 
+    "calcInGivenOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      tokenAmountOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { tokenAmountIn: BigNumber }>;
+
     calcOutGivenIn(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      tokenAmountIn: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { tokenAmountOut: BigNumber }>;
+
+    "calcOutGivenIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceIn: BigNumberish,
       tokenWeightIn: BigNumberish,
       tokenBalanceOut: BigNumberish,
@@ -361,7 +384,27 @@ export class BMath extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { poolAmountIn: BigNumber }>;
 
+    "calcPoolInGivenSingleOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      tokenAmountOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { poolAmountIn: BigNumber }>;
+
     calcPoolOutGivenSingleIn(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      tokenAmountIn: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { poolAmountOut: BigNumber }>;
+
+    "calcPoolOutGivenSingleIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceIn: BigNumberish,
       tokenWeightIn: BigNumberish,
       poolSupply: BigNumberish,
@@ -381,7 +424,27 @@ export class BMath extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { tokenAmountIn: BigNumber }>;
 
+    "calcSingleInGivenPoolOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      poolAmountOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { tokenAmountIn: BigNumber }>;
+
     calcSingleOutGivenPoolIn(
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      poolAmountIn: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { tokenAmountOut: BigNumber }>;
+
+    "calcSingleOutGivenPoolIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceOut: BigNumberish,
       tokenWeightOut: BigNumberish,
       poolSupply: BigNumberish,
@@ -400,42 +463,95 @@ export class BMath extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { spotPrice: BigNumber }>;
 
+    "calcSpotPrice(uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { spotPrice: BigNumber }>;
+
     getColor(overrides?: CallOverrides): Promise<[string]>;
+
+    "getColor()"(overrides?: CallOverrides): Promise<[string]>;
   };
 
   BONE(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "BONE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   BPOW_PRECISION(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "BPOW_PRECISION()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   EXIT_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "EXIT_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   INIT_POOL_SUPPLY(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "INIT_POOL_SUPPLY()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   MAX_BOUND_TOKENS(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "MAX_BOUND_TOKENS()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   MAX_BPOW_BASE(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "MAX_BPOW_BASE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   MAX_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "MAX_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   MAX_IN_RATIO(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "MAX_IN_RATIO()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   MAX_OUT_RATIO(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "MAX_OUT_RATIO()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   MAX_TOTAL_WEIGHT(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "MAX_TOTAL_WEIGHT()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   MAX_WEIGHT(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "MAX_WEIGHT()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   MIN_BALANCE(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "MIN_BALANCE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   MIN_BOUND_TOKENS(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "MIN_BOUND_TOKENS()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   MIN_BPOW_BASE(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "MIN_BPOW_BASE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   MIN_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "MIN_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   MIN_WEIGHT(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "MIN_WEIGHT()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   calcInGivenOut(
+    tokenBalanceIn: BigNumberish,
+    tokenWeightIn: BigNumberish,
+    tokenBalanceOut: BigNumberish,
+    tokenWeightOut: BigNumberish,
+    tokenAmountOut: BigNumberish,
+    swapFee: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "calcInGivenOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
     tokenBalanceIn: BigNumberish,
     tokenWeightIn: BigNumberish,
     tokenBalanceOut: BigNumberish,
@@ -455,7 +571,27 @@ export class BMath extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  "calcOutGivenIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
+    tokenBalanceIn: BigNumberish,
+    tokenWeightIn: BigNumberish,
+    tokenBalanceOut: BigNumberish,
+    tokenWeightOut: BigNumberish,
+    tokenAmountIn: BigNumberish,
+    swapFee: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   calcPoolInGivenSingleOut(
+    tokenBalanceOut: BigNumberish,
+    tokenWeightOut: BigNumberish,
+    poolSupply: BigNumberish,
+    totalWeight: BigNumberish,
+    tokenAmountOut: BigNumberish,
+    swapFee: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "calcPoolInGivenSingleOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
     tokenBalanceOut: BigNumberish,
     tokenWeightOut: BigNumberish,
     poolSupply: BigNumberish,
@@ -475,7 +611,27 @@ export class BMath extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  "calcPoolOutGivenSingleIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
+    tokenBalanceIn: BigNumberish,
+    tokenWeightIn: BigNumberish,
+    poolSupply: BigNumberish,
+    totalWeight: BigNumberish,
+    tokenAmountIn: BigNumberish,
+    swapFee: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   calcSingleInGivenPoolOut(
+    tokenBalanceIn: BigNumberish,
+    tokenWeightIn: BigNumberish,
+    poolSupply: BigNumberish,
+    totalWeight: BigNumberish,
+    poolAmountOut: BigNumberish,
+    swapFee: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "calcSingleInGivenPoolOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
     tokenBalanceIn: BigNumberish,
     tokenWeightIn: BigNumberish,
     poolSupply: BigNumberish,
@@ -495,7 +651,26 @@ export class BMath extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  "calcSingleOutGivenPoolIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
+    tokenBalanceOut: BigNumberish,
+    tokenWeightOut: BigNumberish,
+    poolSupply: BigNumberish,
+    totalWeight: BigNumberish,
+    poolAmountIn: BigNumberish,
+    swapFee: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   calcSpotPrice(
+    tokenBalanceIn: BigNumberish,
+    tokenWeightIn: BigNumberish,
+    tokenBalanceOut: BigNumberish,
+    tokenWeightOut: BigNumberish,
+    swapFee: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "calcSpotPrice(uint256,uint256,uint256,uint256,uint256)"(
     tokenBalanceIn: BigNumberish,
     tokenWeightIn: BigNumberish,
     tokenBalanceOut: BigNumberish,
@@ -506,40 +681,84 @@ export class BMath extends BaseContract {
 
   getColor(overrides?: CallOverrides): Promise<string>;
 
+  "getColor()"(overrides?: CallOverrides): Promise<string>;
+
   callStatic: {
     BONE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "BONE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     BPOW_PRECISION(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "BPOW_PRECISION()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     EXIT_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "EXIT_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     INIT_POOL_SUPPLY(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "INIT_POOL_SUPPLY()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MAX_BOUND_TOKENS(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MAX_BOUND_TOKENS()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MAX_BPOW_BASE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MAX_BPOW_BASE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MAX_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MAX_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MAX_IN_RATIO(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MAX_IN_RATIO()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MAX_OUT_RATIO(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MAX_OUT_RATIO()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MAX_TOTAL_WEIGHT(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MAX_TOTAL_WEIGHT()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MAX_WEIGHT(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MAX_WEIGHT()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MIN_BALANCE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MIN_BALANCE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MIN_BOUND_TOKENS(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MIN_BOUND_TOKENS()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MIN_BPOW_BASE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MIN_BPOW_BASE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MIN_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MIN_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MIN_WEIGHT(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MIN_WEIGHT()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     calcInGivenOut(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      tokenAmountOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "calcInGivenOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceIn: BigNumberish,
       tokenWeightIn: BigNumberish,
       tokenBalanceOut: BigNumberish,
@@ -559,7 +778,27 @@ export class BMath extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "calcOutGivenIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      tokenAmountIn: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     calcPoolInGivenSingleOut(
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      tokenAmountOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "calcPoolInGivenSingleOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceOut: BigNumberish,
       tokenWeightOut: BigNumberish,
       poolSupply: BigNumberish,
@@ -579,7 +818,27 @@ export class BMath extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "calcPoolOutGivenSingleIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      tokenAmountIn: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     calcSingleInGivenPoolOut(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      poolAmountOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "calcSingleInGivenPoolOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceIn: BigNumberish,
       tokenWeightIn: BigNumberish,
       poolSupply: BigNumberish,
@@ -599,7 +858,26 @@ export class BMath extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "calcSingleOutGivenPoolIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      poolAmountIn: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     calcSpotPrice(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "calcSpotPrice(uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceIn: BigNumberish,
       tokenWeightIn: BigNumberish,
       tokenBalanceOut: BigNumberish,
@@ -609,6 +887,8 @@ export class BMath extends BaseContract {
     ): Promise<BigNumber>;
 
     getColor(overrides?: CallOverrides): Promise<string>;
+
+    "getColor()"(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {};
@@ -616,37 +896,79 @@ export class BMath extends BaseContract {
   estimateGas: {
     BONE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "BONE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     BPOW_PRECISION(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "BPOW_PRECISION()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     EXIT_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "EXIT_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     INIT_POOL_SUPPLY(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "INIT_POOL_SUPPLY()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MAX_BOUND_TOKENS(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MAX_BOUND_TOKENS()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MAX_BPOW_BASE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MAX_BPOW_BASE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MAX_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MAX_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MAX_IN_RATIO(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MAX_IN_RATIO()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MAX_OUT_RATIO(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MAX_OUT_RATIO()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MAX_TOTAL_WEIGHT(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MAX_TOTAL_WEIGHT()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MAX_WEIGHT(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MAX_WEIGHT()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MIN_BALANCE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MIN_BALANCE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MIN_BOUND_TOKENS(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MIN_BOUND_TOKENS()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MIN_BPOW_BASE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MIN_BPOW_BASE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MIN_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MIN_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MIN_WEIGHT(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MIN_WEIGHT()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     calcInGivenOut(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      tokenAmountOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "calcInGivenOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceIn: BigNumberish,
       tokenWeightIn: BigNumberish,
       tokenBalanceOut: BigNumberish,
@@ -666,7 +988,27 @@ export class BMath extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "calcOutGivenIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      tokenAmountIn: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     calcPoolInGivenSingleOut(
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      tokenAmountOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "calcPoolInGivenSingleOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceOut: BigNumberish,
       tokenWeightOut: BigNumberish,
       poolSupply: BigNumberish,
@@ -686,7 +1028,27 @@ export class BMath extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "calcPoolOutGivenSingleIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      tokenAmountIn: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     calcSingleInGivenPoolOut(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      poolAmountOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "calcSingleInGivenPoolOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceIn: BigNumberish,
       tokenWeightIn: BigNumberish,
       poolSupply: BigNumberish,
@@ -706,7 +1068,26 @@ export class BMath extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "calcSingleOutGivenPoolIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      poolAmountIn: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     calcSpotPrice(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "calcSpotPrice(uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceIn: BigNumberish,
       tokenWeightIn: BigNumberish,
       tokenBalanceOut: BigNumberish,
@@ -716,42 +1097,96 @@ export class BMath extends BaseContract {
     ): Promise<BigNumber>;
 
     getColor(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getColor()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
     BONE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "BONE()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     BPOW_PRECISION(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "BPOW_PRECISION()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     EXIT_FEE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "EXIT_FEE()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     INIT_POOL_SUPPLY(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "INIT_POOL_SUPPLY()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     MAX_BOUND_TOKENS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "MAX_BOUND_TOKENS()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     MAX_BPOW_BASE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "MAX_BPOW_BASE()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     MAX_FEE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "MAX_FEE()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     MAX_IN_RATIO(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "MAX_IN_RATIO()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     MAX_OUT_RATIO(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "MAX_OUT_RATIO()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     MAX_TOTAL_WEIGHT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "MAX_TOTAL_WEIGHT()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     MAX_WEIGHT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "MAX_WEIGHT()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     MIN_BALANCE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "MIN_BALANCE()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     MIN_BOUND_TOKENS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "MIN_BOUND_TOKENS()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     MIN_BPOW_BASE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "MIN_BPOW_BASE()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     MIN_FEE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "MIN_FEE()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     MIN_WEIGHT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "MIN_WEIGHT()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     calcInGivenOut(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      tokenAmountOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "calcInGivenOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceIn: BigNumberish,
       tokenWeightIn: BigNumberish,
       tokenBalanceOut: BigNumberish,
@@ -771,7 +1206,27 @@ export class BMath extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "calcOutGivenIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      tokenAmountIn: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     calcPoolInGivenSingleOut(
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      tokenAmountOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "calcPoolInGivenSingleOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceOut: BigNumberish,
       tokenWeightOut: BigNumberish,
       poolSupply: BigNumberish,
@@ -791,7 +1246,27 @@ export class BMath extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "calcPoolOutGivenSingleIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      tokenAmountIn: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     calcSingleInGivenPoolOut(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      poolAmountOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "calcSingleInGivenPoolOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceIn: BigNumberish,
       tokenWeightIn: BigNumberish,
       poolSupply: BigNumberish,
@@ -811,6 +1286,16 @@ export class BMath extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "calcSingleOutGivenPoolIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      poolAmountIn: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     calcSpotPrice(
       tokenBalanceIn: BigNumberish,
       tokenWeightIn: BigNumberish,
@@ -820,6 +1305,17 @@ export class BMath extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "calcSpotPrice(uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getColor(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getColor()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

@@ -9,15 +9,16 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface IBPoolInterface extends ethers.utils.Interface {
   functions: {
@@ -185,60 +186,49 @@ interface IBPoolInterface extends ethers.utils.Interface {
   events: {};
 }
 
-export class IBPool extends BaseContract {
+export class IBPool extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: IBPoolInterface;
 
   functions: {
     EXIT_FEE(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "EXIT_FEE()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     bind(
       token: string,
       balance: BigNumberish,
       denorm: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "bind(address,uint256,uint256)"(
+      token: string,
+      balance: BigNumberish,
+      denorm: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     calcPoolInGivenSingleOut(
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      tokenAmountOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { poolAmountIn: BigNumber }>;
+
+    "calcPoolInGivenSingleOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceOut: BigNumberish,
       tokenWeightOut: BigNumberish,
       poolSupply: BigNumberish,
@@ -258,7 +248,27 @@ export class IBPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { poolAmountOut: BigNumber }>;
 
+    "calcPoolOutGivenSingleIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      tokenAmountIn: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { poolAmountOut: BigNumber }>;
+
     calcSingleInGivenPoolOut(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      poolAmountOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { tokenAmountIn: BigNumber }>;
+
+    "calcSingleInGivenPoolOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceIn: BigNumberish,
       tokenWeightIn: BigNumberish,
       poolSupply: BigNumberish,
@@ -278,9 +288,28 @@ export class IBPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { tokenAmountOut: BigNumber }>;
 
+    "calcSingleOutGivenPoolIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      poolAmountIn: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { tokenAmountOut: BigNumber }>;
+
     getBalance(token: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "getBalance(address)"(
+      token: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     getCurrentTokens(
+      overrides?: CallOverrides
+    ): Promise<[string[]] & { tokens: string[] }>;
+
+    "getCurrentTokens()"(
       overrides?: CallOverrides
     ): Promise<[string[]] & { tokens: string[] }>;
 
@@ -289,54 +318,114 @@ export class IBPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    "getDenormalizedWeight(address)"(
+      token: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     getSwapFee(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "getSwapFee()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getTotalDenormalizedWeight(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    gulp(
+    "getTotalDenormalizedWeight()"(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    gulp(token: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+    "gulp(address)"(
       token: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     isBound(token: string, overrides?: CallOverrides): Promise<[boolean]>;
 
+    "isBound(address)"(
+      token: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     isPublicSwap(overrides?: CallOverrides): Promise<[boolean]>;
+
+    "isPublicSwap()"(overrides?: CallOverrides): Promise<[boolean]>;
 
     rebind(
       token: string,
       balance: BigNumberish,
       denorm: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "rebind(address,uint256,uint256)"(
+      token: string,
+      balance: BigNumberish,
+      denorm: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setPublicSwap(
       publicSwap: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "setPublicSwap(bool)"(
+      publicSwap: boolean,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setSwapFee(
       swapFee: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "setSwapFee(uint256)"(
+      swapFee: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    unbind(
+    "totalSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    unbind(token: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+    "unbind(address)"(
       token: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
 
   EXIT_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "EXIT_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   bind(
     token: string,
     balance: BigNumberish,
     denorm: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "bind(address,uint256,uint256)"(
+    token: string,
+    balance: BigNumberish,
+    denorm: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   calcPoolInGivenSingleOut(
+    tokenBalanceOut: BigNumberish,
+    tokenWeightOut: BigNumberish,
+    poolSupply: BigNumberish,
+    totalWeight: BigNumberish,
+    tokenAmountOut: BigNumberish,
+    swapFee: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "calcPoolInGivenSingleOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
     tokenBalanceOut: BigNumberish,
     tokenWeightOut: BigNumberish,
     poolSupply: BigNumberish,
@@ -356,7 +445,27 @@ export class IBPool extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  "calcPoolOutGivenSingleIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
+    tokenBalanceIn: BigNumberish,
+    tokenWeightIn: BigNumberish,
+    poolSupply: BigNumberish,
+    totalWeight: BigNumberish,
+    tokenAmountIn: BigNumberish,
+    swapFee: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   calcSingleInGivenPoolOut(
+    tokenBalanceIn: BigNumberish,
+    tokenWeightIn: BigNumberish,
+    poolSupply: BigNumberish,
+    totalWeight: BigNumberish,
+    poolAmountOut: BigNumberish,
+    swapFee: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "calcSingleInGivenPoolOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
     tokenBalanceIn: BigNumberish,
     tokenWeightIn: BigNumberish,
     poolSupply: BigNumberish,
@@ -376,54 +485,112 @@ export class IBPool extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  "calcSingleOutGivenPoolIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
+    tokenBalanceOut: BigNumberish,
+    tokenWeightOut: BigNumberish,
+    poolSupply: BigNumberish,
+    totalWeight: BigNumberish,
+    poolAmountIn: BigNumberish,
+    swapFee: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   getBalance(token: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+  "getBalance(address)"(
+    token: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   getCurrentTokens(overrides?: CallOverrides): Promise<string[]>;
+
+  "getCurrentTokens()"(overrides?: CallOverrides): Promise<string[]>;
 
   getDenormalizedWeight(
     token: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  "getDenormalizedWeight(address)"(
+    token: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   getSwapFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "getSwapFee()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   getTotalDenormalizedWeight(overrides?: CallOverrides): Promise<BigNumber>;
 
-  gulp(
+  "getTotalDenormalizedWeight()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+  gulp(token: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+  "gulp(address)"(
     token: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   isBound(token: string, overrides?: CallOverrides): Promise<boolean>;
 
+  "isBound(address)"(
+    token: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   isPublicSwap(overrides?: CallOverrides): Promise<boolean>;
+
+  "isPublicSwap()"(overrides?: CallOverrides): Promise<boolean>;
 
   rebind(
     token: string,
     balance: BigNumberish,
     denorm: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "rebind(address,uint256,uint256)"(
+    token: string,
+    balance: BigNumberish,
+    denorm: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setPublicSwap(
     publicSwap: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "setPublicSwap(bool)"(
+    publicSwap: boolean,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setSwapFee(
     swapFee: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "setSwapFee(uint256)"(
+    swapFee: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-  unbind(
+  "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+  unbind(token: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+  "unbind(address)"(
     token: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   callStatic: {
     EXIT_FEE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "EXIT_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     bind(
       token: string,
@@ -432,7 +599,24 @@ export class IBPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "bind(address,uint256,uint256)"(
+      token: string,
+      balance: BigNumberish,
+      denorm: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     calcPoolInGivenSingleOut(
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      tokenAmountOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "calcPoolInGivenSingleOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceOut: BigNumberish,
       tokenWeightOut: BigNumberish,
       poolSupply: BigNumberish,
@@ -452,7 +636,27 @@ export class IBPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "calcPoolOutGivenSingleIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      tokenAmountIn: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     calcSingleInGivenPoolOut(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      poolAmountOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "calcSingleInGivenPoolOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceIn: BigNumberish,
       tokenWeightIn: BigNumberish,
       poolSupply: BigNumberish,
@@ -472,26 +676,70 @@ export class IBPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "calcSingleOutGivenPoolIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      poolAmountIn: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getBalance(token: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getBalance(address)"(
+      token: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getCurrentTokens(overrides?: CallOverrides): Promise<string[]>;
+
+    "getCurrentTokens()"(overrides?: CallOverrides): Promise<string[]>;
 
     getDenormalizedWeight(
       token: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "getDenormalizedWeight(address)"(
+      token: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getSwapFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getSwapFee()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getTotalDenormalizedWeight(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getTotalDenormalizedWeight()"(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     gulp(token: string, overrides?: CallOverrides): Promise<void>;
+
+    "gulp(address)"(token: string, overrides?: CallOverrides): Promise<void>;
 
     isBound(token: string, overrides?: CallOverrides): Promise<boolean>;
 
+    "isBound(address)"(
+      token: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     isPublicSwap(overrides?: CallOverrides): Promise<boolean>;
 
+    "isPublicSwap()"(overrides?: CallOverrides): Promise<boolean>;
+
     rebind(
+      token: string,
+      balance: BigNumberish,
+      denorm: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "rebind(address,uint256,uint256)"(
       token: string,
       balance: BigNumberish,
       denorm: BigNumberish,
@@ -503,11 +751,25 @@ export class IBPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "setPublicSwap(bool)"(
+      publicSwap: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setSwapFee(swapFee: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
+    "setSwapFee(uint256)"(
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     unbind(token: string, overrides?: CallOverrides): Promise<void>;
+
+    "unbind(address)"(token: string, overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {};
@@ -515,14 +777,33 @@ export class IBPool extends BaseContract {
   estimateGas: {
     EXIT_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "EXIT_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     bind(
       token: string,
       balance: BigNumberish,
       denorm: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "bind(address,uint256,uint256)"(
+      token: string,
+      balance: BigNumberish,
+      denorm: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     calcPoolInGivenSingleOut(
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      tokenAmountOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "calcPoolInGivenSingleOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceOut: BigNumberish,
       tokenWeightOut: BigNumberish,
       poolSupply: BigNumberish,
@@ -542,7 +823,27 @@ export class IBPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "calcPoolOutGivenSingleIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      tokenAmountIn: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     calcSingleInGivenPoolOut(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      poolAmountOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "calcSingleInGivenPoolOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceIn: BigNumberish,
       tokenWeightIn: BigNumberish,
       poolSupply: BigNumberish,
@@ -562,64 +863,135 @@ export class IBPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "calcSingleOutGivenPoolIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      poolAmountIn: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getBalance(token: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getBalance(address)"(
+      token: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getCurrentTokens(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getCurrentTokens()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getDenormalizedWeight(
       token: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "getDenormalizedWeight(address)"(
+      token: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getSwapFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getSwapFee()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getTotalDenormalizedWeight(overrides?: CallOverrides): Promise<BigNumber>;
 
-    gulp(
-      token: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "getTotalDenormalizedWeight()"(
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    gulp(token: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "gulp(address)"(token: string, overrides?: Overrides): Promise<BigNumber>;
 
     isBound(token: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "isBound(address)"(
+      token: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     isPublicSwap(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "isPublicSwap()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     rebind(
       token: string,
       balance: BigNumberish,
       denorm: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "rebind(address,uint256,uint256)"(
+      token: string,
+      balance: BigNumberish,
+      denorm: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     setPublicSwap(
       publicSwap: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "setPublicSwap(bool)"(
+      publicSwap: boolean,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     setSwapFee(
       swapFee: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "setSwapFee(uint256)"(
+      swapFee: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-    unbind(
-      token: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    unbind(token: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "unbind(address)"(token: string, overrides?: Overrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
     EXIT_FEE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "EXIT_FEE()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     bind(
       token: string,
       balance: BigNumberish,
       denorm: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "bind(address,uint256,uint256)"(
+      token: string,
+      balance: BigNumberish,
+      denorm: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     calcPoolInGivenSingleOut(
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      tokenAmountOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "calcPoolInGivenSingleOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceOut: BigNumberish,
       tokenWeightOut: BigNumberish,
       poolSupply: BigNumberish,
@@ -639,6 +1011,16 @@ export class IBPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "calcPoolOutGivenSingleIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      tokenAmountIn: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     calcSingleInGivenPoolOut(
       tokenBalanceIn: BigNumberish,
       tokenWeightIn: BigNumberish,
@@ -649,7 +1031,27 @@ export class IBPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "calcSingleInGivenPoolOut(uint256,uint256,uint256,uint256,uint256,uint256)"(
+      tokenBalanceIn: BigNumberish,
+      tokenWeightIn: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      poolAmountOut: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     calcSingleOutGivenPoolIn(
+      tokenBalanceOut: BigNumberish,
+      tokenWeightOut: BigNumberish,
+      poolSupply: BigNumberish,
+      totalWeight: BigNumberish,
+      poolAmountIn: BigNumberish,
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "calcSingleOutGivenPoolIn(uint256,uint256,uint256,uint256,uint256,uint256)"(
       tokenBalanceOut: BigNumberish,
       tokenWeightOut: BigNumberish,
       poolSupply: BigNumberish,
@@ -664,22 +1066,44 @@ export class IBPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "getBalance(address)"(
+      token: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getCurrentTokens(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getCurrentTokens()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     getDenormalizedWeight(
       token: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "getDenormalizedWeight(address)"(
+      token: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getSwapFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getSwapFee()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getTotalDenormalizedWeight(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    gulp(
+    "getTotalDenormalizedWeight()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    gulp(token: string, overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "gulp(address)"(
       token: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     isBound(
@@ -687,30 +1111,58 @@ export class IBPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "isBound(address)"(
+      token: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     isPublicSwap(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "isPublicSwap()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     rebind(
       token: string,
       balance: BigNumberish,
       denorm: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "rebind(address,uint256,uint256)"(
+      token: string,
+      balance: BigNumberish,
+      denorm: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setPublicSwap(
       publicSwap: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "setPublicSwap(bool)"(
+      publicSwap: boolean,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setSwapFee(
       swapFee: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "setSwapFee(uint256)"(
+      swapFee: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    unbind(
+    "totalSupply()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    unbind(token: string, overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "unbind(address)"(
       token: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };
 }

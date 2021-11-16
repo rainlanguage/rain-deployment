@@ -9,15 +9,16 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface ClaimERC1155TestInterface extends ethers.utils.Interface {
   functions: {
@@ -171,99 +172,35 @@ interface ClaimERC1155TestInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "URI"): EventFragment;
 }
 
-export type ApprovalForAllEvent = TypedEvent<
-  [string, string, boolean] & {
-    account: string;
-    operator: string;
-    approved: boolean;
-  }
->;
-
-export type ClaimEvent = TypedEvent<
-  [string, string] & { account: string; data: string }
->;
-
-export type TierChangeEvent = TypedEvent<
-  [string, number, number] & {
-    account: string;
-    startTier: number;
-    endTier: number;
-  }
->;
-
-export type TransferBatchEvent = TypedEvent<
-  [string, string, string, BigNumber[], BigNumber[]] & {
-    operator: string;
-    from: string;
-    to: string;
-    ids: BigNumber[];
-    values: BigNumber[];
-  }
->;
-
-export type TransferSingleEvent = TypedEvent<
-  [string, string, string, BigNumber, BigNumber] & {
-    operator: string;
-    from: string;
-    to: string;
-    id: BigNumber;
-    value: BigNumber;
-  }
->;
-
-export type URIEvent = TypedEvent<
-  [string, BigNumber] & { value: string; id: BigNumber }
->;
-
-export class ClaimERC1155Test extends BaseContract {
+export class ClaimERC1155Test extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: ClaimERC1155TestInterface;
 
   functions: {
     ART(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "ART()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     GOOD_ART(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "GOOD_ART()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     balanceOf(
+      account: string,
+      id: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "balanceOf(address,uint256)"(
       account: string,
       id: BigNumberish,
       overrides?: CallOverrides
@@ -275,19 +212,46 @@ export class ClaimERC1155Test extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
+    "balanceOfBatch(address[],uint256[])"(
+      accounts: string[],
+      ids: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[]]>;
+
     claim(
       account_: string,
       data_: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "claim(address,bytes)"(
+      account_: string,
+      data_: BytesLike,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     claims(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
 
+    "claims(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     constructionBlock(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "constructionBlock()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     erc20(overrides?: CallOverrides): Promise<[string]>;
 
+    "erc20()"(overrides?: CallOverrides): Promise<[string]>;
+
     isApprovedForAll(
+      account: string,
+      operator: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    "isApprovedForAll(address,address)"(
       account: string,
       operator: string,
       overrides?: CallOverrides
@@ -299,9 +263,22 @@ export class ClaimERC1155Test extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    "isTier(address,uint8)"(
+      account_: string,
+      minimumTier_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     minimumTier(overrides?: CallOverrides): Promise<[number]>;
 
+    "minimumTier()"(overrides?: CallOverrides): Promise<[number]>;
+
     report(account_: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "report(address)"(
+      account_: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     safeBatchTransferFrom(
       from: string,
@@ -309,7 +286,16 @@ export class ClaimERC1155Test extends BaseContract {
       ids: BigNumberish[],
       amounts: BigNumberish[],
       data: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)"(
+      from: string,
+      to: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      data: BytesLike,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     safeTransferFrom(
@@ -318,20 +304,42 @@ export class ClaimERC1155Test extends BaseContract {
       id: BigNumberish,
       amount: BigNumberish,
       data: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "safeTransferFrom(address,address,uint256,uint256,bytes)"(
+      from: string,
+      to: string,
+      id: BigNumberish,
+      amount: BigNumberish,
+      data: BytesLike,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setApprovalForAll(
       operator: string,
       approved: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "setApprovalForAll(address,bool)"(
+      operator: string,
+      approved: boolean,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setTier(
       arg0: string,
       arg1: BigNumberish,
       arg2: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "setTier(address,uint8,bytes)"(
+      arg0: string,
+      arg1: BigNumberish,
+      arg2: BytesLike,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     supportsInterface(
@@ -339,7 +347,14 @@ export class ClaimERC1155Test extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    "supportsInterface(bytes4)"(
+      interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     tierContract(overrides?: CallOverrides): Promise<[string]>;
+
+    "tierContract()"(overrides?: CallOverrides): Promise<[string]>;
 
     tierValues(
       overrides?: CallOverrides
@@ -369,14 +384,57 @@ export class ClaimERC1155Test extends BaseContract {
       }
     >;
 
+    "tierValues()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        [
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber
+        ]
+      ] & {
+        tierValues_: [
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber
+        ];
+      }
+    >;
+
     uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
+
+    "uri(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
   };
 
   ART(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "ART()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   GOOD_ART(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "GOOD_ART()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   balanceOf(
+    account: string,
+    id: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "balanceOf(address,uint256)"(
     account: string,
     id: BigNumberish,
     overrides?: CallOverrides
@@ -388,19 +446,43 @@ export class ClaimERC1155Test extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
+  "balanceOfBatch(address[],uint256[])"(
+    accounts: string[],
+    ids: BigNumberish[],
+    overrides?: CallOverrides
+  ): Promise<BigNumber[]>;
+
   claim(
     account_: string,
     data_: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "claim(address,bytes)"(
+    account_: string,
+    data_: BytesLike,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   claims(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
+  "claims(address)"(arg0: string, overrides?: CallOverrides): Promise<boolean>;
+
   constructionBlock(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "constructionBlock()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   erc20(overrides?: CallOverrides): Promise<string>;
 
+  "erc20()"(overrides?: CallOverrides): Promise<string>;
+
   isApprovedForAll(
+    account: string,
+    operator: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  "isApprovedForAll(address,address)"(
     account: string,
     operator: string,
     overrides?: CallOverrides
@@ -412,9 +494,22 @@ export class ClaimERC1155Test extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  "isTier(address,uint8)"(
+    account_: string,
+    minimumTier_: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   minimumTier(overrides?: CallOverrides): Promise<number>;
 
+  "minimumTier()"(overrides?: CallOverrides): Promise<number>;
+
   report(account_: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  "report(address)"(
+    account_: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   safeBatchTransferFrom(
     from: string,
@@ -422,7 +517,16 @@ export class ClaimERC1155Test extends BaseContract {
     ids: BigNumberish[],
     amounts: BigNumberish[],
     data: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)"(
+    from: string,
+    to: string,
+    ids: BigNumberish[],
+    amounts: BigNumberish[],
+    data: BytesLike,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   safeTransferFrom(
@@ -431,20 +535,42 @@ export class ClaimERC1155Test extends BaseContract {
     id: BigNumberish,
     amount: BigNumberish,
     data: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "safeTransferFrom(address,address,uint256,uint256,bytes)"(
+    from: string,
+    to: string,
+    id: BigNumberish,
+    amount: BigNumberish,
+    data: BytesLike,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setApprovalForAll(
     operator: string,
     approved: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "setApprovalForAll(address,bool)"(
+    operator: string,
+    approved: boolean,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setTier(
     arg0: string,
     arg1: BigNumberish,
     arg2: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "setTier(address,uint8,bytes)"(
+    arg0: string,
+    arg1: BigNumberish,
+    arg2: BytesLike,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   supportsInterface(
@@ -452,7 +578,14 @@ export class ClaimERC1155Test extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  "supportsInterface(bytes4)"(
+    interfaceId: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   tierContract(overrides?: CallOverrides): Promise<string>;
+
+  "tierContract()"(overrides?: CallOverrides): Promise<string>;
 
   tierValues(
     overrides?: CallOverrides
@@ -469,14 +602,44 @@ export class ClaimERC1155Test extends BaseContract {
     ]
   >;
 
+  "tierValues()"(
+    overrides?: CallOverrides
+  ): Promise<
+    [
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber
+    ]
+  >;
+
   uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+  "uri(uint256)"(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   callStatic: {
     ART(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "ART()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     GOOD_ART(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "GOOD_ART()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     balanceOf(
+      account: string,
+      id: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "balanceOf(address,uint256)"(
       account: string,
       id: BigNumberish,
       overrides?: CallOverrides
@@ -488,7 +651,19 @@ export class ClaimERC1155Test extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
 
+    "balanceOfBatch(address[],uint256[])"(
+      accounts: string[],
+      ids: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<BigNumber[]>;
+
     claim(
+      account_: string,
+      data_: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "claim(address,bytes)"(
       account_: string,
       data_: BytesLike,
       overrides?: CallOverrides
@@ -496,11 +671,26 @@ export class ClaimERC1155Test extends BaseContract {
 
     claims(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
+    "claims(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     constructionBlock(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "constructionBlock()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     erc20(overrides?: CallOverrides): Promise<string>;
 
+    "erc20()"(overrides?: CallOverrides): Promise<string>;
+
     isApprovedForAll(
+      account: string,
+      operator: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "isApprovedForAll(address,address)"(
       account: string,
       operator: string,
       overrides?: CallOverrides
@@ -512,11 +702,33 @@ export class ClaimERC1155Test extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "isTier(address,uint8)"(
+      account_: string,
+      minimumTier_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     minimumTier(overrides?: CallOverrides): Promise<number>;
+
+    "minimumTier()"(overrides?: CallOverrides): Promise<number>;
 
     report(account_: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "report(address)"(
+      account_: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     safeBatchTransferFrom(
+      from: string,
+      to: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      data: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)"(
       from: string,
       to: string,
       ids: BigNumberish[],
@@ -534,7 +746,22 @@ export class ClaimERC1155Test extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "safeTransferFrom(address,address,uint256,uint256,bytes)"(
+      from: string,
+      to: string,
+      id: BigNumberish,
+      amount: BigNumberish,
+      data: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setApprovalForAll(
+      operator: string,
+      approved: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "setApprovalForAll(address,bool)"(
       operator: string,
       approved: boolean,
       overrides?: CallOverrides
@@ -547,12 +774,26 @@ export class ClaimERC1155Test extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "setTier(address,uint8,bytes)"(
+      arg0: string,
+      arg1: BigNumberish,
+      arg2: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "supportsInterface(bytes4)"(
+      interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     tierContract(overrides?: CallOverrides): Promise<string>;
+
+    "tierContract()"(overrides?: CallOverrides): Promise<string>;
 
     tierValues(
       overrides?: CallOverrides
@@ -569,141 +810,79 @@ export class ClaimERC1155Test extends BaseContract {
       ]
     >;
 
+    "tierValues()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber
+      ]
+    >;
+
     uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+    "uri(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
   };
 
   filters: {
-    "ApprovalForAll(address,address,bool)"(
-      account?: string | null,
-      operator?: string | null,
-      approved?: null
-    ): TypedEventFilter<
-      [string, string, boolean],
-      { account: string; operator: string; approved: boolean }
-    >;
-
     ApprovalForAll(
-      account?: string | null,
-      operator?: string | null,
-      approved?: null
-    ): TypedEventFilter<
-      [string, string, boolean],
-      { account: string; operator: string; approved: boolean }
-    >;
+      account: string | null,
+      operator: string | null,
+      approved: null
+    ): EventFilter;
 
-    "Claim(address,bytes)"(
-      account?: string | null,
-      data?: null
-    ): TypedEventFilter<[string, string], { account: string; data: string }>;
-
-    Claim(
-      account?: string | null,
-      data?: null
-    ): TypedEventFilter<[string, string], { account: string; data: string }>;
-
-    "TierChange(address,uint8,uint8)"(
-      account?: string | null,
-      startTier?: BigNumberish | null,
-      endTier?: BigNumberish | null
-    ): TypedEventFilter<
-      [string, number, number],
-      { account: string; startTier: number; endTier: number }
-    >;
+    Claim(account: string | null, data: null): EventFilter;
 
     TierChange(
-      account?: string | null,
-      startTier?: BigNumberish | null,
-      endTier?: BigNumberish | null
-    ): TypedEventFilter<
-      [string, number, number],
-      { account: string; startTier: number; endTier: number }
-    >;
-
-    "TransferBatch(address,address,address,uint256[],uint256[])"(
-      operator?: string | null,
-      from?: string | null,
-      to?: string | null,
-      ids?: null,
-      values?: null
-    ): TypedEventFilter<
-      [string, string, string, BigNumber[], BigNumber[]],
-      {
-        operator: string;
-        from: string;
-        to: string;
-        ids: BigNumber[];
-        values: BigNumber[];
-      }
-    >;
+      account: string | null,
+      startTier: BigNumberish | null,
+      endTier: BigNumberish | null
+    ): EventFilter;
 
     TransferBatch(
-      operator?: string | null,
-      from?: string | null,
-      to?: string | null,
-      ids?: null,
-      values?: null
-    ): TypedEventFilter<
-      [string, string, string, BigNumber[], BigNumber[]],
-      {
-        operator: string;
-        from: string;
-        to: string;
-        ids: BigNumber[];
-        values: BigNumber[];
-      }
-    >;
-
-    "TransferSingle(address,address,address,uint256,uint256)"(
-      operator?: string | null,
-      from?: string | null,
-      to?: string | null,
-      id?: null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, string, BigNumber, BigNumber],
-      {
-        operator: string;
-        from: string;
-        to: string;
-        id: BigNumber;
-        value: BigNumber;
-      }
-    >;
+      operator: string | null,
+      from: string | null,
+      to: string | null,
+      ids: null,
+      values: null
+    ): EventFilter;
 
     TransferSingle(
-      operator?: string | null,
-      from?: string | null,
-      to?: string | null,
-      id?: null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, string, BigNumber, BigNumber],
-      {
-        operator: string;
-        from: string;
-        to: string;
-        id: BigNumber;
-        value: BigNumber;
-      }
-    >;
+      operator: string | null,
+      from: string | null,
+      to: string | null,
+      id: null,
+      value: null
+    ): EventFilter;
 
-    "URI(string,uint256)"(
-      value?: null,
-      id?: BigNumberish | null
-    ): TypedEventFilter<[string, BigNumber], { value: string; id: BigNumber }>;
-
-    URI(
-      value?: null,
-      id?: BigNumberish | null
-    ): TypedEventFilter<[string, BigNumber], { value: string; id: BigNumber }>;
+    URI(value: null, id: BigNumberish | null): EventFilter;
   };
 
   estimateGas: {
     ART(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "ART()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     GOOD_ART(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "GOOD_ART()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     balanceOf(
+      account: string,
+      id: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "balanceOf(address,uint256)"(
       account: string,
       id: BigNumberish,
       overrides?: CallOverrides
@@ -715,17 +894,38 @@ export class ClaimERC1155Test extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "balanceOfBatch(address[],uint256[])"(
+      accounts: string[],
+      ids: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     claim(
       account_: string,
       data_: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "claim(address,bytes)"(
+      account_: string,
+      data_: BytesLike,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     claims(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "claims(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     constructionBlock(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "constructionBlock()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     erc20(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "erc20()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     isApprovedForAll(
       account: string,
@@ -733,7 +933,19 @@ export class ClaimERC1155Test extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "isApprovedForAll(address,address)"(
+      account: string,
+      operator: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     isTier(
+      account_: string,
+      minimumTier_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "isTier(address,uint8)"(
       account_: string,
       minimumTier_: BigNumberish,
       overrides?: CallOverrides
@@ -741,7 +953,14 @@ export class ClaimERC1155Test extends BaseContract {
 
     minimumTier(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "minimumTier()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     report(account_: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "report(address)"(
+      account_: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     safeBatchTransferFrom(
       from: string,
@@ -749,7 +968,16 @@ export class ClaimERC1155Test extends BaseContract {
       ids: BigNumberish[],
       amounts: BigNumberish[],
       data: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)"(
+      from: string,
+      to: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      data: BytesLike,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     safeTransferFrom(
@@ -758,20 +986,42 @@ export class ClaimERC1155Test extends BaseContract {
       id: BigNumberish,
       amount: BigNumberish,
       data: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "safeTransferFrom(address,address,uint256,uint256,bytes)"(
+      from: string,
+      to: string,
+      id: BigNumberish,
+      amount: BigNumberish,
+      data: BytesLike,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     setApprovalForAll(
       operator: string,
       approved: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "setApprovalForAll(address,bool)"(
+      operator: string,
+      approved: boolean,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     setTier(
       arg0: string,
       arg1: BigNumberish,
       arg2: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "setTier(address,uint8,bytes)"(
+      arg0: string,
+      arg1: BigNumberish,
+      arg2: BytesLike,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     supportsInterface(
@@ -779,19 +1029,43 @@ export class ClaimERC1155Test extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "supportsInterface(bytes4)"(
+      interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     tierContract(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "tierContract()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     tierValues(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "tierValues()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "uri(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     ART(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "ART()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     GOOD_ART(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "GOOD_ART()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     balanceOf(
+      account: string,
+      id: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "balanceOf(address,uint256)"(
       account: string,
       id: BigNumberish,
       overrides?: CallOverrides
@@ -803,10 +1077,22 @@ export class ClaimERC1155Test extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "balanceOfBatch(address[],uint256[])"(
+      accounts: string[],
+      ids: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     claim(
       account_: string,
       data_: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "claim(address,bytes)"(
+      account_: string,
+      data_: BytesLike,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     claims(
@@ -814,11 +1100,28 @@ export class ClaimERC1155Test extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "claims(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     constructionBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "constructionBlock()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     erc20(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "erc20()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     isApprovedForAll(
+      account: string,
+      operator: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "isApprovedForAll(address,address)"(
       account: string,
       operator: string,
       overrides?: CallOverrides
@@ -830,9 +1133,22 @@ export class ClaimERC1155Test extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "isTier(address,uint8)"(
+      account_: string,
+      minimumTier_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     minimumTier(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "minimumTier()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     report(
+      account_: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "report(address)"(
       account_: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -843,7 +1159,16 @@ export class ClaimERC1155Test extends BaseContract {
       ids: BigNumberish[],
       amounts: BigNumberish[],
       data: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)"(
+      from: string,
+      to: string,
+      ids: BigNumberish[],
+      amounts: BigNumberish[],
+      data: BytesLike,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     safeTransferFrom(
@@ -852,20 +1177,42 @@ export class ClaimERC1155Test extends BaseContract {
       id: BigNumberish,
       amount: BigNumberish,
       data: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "safeTransferFrom(address,address,uint256,uint256,bytes)"(
+      from: string,
+      to: string,
+      id: BigNumberish,
+      amount: BigNumberish,
+      data: BytesLike,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setApprovalForAll(
       operator: string,
       approved: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "setApprovalForAll(address,bool)"(
+      operator: string,
+      approved: boolean,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setTier(
       arg0: string,
       arg1: BigNumberish,
       arg2: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "setTier(address,uint8,bytes)"(
+      arg0: string,
+      arg1: BigNumberish,
+      arg2: BytesLike,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     supportsInterface(
@@ -873,11 +1220,25 @@ export class ClaimERC1155Test extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "supportsInterface(bytes4)"(
+      interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     tierContract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "tierContract()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     tierValues(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "tierValues()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     uri(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "uri(uint256)"(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;

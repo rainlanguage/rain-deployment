@@ -9,15 +9,16 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface TrustInterface extends ethers.utils.Interface {
   functions: {
@@ -148,59 +149,51 @@ interface TrustInterface extends ethers.utils.Interface {
   events: {};
 }
 
-export class Trust extends BaseContract {
+export class Trust extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: TrustInterface;
 
   functions: {
-    anonEndDistribution(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    anonEndDistribution(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "anonEndDistribution()"(
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     creator(overrides?: CallOverrides): Promise<[string]>;
 
+    "creator()"(overrides?: CallOverrides): Promise<[string]>;
+
     finalBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "finalBalance()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     getContracts(
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        [string, string, string, string, string, string, string] & {
+          reserveERC20: string;
+          redeemableERC20: string;
+          redeemableERC20Pool: string;
+          seeder: string;
+          tier: string;
+          crp: string;
+          pool: string;
+        }
+      ]
+    >;
+
+    "getContracts()"(
       overrides?: CallOverrides
     ): Promise<
       [
@@ -244,7 +237,37 @@ export class Trust extends BaseContract {
       ]
     >;
 
+    "getDistributionProgress()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        [
+          number,
+          number,
+          number,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber
+        ] & {
+          distributionStatus: number;
+          distributionStartBlock: number;
+          distributionEndBlock: number;
+          poolReserveBalance: BigNumber;
+          poolTokenBalance: BigNumber;
+          reserveInit: BigNumber;
+          minimumCreatorRaise: BigNumber;
+          seederFee: BigNumber;
+          redeemInit: BigNumber;
+        }
+      ]
+    >;
+
     getDistributionStatus(overrides?: CallOverrides): Promise<[number]>;
+
+    "getDistributionStatus()"(overrides?: CallOverrides): Promise<[number]>;
 
     getTrustConfig(
       overrides?: CallOverrides
@@ -272,36 +295,100 @@ export class Trust extends BaseContract {
       ]
     >;
 
+    "getTrustConfig()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        [
+          string,
+          BigNumber,
+          string,
+          string,
+          BigNumber,
+          number,
+          number,
+          BigNumber
+        ] & {
+          creator: string;
+          minimumCreatorRaise: BigNumber;
+          seedERC20Factory: string;
+          seeder: string;
+          seederFee: BigNumber;
+          seederUnits: number;
+          seederCooldownDuration: number;
+          redeemInit: BigNumber;
+        }
+      ]
+    >;
+
     minimumCreatorRaise(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "minimumCreatorRaise()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     pool(overrides?: CallOverrides): Promise<[string]>;
 
+    "pool()"(overrides?: CallOverrides): Promise<[string]>;
+
     redeemInit(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "redeemInit()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     seedERC20Factory(overrides?: CallOverrides): Promise<[string]>;
 
+    "seedERC20Factory()"(overrides?: CallOverrides): Promise<[string]>;
+
     seeder(overrides?: CallOverrides): Promise<[string]>;
+
+    "seeder()"(overrides?: CallOverrides): Promise<[string]>;
 
     seederCooldownDuration(overrides?: CallOverrides): Promise<[number]>;
 
+    "seederCooldownDuration()"(overrides?: CallOverrides): Promise<[number]>;
+
     seederFee(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "seederFee()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     seederUnits(overrides?: CallOverrides): Promise<[number]>;
 
+    "seederUnits()"(overrides?: CallOverrides): Promise<[number]>;
+
     successBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "successBalance()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     token(overrides?: CallOverrides): Promise<[string]>;
+
+    "token()"(overrides?: CallOverrides): Promise<[string]>;
   };
 
-  anonEndDistribution(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  anonEndDistribution(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "anonEndDistribution()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   creator(overrides?: CallOverrides): Promise<string>;
 
+  "creator()"(overrides?: CallOverrides): Promise<string>;
+
   finalBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "finalBalance()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   getContracts(
+    overrides?: CallOverrides
+  ): Promise<
+    [string, string, string, string, string, string, string] & {
+      reserveERC20: string;
+      redeemableERC20: string;
+      redeemableERC20Pool: string;
+      seeder: string;
+      tier: string;
+      crp: string;
+      pool: string;
+    }
+  >;
+
+  "getContracts()"(
     overrides?: CallOverrides
   ): Promise<
     [string, string, string, string, string, string, string] & {
@@ -341,7 +428,35 @@ export class Trust extends BaseContract {
     }
   >;
 
+  "getDistributionProgress()"(
+    overrides?: CallOverrides
+  ): Promise<
+    [
+      number,
+      number,
+      number,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber
+    ] & {
+      distributionStatus: number;
+      distributionStartBlock: number;
+      distributionEndBlock: number;
+      poolReserveBalance: BigNumber;
+      poolTokenBalance: BigNumber;
+      reserveInit: BigNumber;
+      minimumCreatorRaise: BigNumber;
+      seederFee: BigNumber;
+      redeemInit: BigNumber;
+    }
+  >;
+
   getDistributionStatus(overrides?: CallOverrides): Promise<number>;
+
+  "getDistributionStatus()"(overrides?: CallOverrides): Promise<number>;
 
   getTrustConfig(
     overrides?: CallOverrides
@@ -367,34 +482,98 @@ export class Trust extends BaseContract {
     }
   >;
 
+  "getTrustConfig()"(
+    overrides?: CallOverrides
+  ): Promise<
+    [
+      string,
+      BigNumber,
+      string,
+      string,
+      BigNumber,
+      number,
+      number,
+      BigNumber
+    ] & {
+      creator: string;
+      minimumCreatorRaise: BigNumber;
+      seedERC20Factory: string;
+      seeder: string;
+      seederFee: BigNumber;
+      seederUnits: number;
+      seederCooldownDuration: number;
+      redeemInit: BigNumber;
+    }
+  >;
+
   minimumCreatorRaise(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "minimumCreatorRaise()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   pool(overrides?: CallOverrides): Promise<string>;
 
+  "pool()"(overrides?: CallOverrides): Promise<string>;
+
   redeemInit(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "redeemInit()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   seedERC20Factory(overrides?: CallOverrides): Promise<string>;
 
+  "seedERC20Factory()"(overrides?: CallOverrides): Promise<string>;
+
   seeder(overrides?: CallOverrides): Promise<string>;
+
+  "seeder()"(overrides?: CallOverrides): Promise<string>;
 
   seederCooldownDuration(overrides?: CallOverrides): Promise<number>;
 
+  "seederCooldownDuration()"(overrides?: CallOverrides): Promise<number>;
+
   seederFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "seederFee()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   seederUnits(overrides?: CallOverrides): Promise<number>;
 
+  "seederUnits()"(overrides?: CallOverrides): Promise<number>;
+
   successBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "successBalance()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   token(overrides?: CallOverrides): Promise<string>;
+
+  "token()"(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
     anonEndDistribution(overrides?: CallOverrides): Promise<void>;
 
+    "anonEndDistribution()"(overrides?: CallOverrides): Promise<void>;
+
     creator(overrides?: CallOverrides): Promise<string>;
+
+    "creator()"(overrides?: CallOverrides): Promise<string>;
 
     finalBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "finalBalance()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getContracts(
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, string, string, string, string, string] & {
+        reserveERC20: string;
+        redeemableERC20: string;
+        redeemableERC20Pool: string;
+        seeder: string;
+        tier: string;
+        crp: string;
+        pool: string;
+      }
+    >;
+
+    "getContracts()"(
       overrides?: CallOverrides
     ): Promise<
       [string, string, string, string, string, string, string] & {
@@ -434,7 +613,35 @@ export class Trust extends BaseContract {
       }
     >;
 
+    "getDistributionProgress()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        number,
+        number,
+        number,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber
+      ] & {
+        distributionStatus: number;
+        distributionStartBlock: number;
+        distributionEndBlock: number;
+        poolReserveBalance: BigNumber;
+        poolTokenBalance: BigNumber;
+        reserveInit: BigNumber;
+        minimumCreatorRaise: BigNumber;
+        seederFee: BigNumber;
+        redeemInit: BigNumber;
+      }
+    >;
+
     getDistributionStatus(overrides?: CallOverrides): Promise<number>;
+
+    "getDistributionStatus()"(overrides?: CallOverrides): Promise<number>;
 
     getTrustConfig(
       overrides?: CallOverrides
@@ -460,79 +667,167 @@ export class Trust extends BaseContract {
       }
     >;
 
+    "getTrustConfig()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        string,
+        BigNumber,
+        string,
+        string,
+        BigNumber,
+        number,
+        number,
+        BigNumber
+      ] & {
+        creator: string;
+        minimumCreatorRaise: BigNumber;
+        seedERC20Factory: string;
+        seeder: string;
+        seederFee: BigNumber;
+        seederUnits: number;
+        seederCooldownDuration: number;
+        redeemInit: BigNumber;
+      }
+    >;
+
     minimumCreatorRaise(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "minimumCreatorRaise()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     pool(overrides?: CallOverrides): Promise<string>;
 
+    "pool()"(overrides?: CallOverrides): Promise<string>;
+
     redeemInit(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "redeemInit()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     seedERC20Factory(overrides?: CallOverrides): Promise<string>;
 
+    "seedERC20Factory()"(overrides?: CallOverrides): Promise<string>;
+
     seeder(overrides?: CallOverrides): Promise<string>;
+
+    "seeder()"(overrides?: CallOverrides): Promise<string>;
 
     seederCooldownDuration(overrides?: CallOverrides): Promise<number>;
 
+    "seederCooldownDuration()"(overrides?: CallOverrides): Promise<number>;
+
     seederFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "seederFee()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     seederUnits(overrides?: CallOverrides): Promise<number>;
 
+    "seederUnits()"(overrides?: CallOverrides): Promise<number>;
+
     successBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "successBalance()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     token(overrides?: CallOverrides): Promise<string>;
+
+    "token()"(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {};
 
   estimateGas: {
-    anonEndDistribution(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    anonEndDistribution(overrides?: Overrides): Promise<BigNumber>;
+
+    "anonEndDistribution()"(overrides?: Overrides): Promise<BigNumber>;
 
     creator(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "creator()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     finalBalance(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "finalBalance()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getContracts(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getContracts()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getDistributionProgress(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getDistributionProgress()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getDistributionStatus(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getDistributionStatus()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getTrustConfig(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getTrustConfig()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     minimumCreatorRaise(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "minimumCreatorRaise()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     pool(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "pool()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     redeemInit(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "redeemInit()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     seedERC20Factory(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "seedERC20Factory()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     seeder(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "seeder()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     seederCooldownDuration(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "seederCooldownDuration()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     seederFee(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "seederFee()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     seederUnits(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "seederUnits()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     successBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "successBalance()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     token(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "token()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    anonEndDistribution(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    anonEndDistribution(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "anonEndDistribution()"(
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     creator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "creator()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     finalBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "finalBalance()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getContracts(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "getContracts()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     getDistributionProgress(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getDistributionProgress()"(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -540,30 +835,66 @@ export class Trust extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "getDistributionStatus()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getTrustConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getTrustConfig()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     minimumCreatorRaise(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "minimumCreatorRaise()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     pool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "pool()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     redeemInit(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "redeemInit()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     seedERC20Factory(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "seedERC20Factory()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     seeder(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "seeder()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     seederCooldownDuration(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "seederCooldownDuration()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     seederFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "seederFee()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     seederUnits(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "seederUnits()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     successBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "successBalance()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     token(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "token()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

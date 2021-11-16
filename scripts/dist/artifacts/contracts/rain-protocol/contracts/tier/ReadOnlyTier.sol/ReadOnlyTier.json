@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "ReadOnlyTier",
-  "sourceName": "contracts/rain-protocol/contracts/tier/ReadOnlyTier.sol",
+  "sourceName": "contracts/tier/ReadOnlyTier.sol",
   "abi": [
     {
       "anonymous": false,

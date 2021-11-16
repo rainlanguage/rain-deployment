@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "Phased",
-  "sourceName": "contracts/rain-protocol/contracts/phased/Phased.sol",
+  "sourceName": "contracts/phased/Phased.sol",
   "abi": [
     {
       "anonymous": false,

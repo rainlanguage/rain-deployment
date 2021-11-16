@@ -9,15 +9,16 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface ERC20TransferTierInterface extends ethers.utils.Interface {
   functions: {
@@ -53,72 +54,81 @@ interface ERC20TransferTierInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "TierChange"): EventFragment;
 }
 
-export type TierChangeEvent = TypedEvent<
-  [string, number, number] & {
-    account: string;
-    startTier: number;
-    endTier: number;
-  }
->;
-
-export class ERC20TransferTier extends BaseContract {
+export class ERC20TransferTier extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: ERC20TransferTierInterface;
 
   functions: {
     erc20(overrides?: CallOverrides): Promise<[string]>;
 
+    "erc20()"(overrides?: CallOverrides): Promise<[string]>;
+
     report(account_: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "report(address)"(
+      account_: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     reports(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "reports(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     setTier(
       account_: string,
       endTier_: BigNumberish,
       data_: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "setTier(address,uint8,bytes)"(
+      account_: string,
+      endTier_: BigNumberish,
+      data_: BytesLike,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     tierValues(
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        [
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber
+        ]
+      ] & {
+        tierValues_: [
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber,
+          BigNumber
+        ];
+      }
+    >;
+
+    "tierValues()"(
       overrides?: CallOverrides
     ): Promise<
       [
@@ -149,15 +159,34 @@ export class ERC20TransferTier extends BaseContract {
 
   erc20(overrides?: CallOverrides): Promise<string>;
 
+  "erc20()"(overrides?: CallOverrides): Promise<string>;
+
   report(account_: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+  "report(address)"(
+    account_: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   reports(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  "reports(address)"(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   setTier(
     account_: string,
     endTier_: BigNumberish,
     data_: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "setTier(address,uint8,bytes)"(
+    account_: string,
+    endTier_: BigNumberish,
+    data_: BytesLike,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   tierValues(
@@ -175,14 +204,48 @@ export class ERC20TransferTier extends BaseContract {
     ]
   >;
 
+  "tierValues()"(
+    overrides?: CallOverrides
+  ): Promise<
+    [
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber
+    ]
+  >;
+
   callStatic: {
     erc20(overrides?: CallOverrides): Promise<string>;
 
+    "erc20()"(overrides?: CallOverrides): Promise<string>;
+
     report(account_: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "report(address)"(
+      account_: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     reports(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "reports(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     setTier(
+      account_: string,
+      endTier_: BigNumberish,
+      data_: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "setTier(address,uint8,bytes)"(
       account_: string,
       endTier_: BigNumberish,
       data_: BytesLike,
@@ -203,49 +266,80 @@ export class ERC20TransferTier extends BaseContract {
         BigNumber
       ]
     >;
+
+    "tierValues()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber
+      ]
+    >;
   };
 
   filters: {
-    "TierChange(address,uint8,uint8)"(
-      account?: string | null,
-      startTier?: BigNumberish | null,
-      endTier?: BigNumberish | null
-    ): TypedEventFilter<
-      [string, number, number],
-      { account: string; startTier: number; endTier: number }
-    >;
-
     TierChange(
-      account?: string | null,
-      startTier?: BigNumberish | null,
-      endTier?: BigNumberish | null
-    ): TypedEventFilter<
-      [string, number, number],
-      { account: string; startTier: number; endTier: number }
-    >;
+      account: string | null,
+      startTier: BigNumberish | null,
+      endTier: BigNumberish | null
+    ): EventFilter;
   };
 
   estimateGas: {
     erc20(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "erc20()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     report(account_: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "report(address)"(
+      account_: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     reports(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "reports(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     setTier(
       account_: string,
       endTier_: BigNumberish,
       data_: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "setTier(address,uint8,bytes)"(
+      account_: string,
+      endTier_: BigNumberish,
+      data_: BytesLike,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     tierValues(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "tierValues()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
     erc20(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "erc20()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     report(
+      account_: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "report(address)"(
       account_: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -255,13 +349,27 @@ export class ERC20TransferTier extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "reports(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     setTier(
       account_: string,
       endTier_: BigNumberish,
       data_: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "setTier(address,uint8,bytes)"(
+      account_: string,
+      endTier_: BigNumberish,
+      data_: BytesLike,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     tierValues(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "tierValues()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

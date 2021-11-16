@@ -9,259 +9,313 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface IConfigurableRightsPoolInterface extends ethers.utils.Interface {
   functions: {
-    "burnPoolShareFromLib(uint256)": FunctionFragment;
-    "getController()": FunctionFragment;
-    "mintPoolShareFromLib(uint256)": FunctionFragment;
-    "pullPoolShareFromLib(address,uint256)": FunctionFragment;
-    "pushPoolShareFromLib(address,uint256)": FunctionFragment;
-    "totalSupply()": FunctionFragment;
+    "bFactory()": FunctionFragment;
+    "bPool()": FunctionFragment;
+    "createPool(uint256,uint256,uint256)": FunctionFragment;
+    "exitPool(uint256,uint256[])": FunctionFragment;
+    "updateWeightsGradually(uint256[],uint256,uint256)": FunctionFragment;
   };
 
+  encodeFunctionData(functionFragment: "bFactory", values?: undefined): string;
+  encodeFunctionData(functionFragment: "bPool", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "burnPoolShareFromLib",
-    values: [BigNumberish]
+    functionFragment: "createPool",
+    values: [BigNumberish, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "getController",
-    values?: undefined
+    functionFragment: "exitPool",
+    values: [BigNumberish, BigNumberish[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "mintPoolShareFromLib",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "pullPoolShareFromLib",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "pushPoolShareFromLib",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "totalSupply",
-    values?: undefined
+    functionFragment: "updateWeightsGradually",
+    values: [BigNumberish[], BigNumberish, BigNumberish]
   ): string;
 
+  decodeFunctionResult(functionFragment: "bFactory", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "bPool", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "createPool", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "exitPool", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "burnPoolShareFromLib",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getController",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "mintPoolShareFromLib",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "pullPoolShareFromLib",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "pushPoolShareFromLib",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "totalSupply",
+    functionFragment: "updateWeightsGradually",
     data: BytesLike
   ): Result;
 
   events: {};
 }
 
-export class IConfigurableRightsPool extends BaseContract {
+export class IConfigurableRightsPool extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: IConfigurableRightsPoolInterface;
 
   functions: {
-    burnPoolShareFromLib(
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    bFactory(overrides?: CallOverrides): Promise<[string]>;
+
+    "bFactory()"(overrides?: CallOverrides): Promise<[string]>;
+
+    bPool(overrides?: CallOverrides): Promise<[string]>;
+
+    "bPool()"(overrides?: CallOverrides): Promise<[string]>;
+
+    createPool(
+      initialSupply: BigNumberish,
+      minimumWeightChangeBlockPeriodParam: BigNumberish,
+      addTokenTimeLockInBlocksParam: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    getController(overrides?: CallOverrides): Promise<[string]>;
-
-    mintPoolShareFromLib(
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "createPool(uint256,uint256,uint256)"(
+      initialSupply: BigNumberish,
+      minimumWeightChangeBlockPeriodParam: BigNumberish,
+      addTokenTimeLockInBlocksParam: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    pullPoolShareFromLib(
-      from: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    exitPool(
+      poolAmountIn: BigNumberish,
+      minAmountsOut: BigNumberish[],
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    pushPoolShareFromLib(
-      to: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "exitPool(uint256,uint256[])"(
+      poolAmountIn: BigNumberish,
+      minAmountsOut: BigNumberish[],
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+    updateWeightsGradually(
+      newWeights: BigNumberish[],
+      startBlock: BigNumberish,
+      endBlock: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "updateWeightsGradually(uint256[],uint256,uint256)"(
+      newWeights: BigNumberish[],
+      startBlock: BigNumberish,
+      endBlock: BigNumberish,
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
   };
 
-  burnPoolShareFromLib(
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+  bFactory(overrides?: CallOverrides): Promise<string>;
+
+  "bFactory()"(overrides?: CallOverrides): Promise<string>;
+
+  bPool(overrides?: CallOverrides): Promise<string>;
+
+  "bPool()"(overrides?: CallOverrides): Promise<string>;
+
+  createPool(
+    initialSupply: BigNumberish,
+    minimumWeightChangeBlockPeriodParam: BigNumberish,
+    addTokenTimeLockInBlocksParam: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  getController(overrides?: CallOverrides): Promise<string>;
-
-  mintPoolShareFromLib(
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+  "createPool(uint256,uint256,uint256)"(
+    initialSupply: BigNumberish,
+    minimumWeightChangeBlockPeriodParam: BigNumberish,
+    addTokenTimeLockInBlocksParam: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  pullPoolShareFromLib(
-    from: string,
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+  exitPool(
+    poolAmountIn: BigNumberish,
+    minAmountsOut: BigNumberish[],
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  pushPoolShareFromLib(
-    to: string,
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+  "exitPool(uint256,uint256[])"(
+    poolAmountIn: BigNumberish,
+    minAmountsOut: BigNumberish[],
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+  updateWeightsGradually(
+    newWeights: BigNumberish[],
+    startBlock: BigNumberish,
+    endBlock: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "updateWeightsGradually(uint256[],uint256,uint256)"(
+    newWeights: BigNumberish[],
+    startBlock: BigNumberish,
+    endBlock: BigNumberish,
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
 
   callStatic: {
-    burnPoolShareFromLib(
-      amount: BigNumberish,
+    bFactory(overrides?: CallOverrides): Promise<string>;
+
+    "bFactory()"(overrides?: CallOverrides): Promise<string>;
+
+    bPool(overrides?: CallOverrides): Promise<string>;
+
+    "bPool()"(overrides?: CallOverrides): Promise<string>;
+
+    createPool(
+      initialSupply: BigNumberish,
+      minimumWeightChangeBlockPeriodParam: BigNumberish,
+      addTokenTimeLockInBlocksParam: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    getController(overrides?: CallOverrides): Promise<string>;
-
-    mintPoolShareFromLib(
-      amount: BigNumberish,
+    "createPool(uint256,uint256,uint256)"(
+      initialSupply: BigNumberish,
+      minimumWeightChangeBlockPeriodParam: BigNumberish,
+      addTokenTimeLockInBlocksParam: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    pullPoolShareFromLib(
-      from: string,
-      amount: BigNumberish,
+    exitPool(
+      poolAmountIn: BigNumberish,
+      minAmountsOut: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<void>;
 
-    pushPoolShareFromLib(
-      to: string,
-      amount: BigNumberish,
+    "exitPool(uint256,uint256[])"(
+      poolAmountIn: BigNumberish,
+      minAmountsOut: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<void>;
 
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+    updateWeightsGradually(
+      newWeights: BigNumberish[],
+      startBlock: BigNumberish,
+      endBlock: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "updateWeightsGradually(uint256[],uint256,uint256)"(
+      newWeights: BigNumberish[],
+      startBlock: BigNumberish,
+      endBlock: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {};
 
   estimateGas: {
-    burnPoolShareFromLib(
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    bFactory(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "bFactory()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    bPool(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "bPool()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    createPool(
+      initialSupply: BigNumberish,
+      minimumWeightChangeBlockPeriodParam: BigNumberish,
+      addTokenTimeLockInBlocksParam: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
-    getController(overrides?: CallOverrides): Promise<BigNumber>;
-
-    mintPoolShareFromLib(
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "createPool(uint256,uint256,uint256)"(
+      initialSupply: BigNumberish,
+      minimumWeightChangeBlockPeriodParam: BigNumberish,
+      addTokenTimeLockInBlocksParam: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
-    pullPoolShareFromLib(
-      from: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    exitPool(
+      poolAmountIn: BigNumberish,
+      minAmountsOut: BigNumberish[],
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
-    pushPoolShareFromLib(
-      to: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "exitPool(uint256,uint256[])"(
+      poolAmountIn: BigNumberish,
+      minAmountsOut: BigNumberish[],
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+    updateWeightsGradually(
+      newWeights: BigNumberish[],
+      startBlock: BigNumberish,
+      endBlock: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "updateWeightsGradually(uint256[],uint256,uint256)"(
+      newWeights: BigNumberish[],
+      startBlock: BigNumberish,
+      endBlock: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    burnPoolShareFromLib(
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    bFactory(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "bFactory()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    bPool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "bPool()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    createPool(
+      initialSupply: BigNumberish,
+      minimumWeightChangeBlockPeriodParam: BigNumberish,
+      addTokenTimeLockInBlocksParam: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    getController(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    mintPoolShareFromLib(
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "createPool(uint256,uint256,uint256)"(
+      initialSupply: BigNumberish,
+      minimumWeightChangeBlockPeriodParam: BigNumberish,
+      addTokenTimeLockInBlocksParam: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    pullPoolShareFromLib(
-      from: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    exitPool(
+      poolAmountIn: BigNumberish,
+      minAmountsOut: BigNumberish[],
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    pushPoolShareFromLib(
-      to: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "exitPool(uint256,uint256[])"(
+      poolAmountIn: BigNumberish,
+      minAmountsOut: BigNumberish[],
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    updateWeightsGradually(
+      newWeights: BigNumberish[],
+      startBlock: BigNumberish,
+      endBlock: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "updateWeightsGradually(uint256[],uint256,uint256)"(
+      newWeights: BigNumberish[],
+      startBlock: BigNumberish,
+      endBlock: BigNumberish,
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
   };
 }

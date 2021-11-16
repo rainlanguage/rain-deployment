@@ -2,109 +2,12 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from "ethers";
+import { Contract, Signer } from "ethers";
 import { Provider } from "@ethersproject/providers";
-import type {
-  IConfigurableRightsPool,
-  IConfigurableRightsPoolInterface,
-} from "../IConfigurableRightsPool";
 
-const _abi = [
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "burnPoolShareFromLib",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "getController",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "mintPoolShareFromLib",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "pullPoolShareFromLib",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "pushPoolShareFromLib",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "totalSupply",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-];
+import type { IConfigurableRightsPool } from "../IConfigurableRightsPool";
 
 export class IConfigurableRightsPool__factory {
-  static readonly abi = _abi;
-  static createInterface(): IConfigurableRightsPoolInterface {
-    return new utils.Interface(_abi) as IConfigurableRightsPoolInterface;
-  }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
@@ -116,3 +19,96 @@ export class IConfigurableRightsPool__factory {
     ) as IConfigurableRightsPool;
   }
 }
+
+const _abi = [
+  {
+    inputs: [],
+    name: "bFactory",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "bPool",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "initialSupply",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "minimumWeightChangeBlockPeriodParam",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "addTokenTimeLockInBlocksParam",
+        type: "uint256",
+      },
+    ],
+    name: "createPool",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "poolAmountIn",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256[]",
+        name: "minAmountsOut",
+        type: "uint256[]",
+      },
+    ],
+    name: "exitPool",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256[]",
+        name: "newWeights",
+        type: "uint256[]",
+      },
+      {
+        internalType: "uint256",
+        name: "startBlock",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "endBlock",
+        type: "uint256",
+      },
+    ],
+    name: "updateWeightsGradually",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+];

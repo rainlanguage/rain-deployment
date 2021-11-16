@@ -2,12 +2,40 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Signer, utils, Contract, ContractFactory, Overrides } from "ethers";
+import { Signer } from "ethers";
 import { Provider, TransactionRequest } from "@ethersproject/providers";
-import type {
-  SeedERC20ForceSendEther,
-  SeedERC20ForceSendEtherInterface,
-} from "../SeedERC20ForceSendEther";
+import { Contract, ContractFactory, Overrides } from "@ethersproject/contracts";
+
+import type { SeedERC20ForceSendEther } from "../SeedERC20ForceSendEther";
+
+export class SeedERC20ForceSendEther__factory extends ContractFactory {
+  constructor(signer?: Signer) {
+    super(_abi, _bytecode, signer);
+  }
+
+  deploy(overrides?: Overrides): Promise<SeedERC20ForceSendEther> {
+    return super.deploy(overrides || {}) as Promise<SeedERC20ForceSendEther>;
+  }
+  getDeployTransaction(overrides?: Overrides): TransactionRequest {
+    return super.getDeployTransaction(overrides || {});
+  }
+  attach(address: string): SeedERC20ForceSendEther {
+    return super.attach(address) as SeedERC20ForceSendEther;
+  }
+  connect(signer: Signer): SeedERC20ForceSendEther__factory {
+    return super.connect(signer) as SeedERC20ForceSendEther__factory;
+  }
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): SeedERC20ForceSendEther {
+    return new Contract(
+      address,
+      _abi,
+      signerOrProvider
+    ) as SeedERC20ForceSendEther;
+  }
+}
 
 const _abi = [
   {
@@ -34,48 +62,4 @@ const _abi = [
 ];
 
 const _bytecode =
-  "0x6080604052348015600f57600080fd5b50608b8061001e6000396000f3fe608060405260043610601e5760003560e01c8062f55d9d146026576024565b36602457005b005b348015603157600080fd5b50602460048036036020811015604657600080fd5b50356001600160a01b03168080fffea2646970667358221220a8b9eb6e226f272fc599dcd538526b3f56f732a0639c9ee407edfb7b25ad5f8d64736f6c634300060c0033";
-
-export class SeedERC20ForceSendEther__factory extends ContractFactory {
-  constructor(
-    ...args: [signer: Signer] | ConstructorParameters<typeof ContractFactory>
-  ) {
-    if (args.length === 1) {
-      super(_abi, _bytecode, args[0]);
-    } else {
-      super(...args);
-    }
-  }
-
-  deploy(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<SeedERC20ForceSendEther> {
-    return super.deploy(overrides || {}) as Promise<SeedERC20ForceSendEther>;
-  }
-  getDeployTransaction(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): TransactionRequest {
-    return super.getDeployTransaction(overrides || {});
-  }
-  attach(address: string): SeedERC20ForceSendEther {
-    return super.attach(address) as SeedERC20ForceSendEther;
-  }
-  connect(signer: Signer): SeedERC20ForceSendEther__factory {
-    return super.connect(signer) as SeedERC20ForceSendEther__factory;
-  }
-  static readonly bytecode = _bytecode;
-  static readonly abi = _abi;
-  static createInterface(): SeedERC20ForceSendEtherInterface {
-    return new utils.Interface(_abi) as SeedERC20ForceSendEtherInterface;
-  }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): SeedERC20ForceSendEther {
-    return new Contract(
-      address,
-      _abi,
-      signerOrProvider
-    ) as SeedERC20ForceSendEther;
-  }
-}
+  "0x6080604052348015600f57600080fd5b5060988061001e6000396000f3fe608060405260043610601e5760003560e01c8062f55d9d146026576024565b36602457005b005b348015603157600080fd5b50602460048036036020811015604657600080fd5b503573ffffffffffffffffffffffffffffffffffffffff168080fffea26469706673582212207bcf69a4486d0c19abeb95b2e645da3e81302509ef0280d7f6b202055e589cb764736f6c634300060c0033";

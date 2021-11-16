@@ -9,14 +9,15 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface SmartPoolManagerInterface extends ethers.utils.Interface {
   functions: {
@@ -75,51 +76,35 @@ interface SmartPoolManagerInterface extends ethers.utils.Interface {
   events: {};
 }
 
-export class SmartPoolManager extends BaseContract {
+export class SmartPoolManager extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: SmartPoolManagerInterface;
 
   functions: {
     exitPool(
+      self: string,
+      bPool: string,
+      poolAmountIn: BigNumberish,
+      minAmountsOut: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber[]] & {
+        exitFee: BigNumber;
+        pAiAfterExitFee: BigNumber;
+        actualAmountsOut: BigNumber[];
+      }
+    >;
+
+    "exitPool(IConfigurableRightsPool,IBPool,uint256,uint256[])"(
       self: string,
       bPool: string,
       poolAmountIn: BigNumberish,
@@ -144,7 +129,29 @@ export class SmartPoolManager extends BaseContract {
       [BigNumber, BigNumber] & { exitFee: BigNumber; poolAmountIn: BigNumber }
     >;
 
+    "exitswapExternAmountOut(IConfigurableRightsPool,IBPool,address,uint256,uint256)"(
+      self: string,
+      bPool: string,
+      tokenOut: string,
+      tokenAmountOut: BigNumberish,
+      maxPoolAmountIn: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & { exitFee: BigNumber; poolAmountIn: BigNumber }
+    >;
+
     exitswapPoolAmountIn(
+      self: string,
+      bPool: string,
+      tokenOut: string,
+      poolAmountIn: BigNumberish,
+      minAmountOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & { exitFee: BigNumber; tokenAmountOut: BigNumber }
+    >;
+
+    "exitswapPoolAmountIn(IConfigurableRightsPool,IBPool,address,uint256,uint256)"(
       self: string,
       bPool: string,
       tokenOut: string,
@@ -163,7 +170,24 @@ export class SmartPoolManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber[]] & { actualAmountsIn: BigNumber[] }>;
 
+    "joinPool(IConfigurableRightsPool,IBPool,uint256,uint256[])"(
+      self: string,
+      bPool: string,
+      poolAmountOut: BigNumberish,
+      maxAmountsIn: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[]] & { actualAmountsIn: BigNumber[] }>;
+
     joinswapExternAmountIn(
+      self: string,
+      bPool: string,
+      tokenIn: string,
+      tokenAmountIn: BigNumberish,
+      minPoolAmountOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { poolAmountOut: BigNumber }>;
+
+    "joinswapExternAmountIn(IConfigurableRightsPool,IBPool,address,uint256,uint256)"(
       self: string,
       bPool: string,
       tokenIn: string,
@@ -180,9 +204,32 @@ export class SmartPoolManager extends BaseContract {
       maxAmountIn: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { tokenAmountIn: BigNumber }>;
+
+    "joinswapPoolAmountOut(IConfigurableRightsPool,IBPool,address,uint256,uint256)"(
+      self: string,
+      bPool: string,
+      tokenIn: string,
+      poolAmountOut: BigNumberish,
+      maxAmountIn: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { tokenAmountIn: BigNumber }>;
   };
 
   exitPool(
+    self: string,
+    bPool: string,
+    poolAmountIn: BigNumberish,
+    minAmountsOut: BigNumberish[],
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber[]] & {
+      exitFee: BigNumber;
+      pAiAfterExitFee: BigNumber;
+      actualAmountsOut: BigNumber[];
+    }
+  >;
+
+  "exitPool(IConfigurableRightsPool,IBPool,uint256,uint256[])"(
     self: string,
     bPool: string,
     poolAmountIn: BigNumberish,
@@ -207,7 +254,29 @@ export class SmartPoolManager extends BaseContract {
     [BigNumber, BigNumber] & { exitFee: BigNumber; poolAmountIn: BigNumber }
   >;
 
+  "exitswapExternAmountOut(IConfigurableRightsPool,IBPool,address,uint256,uint256)"(
+    self: string,
+    bPool: string,
+    tokenOut: string,
+    tokenAmountOut: BigNumberish,
+    maxPoolAmountIn: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber] & { exitFee: BigNumber; poolAmountIn: BigNumber }
+  >;
+
   exitswapPoolAmountIn(
+    self: string,
+    bPool: string,
+    tokenOut: string,
+    poolAmountIn: BigNumberish,
+    minAmountOut: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber] & { exitFee: BigNumber; tokenAmountOut: BigNumber }
+  >;
+
+  "exitswapPoolAmountIn(IConfigurableRightsPool,IBPool,address,uint256,uint256)"(
     self: string,
     bPool: string,
     tokenOut: string,
@@ -226,7 +295,24 @@ export class SmartPoolManager extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
+  "joinPool(IConfigurableRightsPool,IBPool,uint256,uint256[])"(
+    self: string,
+    bPool: string,
+    poolAmountOut: BigNumberish,
+    maxAmountsIn: BigNumberish[],
+    overrides?: CallOverrides
+  ): Promise<BigNumber[]>;
+
   joinswapExternAmountIn(
+    self: string,
+    bPool: string,
+    tokenIn: string,
+    tokenAmountIn: BigNumberish,
+    minPoolAmountOut: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "joinswapExternAmountIn(IConfigurableRightsPool,IBPool,address,uint256,uint256)"(
     self: string,
     bPool: string,
     tokenIn: string,
@@ -244,8 +330,31 @@ export class SmartPoolManager extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  "joinswapPoolAmountOut(IConfigurableRightsPool,IBPool,address,uint256,uint256)"(
+    self: string,
+    bPool: string,
+    tokenIn: string,
+    poolAmountOut: BigNumberish,
+    maxAmountIn: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   callStatic: {
     exitPool(
+      self: string,
+      bPool: string,
+      poolAmountIn: BigNumberish,
+      minAmountsOut: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber[]] & {
+        exitFee: BigNumber;
+        pAiAfterExitFee: BigNumber;
+        actualAmountsOut: BigNumber[];
+      }
+    >;
+
+    "exitPool(IConfigurableRightsPool,IBPool,uint256,uint256[])"(
       self: string,
       bPool: string,
       poolAmountIn: BigNumberish,
@@ -270,7 +379,29 @@ export class SmartPoolManager extends BaseContract {
       [BigNumber, BigNumber] & { exitFee: BigNumber; poolAmountIn: BigNumber }
     >;
 
+    "exitswapExternAmountOut(IConfigurableRightsPool,IBPool,address,uint256,uint256)"(
+      self: string,
+      bPool: string,
+      tokenOut: string,
+      tokenAmountOut: BigNumberish,
+      maxPoolAmountIn: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & { exitFee: BigNumber; poolAmountIn: BigNumber }
+    >;
+
     exitswapPoolAmountIn(
+      self: string,
+      bPool: string,
+      tokenOut: string,
+      poolAmountIn: BigNumberish,
+      minAmountOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & { exitFee: BigNumber; tokenAmountOut: BigNumber }
+    >;
+
+    "exitswapPoolAmountIn(IConfigurableRightsPool,IBPool,address,uint256,uint256)"(
       self: string,
       bPool: string,
       tokenOut: string,
@@ -289,6 +420,14 @@ export class SmartPoolManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
 
+    "joinPool(IConfigurableRightsPool,IBPool,uint256,uint256[])"(
+      self: string,
+      bPool: string,
+      poolAmountOut: BigNumberish,
+      maxAmountsIn: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<BigNumber[]>;
+
     joinswapExternAmountIn(
       self: string,
       bPool: string,
@@ -298,7 +437,25 @@ export class SmartPoolManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "joinswapExternAmountIn(IConfigurableRightsPool,IBPool,address,uint256,uint256)"(
+      self: string,
+      bPool: string,
+      tokenIn: string,
+      tokenAmountIn: BigNumberish,
+      minPoolAmountOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     joinswapPoolAmountOut(
+      self: string,
+      bPool: string,
+      tokenIn: string,
+      poolAmountOut: BigNumberish,
+      maxAmountIn: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "joinswapPoolAmountOut(IConfigurableRightsPool,IBPool,address,uint256,uint256)"(
       self: string,
       bPool: string,
       tokenIn: string,
@@ -319,7 +476,24 @@ export class SmartPoolManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "exitPool(IConfigurableRightsPool,IBPool,uint256,uint256[])"(
+      self: string,
+      bPool: string,
+      poolAmountIn: BigNumberish,
+      minAmountsOut: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     exitswapExternAmountOut(
+      self: string,
+      bPool: string,
+      tokenOut: string,
+      tokenAmountOut: BigNumberish,
+      maxPoolAmountIn: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "exitswapExternAmountOut(IConfigurableRightsPool,IBPool,address,uint256,uint256)"(
       self: string,
       bPool: string,
       tokenOut: string,
@@ -337,7 +511,24 @@ export class SmartPoolManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "exitswapPoolAmountIn(IConfigurableRightsPool,IBPool,address,uint256,uint256)"(
+      self: string,
+      bPool: string,
+      tokenOut: string,
+      poolAmountIn: BigNumberish,
+      minAmountOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     joinPool(
+      self: string,
+      bPool: string,
+      poolAmountOut: BigNumberish,
+      maxAmountsIn: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "joinPool(IConfigurableRightsPool,IBPool,uint256,uint256[])"(
       self: string,
       bPool: string,
       poolAmountOut: BigNumberish,
@@ -354,7 +545,25 @@ export class SmartPoolManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "joinswapExternAmountIn(IConfigurableRightsPool,IBPool,address,uint256,uint256)"(
+      self: string,
+      bPool: string,
+      tokenIn: string,
+      tokenAmountIn: BigNumberish,
+      minPoolAmountOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     joinswapPoolAmountOut(
+      self: string,
+      bPool: string,
+      tokenIn: string,
+      poolAmountOut: BigNumberish,
+      maxAmountIn: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "joinswapPoolAmountOut(IConfigurableRightsPool,IBPool,address,uint256,uint256)"(
       self: string,
       bPool: string,
       tokenIn: string,
@@ -373,7 +582,24 @@ export class SmartPoolManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "exitPool(IConfigurableRightsPool,IBPool,uint256,uint256[])"(
+      self: string,
+      bPool: string,
+      poolAmountIn: BigNumberish,
+      minAmountsOut: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     exitswapExternAmountOut(
+      self: string,
+      bPool: string,
+      tokenOut: string,
+      tokenAmountOut: BigNumberish,
+      maxPoolAmountIn: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "exitswapExternAmountOut(IConfigurableRightsPool,IBPool,address,uint256,uint256)"(
       self: string,
       bPool: string,
       tokenOut: string,
@@ -391,7 +617,24 @@ export class SmartPoolManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "exitswapPoolAmountIn(IConfigurableRightsPool,IBPool,address,uint256,uint256)"(
+      self: string,
+      bPool: string,
+      tokenOut: string,
+      poolAmountIn: BigNumberish,
+      minAmountOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     joinPool(
+      self: string,
+      bPool: string,
+      poolAmountOut: BigNumberish,
+      maxAmountsIn: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "joinPool(IConfigurableRightsPool,IBPool,uint256,uint256[])"(
       self: string,
       bPool: string,
       poolAmountOut: BigNumberish,
@@ -408,7 +651,25 @@ export class SmartPoolManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "joinswapExternAmountIn(IConfigurableRightsPool,IBPool,address,uint256,uint256)"(
+      self: string,
+      bPool: string,
+      tokenIn: string,
+      tokenAmountIn: BigNumberish,
+      minPoolAmountOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     joinswapPoolAmountOut(
+      self: string,
+      bPool: string,
+      tokenIn: string,
+      poolAmountOut: BigNumberish,
+      maxAmountIn: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "joinswapPoolAmountOut(IConfigurableRightsPool,IBPool,address,uint256,uint256)"(
       self: string,
       bPool: string,
       tokenIn: string,

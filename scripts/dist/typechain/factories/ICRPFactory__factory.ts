@@ -2,9 +2,19 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from "ethers";
+import { Contract, Signer } from "ethers";
 import { Provider } from "@ethersproject/providers";
-import type { ICRPFactory, ICRPFactoryInterface } from "../ICRPFactory";
+
+import type { ICRPFactory } from "../ICRPFactory";
+
+export class ICRPFactory__factory {
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): ICRPFactory {
+    return new Contract(address, _abi, signerOrProvider) as ICRPFactory;
+  }
+}
 
 const _abi = [
   {
@@ -101,16 +111,3 @@ const _abi = [
     type: "function",
   },
 ];
-
-export class ICRPFactory__factory {
-  static readonly abi = _abi;
-  static createInterface(): ICRPFactoryInterface {
-    return new utils.Interface(_abi) as ICRPFactoryInterface;
-  }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): ICRPFactory {
-    return new Contract(address, _abi, signerOrProvider) as ICRPFactory;
-  }
-}

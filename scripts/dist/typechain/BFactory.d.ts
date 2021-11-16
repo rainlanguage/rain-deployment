@@ -9,15 +9,16 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface BFactoryInterface extends ethers.utils.Interface {
   functions: {
@@ -52,179 +53,180 @@ interface BFactoryInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "LOG_NEW_POOL"): EventFragment;
 }
 
-export type LOG_BLABSEvent = TypedEvent<
-  [string, string] & { caller: string; blabs: string }
->;
-
-export type LOG_NEW_POOLEvent = TypedEvent<
-  [string, string] & { caller: string; pool: string }
->;
-
-export class BFactory extends BaseContract {
+export class BFactory extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: BFactoryInterface;
 
   functions: {
-    collect(
+    collect(pool: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+    "collect(address)"(
       pool: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     getBLabs(overrides?: CallOverrides): Promise<[string]>;
 
+    "getBLabs()"(overrides?: CallOverrides): Promise<[string]>;
+
     getColor(overrides?: CallOverrides): Promise<[string]>;
+
+    "getColor()"(overrides?: CallOverrides): Promise<[string]>;
 
     isBPool(b: string, overrides?: CallOverrides): Promise<[boolean]>;
 
-    newBPool(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    setBLabs(
+    "isBPool(address)"(
       b: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    newBPool(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "newBPool()"(overrides?: Overrides): Promise<ContractTransaction>;
+
+    setBLabs(b: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+    "setBLabs(address)"(
+      b: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
 
-  collect(
+  collect(pool: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+  "collect(address)"(
     pool: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   getBLabs(overrides?: CallOverrides): Promise<string>;
 
+  "getBLabs()"(overrides?: CallOverrides): Promise<string>;
+
   getColor(overrides?: CallOverrides): Promise<string>;
+
+  "getColor()"(overrides?: CallOverrides): Promise<string>;
 
   isBPool(b: string, overrides?: CallOverrides): Promise<boolean>;
 
-  newBPool(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  "isBPool(address)"(b: string, overrides?: CallOverrides): Promise<boolean>;
 
-  setBLabs(
+  newBPool(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "newBPool()"(overrides?: Overrides): Promise<ContractTransaction>;
+
+  setBLabs(b: string, overrides?: Overrides): Promise<ContractTransaction>;
+
+  "setBLabs(address)"(
     b: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   callStatic: {
     collect(pool: string, overrides?: CallOverrides): Promise<void>;
 
+    "collect(address)"(pool: string, overrides?: CallOverrides): Promise<void>;
+
     getBLabs(overrides?: CallOverrides): Promise<string>;
+
+    "getBLabs()"(overrides?: CallOverrides): Promise<string>;
 
     getColor(overrides?: CallOverrides): Promise<string>;
 
+    "getColor()"(overrides?: CallOverrides): Promise<string>;
+
     isBPool(b: string, overrides?: CallOverrides): Promise<boolean>;
+
+    "isBPool(address)"(b: string, overrides?: CallOverrides): Promise<boolean>;
 
     newBPool(overrides?: CallOverrides): Promise<string>;
 
+    "newBPool()"(overrides?: CallOverrides): Promise<string>;
+
     setBLabs(b: string, overrides?: CallOverrides): Promise<void>;
+
+    "setBLabs(address)"(b: string, overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
-    "LOG_BLABS(address,address)"(
-      caller?: string | null,
-      blabs?: string | null
-    ): TypedEventFilter<[string, string], { caller: string; blabs: string }>;
+    LOG_BLABS(caller: string | null, blabs: string | null): EventFilter;
 
-    LOG_BLABS(
-      caller?: string | null,
-      blabs?: string | null
-    ): TypedEventFilter<[string, string], { caller: string; blabs: string }>;
-
-    "LOG_NEW_POOL(address,address)"(
-      caller?: string | null,
-      pool?: string | null
-    ): TypedEventFilter<[string, string], { caller: string; pool: string }>;
-
-    LOG_NEW_POOL(
-      caller?: string | null,
-      pool?: string | null
-    ): TypedEventFilter<[string, string], { caller: string; pool: string }>;
+    LOG_NEW_POOL(caller: string | null, pool: string | null): EventFilter;
   };
 
   estimateGas: {
-    collect(
-      pool: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    collect(pool: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "collect(address)"(pool: string, overrides?: Overrides): Promise<BigNumber>;
 
     getBLabs(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getBLabs()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getColor(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getColor()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     isBPool(b: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    newBPool(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "isBPool(address)"(
+      b: string,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    setBLabs(
-      b: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    newBPool(overrides?: Overrides): Promise<BigNumber>;
+
+    "newBPool()"(overrides?: Overrides): Promise<BigNumber>;
+
+    setBLabs(b: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "setBLabs(address)"(b: string, overrides?: Overrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    collect(
+    collect(pool: string, overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "collect(address)"(
       pool: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     getBLabs(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "getBLabs()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     getColor(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getColor()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     isBPool(
       b: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    newBPool(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "isBPool(address)"(
+      b: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    setBLabs(
+    newBPool(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "newBPool()"(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    setBLabs(b: string, overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "setBLabs(address)"(
       b: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };
 }

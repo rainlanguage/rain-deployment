@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "Cooldown",
-  "sourceName": "contracts/rain-protocol/contracts/cooldown/Cooldown.sol",
+  "sourceName": "contracts/cooldown/Cooldown.sol",
   "abi": [
     {
       "inputs": [

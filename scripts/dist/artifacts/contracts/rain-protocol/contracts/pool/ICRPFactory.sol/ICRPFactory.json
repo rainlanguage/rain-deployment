@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "ICRPFactory",
-  "sourceName": "contracts/rain-protocol/contracts/pool/ICRPFactory.sol",
+  "sourceName": "contracts/pool/ICRPFactory.sol",
   "abi": [
     {
       "inputs": [

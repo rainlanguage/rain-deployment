@@ -9,15 +9,16 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface ConfigurableRightsPoolInterface extends ethers.utils.Interface {
   functions: {
@@ -439,101 +440,29 @@ interface ConfigurableRightsPoolInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
-export type ApprovalEvent = TypedEvent<
-  [string, string, BigNumber] & {
-    owner: string;
-    spender: string;
-    value: BigNumber;
-  }
->;
-
-export type CapChangedEvent = TypedEvent<
-  [string, BigNumber, BigNumber] & {
-    caller: string;
-    oldCap: BigNumber;
-    newCap: BigNumber;
-  }
->;
-
-export type LogCallEvent = TypedEvent<
-  [string, string, string] & { sig: string; caller: string; data: string }
->;
-
-export type LogExitEvent = TypedEvent<
-  [string, string, BigNumber] & {
-    caller: string;
-    tokenOut: string;
-    tokenAmountOut: BigNumber;
-  }
->;
-
-export type LogJoinEvent = TypedEvent<
-  [string, string, BigNumber] & {
-    caller: string;
-    tokenIn: string;
-    tokenAmountIn: BigNumber;
-  }
->;
-
-export type NewTokenCommittedEvent = TypedEvent<
-  [string, string, string] & { token: string; pool: string; caller: string }
->;
-
-export type OwnershipTransferredEvent = TypedEvent<
-  [string, string] & { previousOwner: string; newOwner: string }
->;
-
-export type TransferEvent = TypedEvent<
-  [string, string, BigNumber] & { from: string; to: string; value: BigNumber }
->;
-
-export class ConfigurableRightsPool extends BaseContract {
+export class ConfigurableRightsPool extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: ConfigurableRightsPoolInterface;
 
   functions: {
     DECIMALS(overrides?: CallOverrides): Promise<[number]>;
 
+    "DECIMALS()"(overrides?: CallOverrides): Promise<[number]>;
+
     DEFAULT_ADD_TOKEN_TIME_LOCK_IN_BLOCKS(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "DEFAULT_ADD_TOKEN_TIME_LOCK_IN_BLOCKS()"(
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
@@ -541,9 +470,19 @@ export class ConfigurableRightsPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    "DEFAULT_MIN_WEIGHT_CHANGE_BLOCK_PERIOD()"(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     NAME(overrides?: CallOverrides): Promise<[string]>;
 
+    "NAME()"(overrides?: CallOverrides): Promise<[string]>;
+
     addTokenTimeLockInBlocks(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "addTokenTimeLockInBlocks()"(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     allowance(
       owner: string,
@@ -551,30 +490,63 @@ export class ConfigurableRightsPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    applyAddToken(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    "allowance(address,address)"(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    applyAddToken(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "applyAddToken()"(overrides?: Overrides): Promise<ContractTransaction>;
 
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     bFactory(overrides?: CallOverrides): Promise<[string]>;
 
+    "bFactory()"(overrides?: CallOverrides): Promise<[string]>;
+
     bPool(overrides?: CallOverrides): Promise<[string]>;
+
+    "bPool()"(overrides?: CallOverrides): Promise<[string]>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     bspCap(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "bspCap()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     burnPoolShareFromLib(
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "burnPoolShareFromLib(uint256)"(
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     canProvideLiquidity(
+      provider: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    "canProvideLiquidity(address)"(
       provider: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
@@ -583,63 +555,121 @@ export class ConfigurableRightsPool extends BaseContract {
       token: string,
       balance: BigNumberish,
       denormalizedWeight: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "commitAddToken(address,uint256,uint256)"(
+      token: string,
+      balance: BigNumberish,
+      denormalizedWeight: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "createPool(uint256)"(
       initialSupply: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     "createPool(uint256,uint256,uint256)"(
       initialSupply: BigNumberish,
       minimumWeightChangeBlockPeriodParam: BigNumberish,
       addTokenTimeLockInBlocksParam: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     decimals(overrides?: CallOverrides): Promise<[number]>;
 
+    "decimals()"(overrides?: CallOverrides): Promise<[number]>;
+
     decreaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "decreaseApproval(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     exitPool(
       poolAmountIn: BigNumberish,
       minAmountsOut: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "exitPool(uint256,uint256[])"(
+      poolAmountIn: BigNumberish,
+      minAmountsOut: BigNumberish[],
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     exitswapExternAmountOut(
       tokenOut: string,
       tokenAmountOut: BigNumberish,
       maxPoolAmountIn: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "exitswapExternAmountOut(address,uint256,uint256)"(
+      tokenOut: string,
+      tokenAmountOut: BigNumberish,
+      maxPoolAmountIn: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     exitswapPoolAmountIn(
       tokenOut: string,
       poolAmountIn: BigNumberish,
       minAmountOut: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "exitswapPoolAmountIn(address,uint256,uint256)"(
+      tokenOut: string,
+      poolAmountIn: BigNumberish,
+      minAmountOut: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     getBalancerSafeMathVersion(overrides?: CallOverrides): Promise<[string]>;
 
+    "getBalancerSafeMathVersion()"(
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     getController(overrides?: CallOverrides): Promise<[string]>;
+
+    "getController()"(overrides?: CallOverrides): Promise<[string]>;
 
     getDenormalizedWeight(
       token: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    "getDenormalizedWeight(address)"(
+      token: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     getRightsManagerVersion(overrides?: CallOverrides): Promise<[string]>;
+
+    "getRightsManagerVersion()"(overrides?: CallOverrides): Promise<[string]>;
 
     getSmartPoolManagerVersion(overrides?: CallOverrides): Promise<[string]>;
 
+    "getSmartPoolManagerVersion()"(
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     gradualUpdate(
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & { startBlock: BigNumber; endBlock: BigNumber }
+    >;
+
+    "gradualUpdate()"(
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber] & { startBlock: BigNumber; endBlock: BigNumber }
@@ -650,44 +680,88 @@ export class ConfigurableRightsPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    "hasPermission(uint8)"(
+      permission: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     increaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "increaseApproval(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     isPublicSwap(overrides?: CallOverrides): Promise<[boolean]>;
 
+    "isPublicSwap()"(overrides?: CallOverrides): Promise<[boolean]>;
+
     joinPool(
       poolAmountOut: BigNumberish,
       maxAmountsIn: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "joinPool(uint256,uint256[])"(
+      poolAmountOut: BigNumberish,
+      maxAmountsIn: BigNumberish[],
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     joinswapExternAmountIn(
       tokenIn: string,
       tokenAmountIn: BigNumberish,
       minPoolAmountOut: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "joinswapExternAmountIn(address,uint256,uint256)"(
+      tokenIn: string,
+      tokenAmountIn: BigNumberish,
+      minPoolAmountOut: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     joinswapPoolAmountOut(
       tokenIn: string,
       poolAmountOut: BigNumberish,
       maxAmountIn: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "joinswapPoolAmountOut(address,uint256,uint256)"(
+      tokenIn: string,
+      poolAmountOut: BigNumberish,
+      maxAmountIn: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     minimumWeightChangeBlockPeriod(
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    "minimumWeightChangeBlockPeriod()"(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     mintPoolShareFromLib(
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "mintPoolShareFromLib(uint256)"(
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
+
+    "name()"(overrides?: CallOverrides): Promise<[string]>;
 
     newToken(
       overrides?: CallOverrides
@@ -701,30 +775,64 @@ export class ConfigurableRightsPool extends BaseContract {
       }
     >;
 
-    pokeWeights(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    "newToken()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [string, boolean, BigNumber, BigNumber, BigNumber] & {
+        addr: string;
+        isCommitted: boolean;
+        commitBlock: BigNumber;
+        denorm: BigNumber;
+        balance: BigNumber;
+      }
+    >;
+
+    pokeWeights(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "pokeWeights()"(overrides?: Overrides): Promise<ContractTransaction>;
 
     pullPoolShareFromLib(
       from: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "pullPoolShareFromLib(address,uint256)"(
+      from: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     pushPoolShareFromLib(
       to: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "pushPoolShareFromLib(address,uint256)"(
+      to: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     removeToken(
       token: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "removeToken(address)"(
+      token: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     removeWhitelistedLiquidityProvider(
       provider: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "removeWhitelistedLiquidityProvider(address)"(
+      provider: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     rights(
@@ -740,65 +848,139 @@ export class ConfigurableRightsPool extends BaseContract {
       }
     >;
 
+    "rights()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [boolean, boolean, boolean, boolean, boolean, boolean] & {
+        canPauseSwapping: boolean;
+        canChangeSwapFee: boolean;
+        canChangeWeights: boolean;
+        canAddRemoveTokens: boolean;
+        canWhitelistLPs: boolean;
+        canChangeCap: boolean;
+      }
+    >;
+
     setCap(
       newCap: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "setCap(uint256)"(
+      newCap: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setController(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "setController(address)"(
+      newOwner: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setPublicSwap(
       publicSwap: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "setPublicSwap(bool)"(
+      publicSwap: boolean,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     setSwapFee(
       swapFee: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "setSwapFee(uint256)"(
+      swapFee: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<[string]>;
+
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "transferFrom(address,address,uint256)"(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     updateWeight(
       token: string,
       newWeight: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "updateWeight(address,uint256)"(
+      token: string,
+      newWeight: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     updateWeightsGradually(
       newWeights: BigNumberish[],
       startBlock: BigNumberish,
       endBlock: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "updateWeightsGradually(uint256[],uint256,uint256)"(
+      newWeights: BigNumberish[],
+      startBlock: BigNumberish,
+      endBlock: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
 
     whitelistLiquidityProvider(
       provider: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<ContractTransaction>;
+
+    "whitelistLiquidityProvider(address)"(
+      provider: string,
+      overrides?: Overrides
     ): Promise<ContractTransaction>;
   };
 
   DECIMALS(overrides?: CallOverrides): Promise<number>;
 
+  "DECIMALS()"(overrides?: CallOverrides): Promise<number>;
+
   DEFAULT_ADD_TOKEN_TIME_LOCK_IN_BLOCKS(
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "DEFAULT_ADD_TOKEN_TIME_LOCK_IN_BLOCKS()"(
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -806,9 +988,17 @@ export class ConfigurableRightsPool extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  "DEFAULT_MIN_WEIGHT_CHANGE_BLOCK_PERIOD()"(
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   NAME(overrides?: CallOverrides): Promise<string>;
 
+  "NAME()"(overrides?: CallOverrides): Promise<string>;
+
   addTokenTimeLockInBlocks(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "addTokenTimeLockInBlocks()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   allowance(
     owner: string,
@@ -816,30 +1006,63 @@ export class ConfigurableRightsPool extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  applyAddToken(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  "allowance(address,address)"(
+    owner: string,
+    spender: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  applyAddToken(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "applyAddToken()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   approve(
     spender: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "approve(address,uint256)"(
+    spender: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   bFactory(overrides?: CallOverrides): Promise<string>;
 
+  "bFactory()"(overrides?: CallOverrides): Promise<string>;
+
   bPool(overrides?: CallOverrides): Promise<string>;
+
+  "bPool()"(overrides?: CallOverrides): Promise<string>;
 
   balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+  "balanceOf(address)"(
+    account: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   bspCap(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "bspCap()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   burnPoolShareFromLib(
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "burnPoolShareFromLib(uint256)"(
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   canProvideLiquidity(
+    provider: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  "canProvideLiquidity(address)"(
     provider: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
@@ -848,63 +1071,117 @@ export class ConfigurableRightsPool extends BaseContract {
     token: string,
     balance: BigNumberish,
     denormalizedWeight: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "commitAddToken(address,uint256,uint256)"(
+    token: string,
+    balance: BigNumberish,
+    denormalizedWeight: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "createPool(uint256)"(
     initialSupply: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   "createPool(uint256,uint256,uint256)"(
     initialSupply: BigNumberish,
     minimumWeightChangeBlockPeriodParam: BigNumberish,
     addTokenTimeLockInBlocksParam: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   decimals(overrides?: CallOverrides): Promise<number>;
 
+  "decimals()"(overrides?: CallOverrides): Promise<number>;
+
   decreaseApproval(
     spender: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "decreaseApproval(address,uint256)"(
+    spender: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   exitPool(
     poolAmountIn: BigNumberish,
     minAmountsOut: BigNumberish[],
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "exitPool(uint256,uint256[])"(
+    poolAmountIn: BigNumberish,
+    minAmountsOut: BigNumberish[],
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   exitswapExternAmountOut(
     tokenOut: string,
     tokenAmountOut: BigNumberish,
     maxPoolAmountIn: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "exitswapExternAmountOut(address,uint256,uint256)"(
+    tokenOut: string,
+    tokenAmountOut: BigNumberish,
+    maxPoolAmountIn: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   exitswapPoolAmountIn(
     tokenOut: string,
     poolAmountIn: BigNumberish,
     minAmountOut: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "exitswapPoolAmountIn(address,uint256,uint256)"(
+    tokenOut: string,
+    poolAmountIn: BigNumberish,
+    minAmountOut: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   getBalancerSafeMathVersion(overrides?: CallOverrides): Promise<string>;
 
+  "getBalancerSafeMathVersion()"(overrides?: CallOverrides): Promise<string>;
+
   getController(overrides?: CallOverrides): Promise<string>;
+
+  "getController()"(overrides?: CallOverrides): Promise<string>;
 
   getDenormalizedWeight(
     token: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  "getDenormalizedWeight(address)"(
+    token: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   getRightsManagerVersion(overrides?: CallOverrides): Promise<string>;
+
+  "getRightsManagerVersion()"(overrides?: CallOverrides): Promise<string>;
 
   getSmartPoolManagerVersion(overrides?: CallOverrides): Promise<string>;
 
+  "getSmartPoolManagerVersion()"(overrides?: CallOverrides): Promise<string>;
+
   gradualUpdate(
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber] & { startBlock: BigNumber; endBlock: BigNumber }
+  >;
+
+  "gradualUpdate()"(
     overrides?: CallOverrides
   ): Promise<
     [BigNumber, BigNumber] & { startBlock: BigNumber; endBlock: BigNumber }
@@ -915,42 +1192,86 @@ export class ConfigurableRightsPool extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  "hasPermission(uint8)"(
+    permission: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   increaseApproval(
     spender: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "increaseApproval(address,uint256)"(
+    spender: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   isPublicSwap(overrides?: CallOverrides): Promise<boolean>;
 
+  "isPublicSwap()"(overrides?: CallOverrides): Promise<boolean>;
+
   joinPool(
     poolAmountOut: BigNumberish,
     maxAmountsIn: BigNumberish[],
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "joinPool(uint256,uint256[])"(
+    poolAmountOut: BigNumberish,
+    maxAmountsIn: BigNumberish[],
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   joinswapExternAmountIn(
     tokenIn: string,
     tokenAmountIn: BigNumberish,
     minPoolAmountOut: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "joinswapExternAmountIn(address,uint256,uint256)"(
+    tokenIn: string,
+    tokenAmountIn: BigNumberish,
+    minPoolAmountOut: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   joinswapPoolAmountOut(
     tokenIn: string,
     poolAmountOut: BigNumberish,
     maxAmountIn: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "joinswapPoolAmountOut(address,uint256,uint256)"(
+    tokenIn: string,
+    poolAmountOut: BigNumberish,
+    maxAmountIn: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   minimumWeightChangeBlockPeriod(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "minimumWeightChangeBlockPeriod()"(
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   mintPoolShareFromLib(
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "mintPoolShareFromLib(uint256)"(
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   name(overrides?: CallOverrides): Promise<string>;
+
+  "name()"(overrides?: CallOverrides): Promise<string>;
 
   newToken(
     overrides?: CallOverrides
@@ -964,30 +1285,64 @@ export class ConfigurableRightsPool extends BaseContract {
     }
   >;
 
-  pokeWeights(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  "newToken()"(
+    overrides?: CallOverrides
+  ): Promise<
+    [string, boolean, BigNumber, BigNumber, BigNumber] & {
+      addr: string;
+      isCommitted: boolean;
+      commitBlock: BigNumber;
+      denorm: BigNumber;
+      balance: BigNumber;
+    }
+  >;
+
+  pokeWeights(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "pokeWeights()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   pullPoolShareFromLib(
     from: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "pullPoolShareFromLib(address,uint256)"(
+    from: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   pushPoolShareFromLib(
     to: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "pushPoolShareFromLib(address,uint256)"(
+    to: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   removeToken(
     token: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "removeToken(address)"(
+    token: string,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   removeWhitelistedLiquidityProvider(
     provider: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "removeWhitelistedLiquidityProvider(address)"(
+    provider: string,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   rights(
@@ -1003,65 +1358,139 @@ export class ConfigurableRightsPool extends BaseContract {
     }
   >;
 
+  "rights()"(
+    overrides?: CallOverrides
+  ): Promise<
+    [boolean, boolean, boolean, boolean, boolean, boolean] & {
+      canPauseSwapping: boolean;
+      canChangeSwapFee: boolean;
+      canChangeWeights: boolean;
+      canAddRemoveTokens: boolean;
+      canWhitelistLPs: boolean;
+      canChangeCap: boolean;
+    }
+  >;
+
   setCap(
     newCap: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "setCap(uint256)"(
+    newCap: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setController(
     newOwner: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "setController(address)"(
+    newOwner: string,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setPublicSwap(
     publicSwap: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "setPublicSwap(bool)"(
+    publicSwap: boolean,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   setSwapFee(
     swapFee: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "setSwapFee(uint256)"(
+    swapFee: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
 
+  "symbol()"(overrides?: CallOverrides): Promise<string>;
+
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   transfer(
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "transfer(address,uint256)"(
+    recipient: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   transferFrom(
     sender: string,
     recipient: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "transferFrom(address,address,uint256)"(
+    sender: string,
+    recipient: string,
+    amount: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   updateWeight(
     token: string,
     newWeight: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "updateWeight(address,uint256)"(
+    token: string,
+    newWeight: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   updateWeightsGradually(
     newWeights: BigNumberish[],
     startBlock: BigNumberish,
     endBlock: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "updateWeightsGradually(uint256[],uint256,uint256)"(
+    newWeights: BigNumberish[],
+    startBlock: BigNumberish,
+    endBlock: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   whitelistLiquidityProvider(
     provider: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: Overrides
+  ): Promise<ContractTransaction>;
+
+  "whitelistLiquidityProvider(address)"(
+    provider: string,
+    overrides?: Overrides
   ): Promise<ContractTransaction>;
 
   callStatic: {
     DECIMALS(overrides?: CallOverrides): Promise<number>;
 
+    "DECIMALS()"(overrides?: CallOverrides): Promise<number>;
+
     DEFAULT_ADD_TOKEN_TIME_LOCK_IN_BLOCKS(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "DEFAULT_ADD_TOKEN_TIME_LOCK_IN_BLOCKS()"(
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1069,9 +1498,17 @@ export class ConfigurableRightsPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "DEFAULT_MIN_WEIGHT_CHANGE_BLOCK_PERIOD()"(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     NAME(overrides?: CallOverrides): Promise<string>;
 
+    "NAME()"(overrides?: CallOverrides): Promise<string>;
+
     addTokenTimeLockInBlocks(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "addTokenTimeLockInBlocks()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     allowance(
       owner: string,
@@ -1079,7 +1516,15 @@ export class ConfigurableRightsPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "allowance(address,address)"(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     applyAddToken(overrides?: CallOverrides): Promise<void>;
+
+    "applyAddToken()"(overrides?: CallOverrides): Promise<void>;
 
     approve(
       spender: string,
@@ -1087,15 +1532,37 @@ export class ConfigurableRightsPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     bFactory(overrides?: CallOverrides): Promise<string>;
+
+    "bFactory()"(overrides?: CallOverrides): Promise<string>;
 
     bPool(overrides?: CallOverrides): Promise<string>;
 
+    "bPool()"(overrides?: CallOverrides): Promise<string>;
+
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     bspCap(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "bspCap()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     burnPoolShareFromLib(
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "burnPoolShareFromLib(uint256)"(
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -1105,7 +1572,19 @@ export class ConfigurableRightsPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "canProvideLiquidity(address)"(
+      provider: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     commitAddToken(
+      token: string,
+      balance: BigNumberish,
+      denormalizedWeight: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "commitAddToken(address,uint256,uint256)"(
       token: string,
       balance: BigNumberish,
       denormalizedWeight: BigNumberish,
@@ -1126,7 +1605,15 @@ export class ConfigurableRightsPool extends BaseContract {
 
     decimals(overrides?: CallOverrides): Promise<number>;
 
+    "decimals()"(overrides?: CallOverrides): Promise<number>;
+
     decreaseApproval(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "decreaseApproval(address,uint256)"(
       spender: string,
       amount: BigNumberish,
       overrides?: CallOverrides
@@ -1138,7 +1625,20 @@ export class ConfigurableRightsPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "exitPool(uint256,uint256[])"(
+      poolAmountIn: BigNumberish,
+      minAmountsOut: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     exitswapExternAmountOut(
+      tokenOut: string,
+      tokenAmountOut: BigNumberish,
+      maxPoolAmountIn: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "exitswapExternAmountOut(address,uint256,uint256)"(
       tokenOut: string,
       tokenAmountOut: BigNumberish,
       maxPoolAmountIn: BigNumberish,
@@ -1152,20 +1652,46 @@ export class ConfigurableRightsPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "exitswapPoolAmountIn(address,uint256,uint256)"(
+      tokenOut: string,
+      poolAmountIn: BigNumberish,
+      minAmountOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getBalancerSafeMathVersion(overrides?: CallOverrides): Promise<string>;
 
+    "getBalancerSafeMathVersion()"(overrides?: CallOverrides): Promise<string>;
+
     getController(overrides?: CallOverrides): Promise<string>;
+
+    "getController()"(overrides?: CallOverrides): Promise<string>;
 
     getDenormalizedWeight(
       token: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "getDenormalizedWeight(address)"(
+      token: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getRightsManagerVersion(overrides?: CallOverrides): Promise<string>;
+
+    "getRightsManagerVersion()"(overrides?: CallOverrides): Promise<string>;
 
     getSmartPoolManagerVersion(overrides?: CallOverrides): Promise<string>;
 
+    "getSmartPoolManagerVersion()"(overrides?: CallOverrides): Promise<string>;
+
     gradualUpdate(
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & { startBlock: BigNumber; endBlock: BigNumber }
+    >;
+
+    "gradualUpdate()"(
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber] & { startBlock: BigNumber; endBlock: BigNumber }
@@ -1176,7 +1702,18 @@ export class ConfigurableRightsPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "hasPermission(uint8)"(
+      permission: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     increaseApproval(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "increaseApproval(address,uint256)"(
       spender: string,
       amount: BigNumberish,
       overrides?: CallOverrides
@@ -1184,13 +1721,28 @@ export class ConfigurableRightsPool extends BaseContract {
 
     isPublicSwap(overrides?: CallOverrides): Promise<boolean>;
 
+    "isPublicSwap()"(overrides?: CallOverrides): Promise<boolean>;
+
     joinPool(
       poolAmountOut: BigNumberish,
       maxAmountsIn: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "joinPool(uint256,uint256[])"(
+      poolAmountOut: BigNumberish,
+      maxAmountsIn: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     joinswapExternAmountIn(
+      tokenIn: string,
+      tokenAmountIn: BigNumberish,
+      minPoolAmountOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "joinswapExternAmountIn(address,uint256,uint256)"(
       tokenIn: string,
       tokenAmountIn: BigNumberish,
       minPoolAmountOut: BigNumberish,
@@ -1204,7 +1756,18 @@ export class ConfigurableRightsPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "joinswapPoolAmountOut(address,uint256,uint256)"(
+      tokenIn: string,
+      poolAmountOut: BigNumberish,
+      maxAmountIn: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     minimumWeightChangeBlockPeriod(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "minimumWeightChangeBlockPeriod()"(
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1213,7 +1776,14 @@ export class ConfigurableRightsPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "mintPoolShareFromLib(uint256)"(
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     name(overrides?: CallOverrides): Promise<string>;
+
+    "name()"(overrides?: CallOverrides): Promise<string>;
 
     newToken(
       overrides?: CallOverrides
@@ -1227,9 +1797,29 @@ export class ConfigurableRightsPool extends BaseContract {
       }
     >;
 
+    "newToken()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [string, boolean, BigNumber, BigNumber, BigNumber] & {
+        addr: string;
+        isCommitted: boolean;
+        commitBlock: BigNumber;
+        denorm: BigNumber;
+        balance: BigNumber;
+      }
+    >;
+
     pokeWeights(overrides?: CallOverrides): Promise<void>;
 
+    "pokeWeights()"(overrides?: CallOverrides): Promise<void>;
+
     pullPoolShareFromLib(
+      from: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "pullPoolShareFromLib(address,uint256)"(
       from: string,
       amount: BigNumberish,
       overrides?: CallOverrides
@@ -1241,9 +1831,25 @@ export class ConfigurableRightsPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "pushPoolShareFromLib(address,uint256)"(
+      to: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     removeToken(token: string, overrides?: CallOverrides): Promise<void>;
 
+    "removeToken(address)"(
+      token: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     removeWhitelistedLiquidityProvider(
+      provider: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "removeWhitelistedLiquidityProvider(address)"(
       provider: string,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -1261,22 +1867,65 @@ export class ConfigurableRightsPool extends BaseContract {
       }
     >;
 
+    "rights()"(
+      overrides?: CallOverrides
+    ): Promise<
+      [boolean, boolean, boolean, boolean, boolean, boolean] & {
+        canPauseSwapping: boolean;
+        canChangeSwapFee: boolean;
+        canChangeWeights: boolean;
+        canAddRemoveTokens: boolean;
+        canWhitelistLPs: boolean;
+        canChangeCap: boolean;
+      }
+    >;
+
     setCap(newCap: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
+    "setCap(uint256)"(
+      newCap: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setController(newOwner: string, overrides?: CallOverrides): Promise<void>;
+
+    "setController(address)"(
+      newOwner: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     setPublicSwap(
       publicSwap: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "setPublicSwap(bool)"(
+      publicSwap: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setSwapFee(swapFee: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
+    "setSwapFee(uint256)"(
+      swapFee: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<string>;
+
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     transfer(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "transfer(address,uint256)"(
       recipient: string,
       amount: BigNumberish,
       overrides?: CallOverrides
@@ -1289,7 +1938,20 @@ export class ConfigurableRightsPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    "transferFrom(address,address,uint256)"(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     updateWeight(
+      token: string,
+      newWeight: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "updateWeight(address,uint256)"(
       token: string,
       newWeight: BigNumberish,
       overrides?: CallOverrides
@@ -1302,160 +1964,75 @@ export class ConfigurableRightsPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    "updateWeightsGradually(uint256[],uint256,uint256)"(
+      newWeights: BigNumberish[],
+      startBlock: BigNumberish,
+      endBlock: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     whitelistLiquidityProvider(
+      provider: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "whitelistLiquidityProvider(address)"(
       provider: string,
       overrides?: CallOverrides
     ): Promise<void>;
   };
 
   filters: {
-    "Approval(address,address,uint256)"(
-      owner?: string | null,
-      spender?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { owner: string; spender: string; value: BigNumber }
-    >;
-
     Approval(
-      owner?: string | null,
-      spender?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { owner: string; spender: string; value: BigNumber }
-    >;
+      owner: string | null,
+      spender: string | null,
+      value: null
+    ): EventFilter;
 
-    "CapChanged(address,uint256,uint256)"(
-      caller?: string | null,
-      oldCap?: null,
-      newCap?: null
-    ): TypedEventFilter<
-      [string, BigNumber, BigNumber],
-      { caller: string; oldCap: BigNumber; newCap: BigNumber }
-    >;
-
-    CapChanged(
-      caller?: string | null,
-      oldCap?: null,
-      newCap?: null
-    ): TypedEventFilter<
-      [string, BigNumber, BigNumber],
-      { caller: string; oldCap: BigNumber; newCap: BigNumber }
-    >;
-
-    "LogCall(bytes4,address,bytes)"(
-      sig?: BytesLike | null,
-      caller?: string | null,
-      data?: null
-    ): TypedEventFilter<
-      [string, string, string],
-      { sig: string; caller: string; data: string }
-    >;
+    CapChanged(caller: string | null, oldCap: null, newCap: null): EventFilter;
 
     LogCall(
-      sig?: BytesLike | null,
-      caller?: string | null,
-      data?: null
-    ): TypedEventFilter<
-      [string, string, string],
-      { sig: string; caller: string; data: string }
-    >;
-
-    "LogExit(address,address,uint256)"(
-      caller?: string | null,
-      tokenOut?: string | null,
-      tokenAmountOut?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { caller: string; tokenOut: string; tokenAmountOut: BigNumber }
-    >;
+      sig: BytesLike | null,
+      caller: string | null,
+      data: null
+    ): EventFilter;
 
     LogExit(
-      caller?: string | null,
-      tokenOut?: string | null,
-      tokenAmountOut?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { caller: string; tokenOut: string; tokenAmountOut: BigNumber }
-    >;
-
-    "LogJoin(address,address,uint256)"(
-      caller?: string | null,
-      tokenIn?: string | null,
-      tokenAmountIn?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { caller: string; tokenIn: string; tokenAmountIn: BigNumber }
-    >;
+      caller: string | null,
+      tokenOut: string | null,
+      tokenAmountOut: null
+    ): EventFilter;
 
     LogJoin(
-      caller?: string | null,
-      tokenIn?: string | null,
-      tokenAmountIn?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { caller: string; tokenIn: string; tokenAmountIn: BigNumber }
-    >;
-
-    "NewTokenCommitted(address,address,address)"(
-      token?: string | null,
-      pool?: string | null,
-      caller?: string | null
-    ): TypedEventFilter<
-      [string, string, string],
-      { token: string; pool: string; caller: string }
-    >;
+      caller: string | null,
+      tokenIn: string | null,
+      tokenAmountIn: null
+    ): EventFilter;
 
     NewTokenCommitted(
-      token?: string | null,
-      pool?: string | null,
-      caller?: string | null
-    ): TypedEventFilter<
-      [string, string, string],
-      { token: string; pool: string; caller: string }
-    >;
-
-    "OwnershipTransferred(address,address)"(
-      previousOwner?: string | null,
-      newOwner?: string | null
-    ): TypedEventFilter<
-      [string, string],
-      { previousOwner: string; newOwner: string }
-    >;
+      token: string | null,
+      pool: string | null,
+      caller: string | null
+    ): EventFilter;
 
     OwnershipTransferred(
-      previousOwner?: string | null,
-      newOwner?: string | null
-    ): TypedEventFilter<
-      [string, string],
-      { previousOwner: string; newOwner: string }
-    >;
+      previousOwner: string | null,
+      newOwner: string | null
+    ): EventFilter;
 
-    "Transfer(address,address,uint256)"(
-      from?: string | null,
-      to?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { from: string; to: string; value: BigNumber }
-    >;
-
-    Transfer(
-      from?: string | null,
-      to?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { from: string; to: string; value: BigNumber }
-    >;
+    Transfer(from: string | null, to: string | null, value: null): EventFilter;
   };
 
   estimateGas: {
     DECIMALS(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "DECIMALS()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     DEFAULT_ADD_TOKEN_TIME_LOCK_IN_BLOCKS(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "DEFAULT_ADD_TOKEN_TIME_LOCK_IN_BLOCKS()"(
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1463,9 +2040,17 @@ export class ConfigurableRightsPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "DEFAULT_MIN_WEIGHT_CHANGE_BLOCK_PERIOD()"(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     NAME(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "NAME()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     addTokenTimeLockInBlocks(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "addTokenTimeLockInBlocks()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     allowance(
       owner: string,
@@ -1473,30 +2058,63 @@ export class ConfigurableRightsPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    applyAddToken(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "allowance(address,address)"(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    applyAddToken(overrides?: Overrides): Promise<BigNumber>;
+
+    "applyAddToken()"(overrides?: Overrides): Promise<BigNumber>;
 
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     bFactory(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "bFactory()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     bPool(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "bPool()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     bspCap(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "bspCap()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     burnPoolShareFromLib(
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "burnPoolShareFromLib(uint256)"(
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     canProvideLiquidity(
+      provider: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "canProvideLiquidity(address)"(
       provider: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -1505,65 +2123,124 @@ export class ConfigurableRightsPool extends BaseContract {
       token: string,
       balance: BigNumberish,
       denormalizedWeight: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "commitAddToken(address,uint256,uint256)"(
+      token: string,
+      balance: BigNumberish,
+      denormalizedWeight: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     "createPool(uint256)"(
       initialSupply: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     "createPool(uint256,uint256,uint256)"(
       initialSupply: BigNumberish,
       minimumWeightChangeBlockPeriodParam: BigNumberish,
       addTokenTimeLockInBlocksParam: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     decreaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "decreaseApproval(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     exitPool(
       poolAmountIn: BigNumberish,
       minAmountsOut: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "exitPool(uint256,uint256[])"(
+      poolAmountIn: BigNumberish,
+      minAmountsOut: BigNumberish[],
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     exitswapExternAmountOut(
       tokenOut: string,
       tokenAmountOut: BigNumberish,
       maxPoolAmountIn: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "exitswapExternAmountOut(address,uint256,uint256)"(
+      tokenOut: string,
+      tokenAmountOut: BigNumberish,
+      maxPoolAmountIn: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     exitswapPoolAmountIn(
       tokenOut: string,
       poolAmountIn: BigNumberish,
       minAmountOut: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "exitswapPoolAmountIn(address,uint256,uint256)"(
+      tokenOut: string,
+      poolAmountIn: BigNumberish,
+      minAmountOut: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     getBalancerSafeMathVersion(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getBalancerSafeMathVersion()"(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getController(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getController()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getDenormalizedWeight(
       token: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "getDenormalizedWeight(address)"(
+      token: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getRightsManagerVersion(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getRightsManagerVersion()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     getSmartPoolManagerVersion(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getSmartPoolManagerVersion()"(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     gradualUpdate(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "gradualUpdate()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     hasPermission(
+      permission: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "hasPermission(uint8)"(
       permission: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -1571,132 +2248,249 @@ export class ConfigurableRightsPool extends BaseContract {
     increaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "increaseApproval(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     isPublicSwap(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "isPublicSwap()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     joinPool(
       poolAmountOut: BigNumberish,
       maxAmountsIn: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "joinPool(uint256,uint256[])"(
+      poolAmountOut: BigNumberish,
+      maxAmountsIn: BigNumberish[],
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     joinswapExternAmountIn(
       tokenIn: string,
       tokenAmountIn: BigNumberish,
       minPoolAmountOut: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "joinswapExternAmountIn(address,uint256,uint256)"(
+      tokenIn: string,
+      tokenAmountIn: BigNumberish,
+      minPoolAmountOut: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     joinswapPoolAmountOut(
       tokenIn: string,
       poolAmountOut: BigNumberish,
       maxAmountIn: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "joinswapPoolAmountOut(address,uint256,uint256)"(
+      tokenIn: string,
+      poolAmountOut: BigNumberish,
+      maxAmountIn: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     minimumWeightChangeBlockPeriod(
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "minimumWeightChangeBlockPeriod()"(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     mintPoolShareFromLib(
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "mintPoolShareFromLib(uint256)"(
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "name()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     newToken(overrides?: CallOverrides): Promise<BigNumber>;
 
-    pokeWeights(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    "newToken()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    pokeWeights(overrides?: Overrides): Promise<BigNumber>;
+
+    "pokeWeights()"(overrides?: Overrides): Promise<BigNumber>;
 
     pullPoolShareFromLib(
       from: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "pullPoolShareFromLib(address,uint256)"(
+      from: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     pushPoolShareFromLib(
       to: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
-    removeToken(
+    "pushPoolShareFromLib(address,uint256)"(
+      to: string,
+      amount: BigNumberish,
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    removeToken(token: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "removeToken(address)"(
       token: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     removeWhitelistedLiquidityProvider(
       provider: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "removeWhitelistedLiquidityProvider(address)"(
+      provider: string,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     rights(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setCap(
+    "rights()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    setCap(newCap: BigNumberish, overrides?: Overrides): Promise<BigNumber>;
+
+    "setCap(uint256)"(
       newCap: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
-    setController(
+    setController(newOwner: string, overrides?: Overrides): Promise<BigNumber>;
+
+    "setController(address)"(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     setPublicSwap(
       publicSwap: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "setPublicSwap(bool)"(
+      publicSwap: boolean,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     setSwapFee(
       swapFee: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "setSwapFee(uint256)"(
+      swapFee: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "transferFrom(address,address,uint256)"(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     updateWeight(
       token: string,
       newWeight: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "updateWeight(address,uint256)"(
+      token: string,
+      newWeight: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     updateWeightsGradually(
       newWeights: BigNumberish[],
       startBlock: BigNumberish,
       endBlock: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "updateWeightsGradually(uint256[],uint256,uint256)"(
+      newWeights: BigNumberish[],
+      startBlock: BigNumberish,
+      endBlock: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>;
 
     whitelistLiquidityProvider(
       provider: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    "whitelistLiquidityProvider(address)"(
+      provider: string,
+      overrides?: Overrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     DECIMALS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "DECIMALS()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     DEFAULT_ADD_TOKEN_TIME_LOCK_IN_BLOCKS(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "DEFAULT_ADD_TOKEN_TIME_LOCK_IN_BLOCKS()"(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1704,9 +2498,19 @@ export class ConfigurableRightsPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "DEFAULT_MIN_WEIGHT_CHANGE_BLOCK_PERIOD()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     NAME(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "NAME()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     addTokenTimeLockInBlocks(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "addTokenTimeLockInBlocks()"(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1716,33 +2520,66 @@ export class ConfigurableRightsPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    applyAddToken(
-      overrides?: Overrides & { from?: string | Promise<string> }
+    "allowance(address,address)"(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    applyAddToken(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "applyAddToken()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     approve(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "approve(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     bFactory(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "bFactory()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     bPool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "bPool()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     balanceOf(
       account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "balanceOf(address)"(
+      account: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     bspCap(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "bspCap()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     burnPoolShareFromLib(
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "burnPoolShareFromLib(uint256)"(
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     canProvideLiquidity(
+      provider: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "canProvideLiquidity(address)"(
       provider: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1751,56 +2588,102 @@ export class ConfigurableRightsPool extends BaseContract {
       token: string,
       balance: BigNumberish,
       denormalizedWeight: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "commitAddToken(address,uint256,uint256)"(
+      token: string,
+      balance: BigNumberish,
+      denormalizedWeight: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "createPool(uint256)"(
       initialSupply: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     "createPool(uint256,uint256,uint256)"(
       initialSupply: BigNumberish,
       minimumWeightChangeBlockPeriodParam: BigNumberish,
       addTokenTimeLockInBlocksParam: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "decimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     decreaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "decreaseApproval(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     exitPool(
       poolAmountIn: BigNumberish,
       minAmountsOut: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "exitPool(uint256,uint256[])"(
+      poolAmountIn: BigNumberish,
+      minAmountsOut: BigNumberish[],
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     exitswapExternAmountOut(
       tokenOut: string,
       tokenAmountOut: BigNumberish,
       maxPoolAmountIn: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "exitswapExternAmountOut(address,uint256,uint256)"(
+      tokenOut: string,
+      tokenAmountOut: BigNumberish,
+      maxPoolAmountIn: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     exitswapPoolAmountIn(
       tokenOut: string,
       poolAmountIn: BigNumberish,
       minAmountOut: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "exitswapPoolAmountIn(address,uint256,uint256)"(
+      tokenOut: string,
+      poolAmountIn: BigNumberish,
+      minAmountOut: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     getBalancerSafeMathVersion(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "getBalancerSafeMathVersion()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getController(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "getController()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     getDenormalizedWeight(
+      token: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getDenormalizedWeight(address)"(
       token: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1809,13 +2692,28 @@ export class ConfigurableRightsPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "getRightsManagerVersion()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getSmartPoolManagerVersion(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getSmartPoolManagerVersion()"(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     gradualUpdate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "gradualUpdate()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     hasPermission(
+      permission: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "hasPermission(uint8)"(
       permission: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1823,125 +2721,245 @@ export class ConfigurableRightsPool extends BaseContract {
     increaseApproval(
       spender: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "increaseApproval(address,uint256)"(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     isPublicSwap(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "isPublicSwap()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     joinPool(
       poolAmountOut: BigNumberish,
       maxAmountsIn: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "joinPool(uint256,uint256[])"(
+      poolAmountOut: BigNumberish,
+      maxAmountsIn: BigNumberish[],
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     joinswapExternAmountIn(
       tokenIn: string,
       tokenAmountIn: BigNumberish,
       minPoolAmountOut: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "joinswapExternAmountIn(address,uint256,uint256)"(
+      tokenIn: string,
+      tokenAmountIn: BigNumberish,
+      minPoolAmountOut: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     joinswapPoolAmountOut(
       tokenIn: string,
       poolAmountOut: BigNumberish,
       maxAmountIn: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "joinswapPoolAmountOut(address,uint256,uint256)"(
+      tokenIn: string,
+      poolAmountOut: BigNumberish,
+      maxAmountIn: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     minimumWeightChangeBlockPeriod(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "minimumWeightChangeBlockPeriod()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     mintPoolShareFromLib(
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "mintPoolShareFromLib(uint256)"(
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     newToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    pokeWeights(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    "newToken()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    pokeWeights(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "pokeWeights()"(overrides?: Overrides): Promise<PopulatedTransaction>;
 
     pullPoolShareFromLib(
       from: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "pullPoolShareFromLib(address,uint256)"(
+      from: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     pushPoolShareFromLib(
       to: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "pushPoolShareFromLib(address,uint256)"(
+      to: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     removeToken(
       token: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "removeToken(address)"(
+      token: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     removeWhitelistedLiquidityProvider(
       provider: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "removeWhitelistedLiquidityProvider(address)"(
+      provider: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     rights(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "rights()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     setCap(
       newCap: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "setCap(uint256)"(
+      newCap: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setController(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "setController(address)"(
+      newOwner: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setPublicSwap(
       publicSwap: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "setPublicSwap(bool)"(
+      publicSwap: boolean,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     setSwapFee(
       swapFee: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "setSwapFee(uint256)"(
+      swapFee: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "symbol()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "totalSupply()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "transfer(address,uint256)"(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "transferFrom(address,address,uint256)"(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     updateWeight(
       token: string,
       newWeight: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "updateWeight(address,uint256)"(
+      token: string,
+      newWeight: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     updateWeightsGradually(
       newWeights: BigNumberish[],
       startBlock: BigNumberish,
       endBlock: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "updateWeightsGradually(uint256[],uint256,uint256)"(
+      newWeights: BigNumberish[],
+      startBlock: BigNumberish,
+      endBlock: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
     whitelistLiquidityProvider(
       provider: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    "whitelistLiquidityProvider(address)"(
+      provider: string,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>;
   };
 }

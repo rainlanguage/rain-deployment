@@ -9,14 +9,15 @@ import {
   BigNumber,
   BigNumberish,
   PopulatedTransaction,
-  BaseContract,
+} from "ethers";
+import {
+  Contract,
   ContractTransaction,
   CallOverrides,
-} from "ethers";
+} from "@ethersproject/contracts";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface BConstInterface extends ethers.utils.Interface {
   functions: {
@@ -144,153 +145,225 @@ interface BConstInterface extends ethers.utils.Interface {
   events: {};
 }
 
-export class BConst extends BaseContract {
+export class BConst extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
-
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
-
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  on(event: EventFilter | string, listener: Listener): this;
+  once(event: EventFilter | string, listener: Listener): this;
+  addListener(eventName: EventFilter | string, listener: Listener): this;
+  removeAllListeners(eventName: EventFilter | string): this;
+  removeListener(eventName: any, listener: Listener): this;
 
   interface: BConstInterface;
 
   functions: {
     BONE(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "BONE()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     BPOW_PRECISION(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "BPOW_PRECISION()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     EXIT_FEE(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "EXIT_FEE()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     INIT_POOL_SUPPLY(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "INIT_POOL_SUPPLY()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     MAX_BOUND_TOKENS(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "MAX_BOUND_TOKENS()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     MAX_BPOW_BASE(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "MAX_BPOW_BASE()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     MAX_FEE(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "MAX_FEE()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     MAX_IN_RATIO(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "MAX_IN_RATIO()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     MAX_OUT_RATIO(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "MAX_OUT_RATIO()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     MAX_TOTAL_WEIGHT(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "MAX_TOTAL_WEIGHT()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     MAX_WEIGHT(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "MAX_WEIGHT()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     MIN_BALANCE(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "MIN_BALANCE()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     MIN_BOUND_TOKENS(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "MIN_BOUND_TOKENS()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     MIN_BPOW_BASE(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "MIN_BPOW_BASE()"(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     MIN_FEE(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "MIN_FEE()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     MIN_WEIGHT(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "MIN_WEIGHT()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     getColor(overrides?: CallOverrides): Promise<[string]>;
+
+    "getColor()"(overrides?: CallOverrides): Promise<[string]>;
   };
 
   BONE(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "BONE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   BPOW_PRECISION(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "BPOW_PRECISION()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   EXIT_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "EXIT_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   INIT_POOL_SUPPLY(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "INIT_POOL_SUPPLY()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   MAX_BOUND_TOKENS(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "MAX_BOUND_TOKENS()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   MAX_BPOW_BASE(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "MAX_BPOW_BASE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   MAX_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "MAX_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   MAX_IN_RATIO(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "MAX_IN_RATIO()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   MAX_OUT_RATIO(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "MAX_OUT_RATIO()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   MAX_TOTAL_WEIGHT(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "MAX_TOTAL_WEIGHT()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   MAX_WEIGHT(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "MAX_WEIGHT()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   MIN_BALANCE(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "MIN_BALANCE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   MIN_BOUND_TOKENS(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "MIN_BOUND_TOKENS()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   MIN_BPOW_BASE(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "MIN_BPOW_BASE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   MIN_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "MIN_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   MIN_WEIGHT(overrides?: CallOverrides): Promise<BigNumber>;
 
+  "MIN_WEIGHT()"(overrides?: CallOverrides): Promise<BigNumber>;
+
   getColor(overrides?: CallOverrides): Promise<string>;
+
+  "getColor()"(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
     BONE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "BONE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     BPOW_PRECISION(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "BPOW_PRECISION()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     EXIT_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "EXIT_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     INIT_POOL_SUPPLY(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "INIT_POOL_SUPPLY()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MAX_BOUND_TOKENS(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MAX_BOUND_TOKENS()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MAX_BPOW_BASE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MAX_BPOW_BASE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MAX_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MAX_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MAX_IN_RATIO(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MAX_IN_RATIO()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MAX_OUT_RATIO(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MAX_OUT_RATIO()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MAX_TOTAL_WEIGHT(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MAX_TOTAL_WEIGHT()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MAX_WEIGHT(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MAX_WEIGHT()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MIN_BALANCE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MIN_BALANCE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MIN_BOUND_TOKENS(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MIN_BOUND_TOKENS()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MIN_BPOW_BASE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MIN_BPOW_BASE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MIN_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MIN_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MIN_WEIGHT(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MIN_WEIGHT()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getColor(overrides?: CallOverrides): Promise<string>;
+
+    "getColor()"(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {};
@@ -298,72 +371,150 @@ export class BConst extends BaseContract {
   estimateGas: {
     BONE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "BONE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     BPOW_PRECISION(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "BPOW_PRECISION()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     EXIT_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "EXIT_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     INIT_POOL_SUPPLY(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "INIT_POOL_SUPPLY()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MAX_BOUND_TOKENS(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MAX_BOUND_TOKENS()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MAX_BPOW_BASE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MAX_BPOW_BASE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MAX_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MAX_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MAX_IN_RATIO(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MAX_IN_RATIO()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MAX_OUT_RATIO(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MAX_OUT_RATIO()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MAX_TOTAL_WEIGHT(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MAX_TOTAL_WEIGHT()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MAX_WEIGHT(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MAX_WEIGHT()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MIN_BALANCE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MIN_BALANCE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MIN_BOUND_TOKENS(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MIN_BOUND_TOKENS()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MIN_BPOW_BASE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "MIN_BPOW_BASE()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     MIN_FEE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MIN_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     MIN_WEIGHT(overrides?: CallOverrides): Promise<BigNumber>;
 
+    "MIN_WEIGHT()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getColor(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "getColor()"(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
     BONE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "BONE()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     BPOW_PRECISION(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "BPOW_PRECISION()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     EXIT_FEE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "EXIT_FEE()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     INIT_POOL_SUPPLY(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "INIT_POOL_SUPPLY()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     MAX_BOUND_TOKENS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "MAX_BOUND_TOKENS()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     MAX_BPOW_BASE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "MAX_BPOW_BASE()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     MAX_FEE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "MAX_FEE()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     MAX_IN_RATIO(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "MAX_IN_RATIO()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     MAX_OUT_RATIO(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "MAX_OUT_RATIO()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     MAX_TOTAL_WEIGHT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "MAX_TOTAL_WEIGHT()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     MAX_WEIGHT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "MAX_WEIGHT()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     MIN_BALANCE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "MIN_BALANCE()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     MIN_BOUND_TOKENS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "MIN_BOUND_TOKENS()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     MIN_BPOW_BASE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "MIN_BPOW_BASE()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     MIN_FEE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "MIN_FEE()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     MIN_WEIGHT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    "MIN_WEIGHT()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     getColor(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "getColor()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }
