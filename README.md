@@ -31,11 +31,3 @@ yarn deploy-rain-reef --network <NETWORK_NAME>
 The deployment will start and show in the console the address of each contract as in the example above.
 # Contract verification in Etherscan
 This way will work in [Etherscan](https://etherscan.io/) and with others "Etherscan compatibles" like [Polygonscan](https://polygonscan.com/) (Polygon) or [Snowtrace](https://snowtrace.io/) (Avalanche)
-
-# Contract verification in Sourcify
-To verify in Sourcify must provide the address and the metadata for each contract. The metadata is located inside the distribution folder. TThe interface is quite intuitive, the steps to verify are as follows::
-  - Go to [Sourcify](https://sourcify.dev/)
-  - Select the network where the contract was deployed. Ex: *Mumbai Testnet (Polygon/Matic)*
-  - Paste the contract address to verify in *contract address* field. Ex: *0x96f999f904f88EF394250B67A60F920F9CbC44b3*
-  - Upload the corresponding contract metada. Ex: *TrustFactory_meta.json*
-  - Click verify, wait and DONE!
