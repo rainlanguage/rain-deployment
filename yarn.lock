@@ -292,7 +292,7 @@
     "@babel/helper-wrap-function" "^7.16.0"
     "@babel/types" "^7.16.0"
 
-"@babel/helper-replace-supers@^7.16.0":
+"@babel/helper-replace-supers@^7.15.4", "@babel/helper-replace-supers@^7.16.0":
   version "7.16.0"
   resolved "https://registry.yarnpkg.com/@babel/helper-replace-supers/-/helper-replace-supers-7.16.0.tgz#73055e8d3cf9bcba8ddb55cad93fedc860f68f17"
   integrity sha512-TQxuQfSCdoha7cpRNJvfaYxxxzmbxXw/+6cS7V02eeDYyhxderSoMVALvwupA54/pZcOTtVeJ0xccp1nGWladA==
@@ -302,7 +302,7 @@
     "@babel/traverse" "^7.16.0"
     "@babel/types" "^7.16.0"
 
-"@babel/helper-simple-access@^7.16.0":
+"@babel/helper-simple-access@^7.15.4", "@babel/helper-simple-access@^7.16.0":
   version "7.16.0"
   resolved "https://registry.yarnpkg.com/@babel/helper-simple-access/-/helper-simple-access-7.16.0.tgz#21d6a27620e383e37534cf6c10bba019a6f90517"
   integrity sha512-o1rjBT/gppAqKsYfUdfHq5Rk03lMQrkPHG1OWzHWpLgVXRH4HnMM9Et9CVdIqwkCQlobnGHEJMsgWP/jE1zUiw==
@@ -323,7 +323,7 @@
   dependencies:
     "@babel/types" "^7.16.0"
 
-"@babel/helper-validator-identifier@^7.15.7":
+"@babel/helper-validator-identifier@^7.14.5", "@babel/helper-validator-identifier@^7.14.9", "@babel/helper-validator-identifier@^7.15.7":
   version "7.15.7"
   resolved "https://registry.yarnpkg.com/@babel/helper-validator-identifier/-/helper-validator-identifier-7.15.7.tgz#220df993bfe904a4a6b02ab4f3385a5ebf6e2389"
   integrity sha512-K4JvCtQqad9OY2+yTU8w+E82ywk/fe+ELNlt1G8z3bVGlZfn/hOcQQsUhGhW/N+tb3fxK800wLtKOE/aM0m72w==
@@ -1216,7 +1216,7 @@
     "@babel/helper-validator-identifier" "^7.14.9"
     to-fast-properties "^2.0.0"
 
-"@babel/types@^7.16.0":
+"@babel/types@^7.15.6", "@babel/types@^7.16.0":
   version "7.16.0"
   resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.16.0.tgz#db3b313804f96aadd0b776c4823e127ad67289ba"
   integrity sha512-PJgg/k3SdLsGb3hhisFvtLOw5ts113klrpLuIPtCJIU+BB24fqq6lf8RWqKJEjzqXR9AEH1rIb5XTqwBHB+kQg==
@@ -1563,7 +1563,7 @@
     "@ethersproject/logger" "^5.4.0"
     "@ethersproject/rlp" "^5.4.0"
 
-"@ethersproject/base64@5.5.0", "@ethersproject/base64@^5.5.0":
+"@ethersproject/base64@5.5.0", "@ethersproject/base64@^5.4.0", "@ethersproject/base64@^5.5.0":
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/base64/-/base64-5.5.0.tgz#881e8544e47ed976930836986e5eb8fab259c090"
   integrity sha512-tdayUKhU1ljrlHzEWbStXazDpsx4eg1dBXUSI6+mHlYklOXoXF6lZvw8tnD6oVaWfnMxAgRSKROg3cVKtCcppA==
@@ -2577,6 +2577,26 @@
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@reef-defi/evm-provider/-/evm-provider-1.0.2.tgz#a48f6d209e87fb5275bc624c5ce59ea8e4289dac"
   integrity sha512-31vPQrh96xuBKoqpbXJiVT5qHBo+32k7axmlKVFmpT2GP46xPyOJyMsUI0Vwju8RLzFPvr55yfBaGt4i8UjJGQ==
+  dependencies:
+    "@open-web3/dev-config" "^0.1.13"
+    "@open-web3/scanner" "^1.0.1"
+    "@polkadot/api" "^6.3.1"
+    "@polkadot/keyring" "^7.5.1"
+    "@polkadot/rpc-provider" "^6.3.1"
+    "@polkadot/types" "^6.3.1"
+    "@polkadot/util" "^7.5.1"
+    "@polkadot/util-crypto" "^7.5.1"
+    "@reef-defi/api" "^1.0.0"
+    "@reef-defi/api-derive" "^1.0.0"
+    "@reef-defi/type-definitions" "^1.0.0"
+    "@reef-defi/types" "^1.0.0"
+    blakejs "~1.1.0"
+    ethers "~5.5.0"
+
+"@reef-defi/evm-provider@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@reef-defi/evm-provider/-/evm-provider-1.0.3.tgz#835164417948bbcf1c1b8bf3d936d05433d56981"
+  integrity sha512-EvLDkAhJYEjTZImQjwe75/5fyYse52LBezcfw7Aj4iyqOyYh2O3n+87ih+icOqOaBOPOdtHjLrKm04vJShj/rQ==
   dependencies:
     "@open-web3/dev-config" "^0.1.13"
     "@open-web3/scanner" "^1.0.1"
