@@ -56,3 +56,14 @@ RedeemableERC20Factory deployed to:  0xB82E3A939D6581559574BEE9349CD885E09dc047 
 RedeemableERC20PoolFactory deployed to:  0xa6b8B479AAA658532C7f97434224D6bFe4D7203a - verified
 SeedERC20Factory deployed to:  0x893b5BF6A9BE76D164Cb45927a79133665CE31DD - verified
 Trust factory deployed to:  0x942570B811AD49cf8ADaDAaF5FF0a05F21F849CD
+
+---- Dist: c1ef198580ff1fdf3eb7043aa4ba4eac62f84ee4
+BFactory deployed to:  0xfD43aCE7f4B012A192C1803825D1c4FE9c7D230c - verified
+SmartPoolManager deployed to:  0x59E8ad19f140eB5Af4897093c6fD298cFb86C2aE - verified
+BalancerSafeMath deployed to:  0x86796440D11D9be6E3f7225Eea6A385A081a04E3 - verified
+RightsManager deployed to:  0x41b7d9Af4659ABd451b78065711Ab1b8750755fd - verified
+CRPFactory deployed to:  0x5cbbeeF12F303A64E4D281e51f3dCfD605742fBD - verified
+RedeemableERC20Factory deployed to:  0x1B1fac7D90047A1c269d988f5D54eE568d38A19d - verified
+RedeemableERC20PoolFactory deployed to:  0xef1BC5EfFD157d087553c49578C7f89712e61B71 - verified
+SeedERC20Factory deployed to:  0x8714656cAd19b0C32A49308d4DE7daE200C7323c - verified
+Trust factory deployed to:  0xB7195Ef5993306178afAd5D9A2c9b0994E32bce8 - verified
