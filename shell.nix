@@ -33,9 +33,9 @@ let
     buildPath=artifacts/"''${buildPath:10:(''${#buildPath}-11)}"
     cat "''${buildPath}" | jq '.input' | cat > solc-input-rainprotocol.json
   '';
-
+  
   deploy-rain = pkgs.writeShellScriptBin "deploy-rain" ''
-    yarn deploy-rain
+    yarn deploy-rain --network
   '';
 
   deploy-rain-mumbai = pkgs.writeShellScriptBin "deploy-rain-mumbai" ''

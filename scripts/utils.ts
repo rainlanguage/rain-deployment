@@ -2,10 +2,10 @@ import { EtherscanProvider } from "@ethersproject/providers"
 import { ethers, artifacts, network } from "hardhat"
 const fs = require('fs')
 
-const RedeemableERC20Factory = require("./dist/artifact/contracts/rain-protocol/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json")
-const RedeemableERC20PoolFactory = require("./dist/artifact/contracts/rain-protocol/contracts/pool/RedeemableERC20PoolFactory.sol/RedeemableERC20PoolFactory.json")
-const SeedERC20Factory = require("./dist/artifact/contracts/rain-protocol/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json")
-const TrustFactory = require("./dist/artifact/contracts/rain-protocol/contracts/trust/TrustFactory.sol/TrustFactory.json")
+const RedeemableERC20Factory = require("../dist/artifacts/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json")
+const RedeemableERC20PoolFactory = require("../dist/artifacts/contracts/pool/RedeemableERC20PoolFactory.sol/RedeemableERC20PoolFactory.json")
+const SeedERC20Factory = require("../dist/artifacts/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json")
+const TrustFactory = require("../dist/artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json")
 
 export async function deploy(artifact:any, signer:any, argmts:any[]) {
     const iface = new ethers.utils.Interface(artifact.abi)
@@ -59,18 +59,6 @@ export async function factoriesDeploy(crpFactory: string, balancerFactory: strin
       trustFactoryAddress,
     };
   };
-
-  export function generateJSONWithLibAddr(addresses: any, deployId:string) {
-    const solcTemplate = `${__dirname}/dist/solt/solc-input-crpfactory.json`;
-    const pathTo = `${__dirname}/verification/${deployId}`;
-    const content = fetchFile(solcTemplate);
-    Object.keys(content.settings.libraries).forEach(library_name => {
-      const key = Object.keys(content.settings.libraries[library_name])[0];
-      content.settings.libraries[library_name][key] = addresses[key];
-    });
-    checkPath(pathTo)
-    writeFile(`${pathTo}/solc-input-crpfactory.json`, JSON.stringify(content, null, 4));
-  }
 
   export function exportArgs(artifact:any, args:string[], deployId:string) {
     let pathTo = `${__dirname}/verification/${deployId}`;
