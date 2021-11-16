@@ -1,11 +1,18 @@
 import { ethers, artifacts } from "hardhat";
-import type { Trust } from "../dist/typechain/Trust";
-import TrustJson from "../dist/artifacts/contracts/rain-protocol/contracts/trust/Trust.sol/Trust.json";
-import ConfigurableRightsPoolJson from "../dist/artifacts/contracts/configurable-rights-pool/contracts/ConfigurableRightsPool.sol/ConfigurableRightsPool.json";
+
+import ConfigurableRightsPoolJson from "@beehiveinnovation/configurable-rights-pool/artifacts/ConfigurableRightsPool.json";
 import BPoolJson from "@beehiveinnovation/configurable-rights-pool/artifacts/BPool.json";
-import type { RedeemableERC20Pool } from "../dist/typechain/RedeemableERC20Pool";
-import type { ConfigurableRightsPool } from "../dist/typechain/ConfigurableRightsPool";
-import type { BPool } from "../dist/typechain/BPool";
+// import TrustJson from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/artifacts/contracts/trust/Trust.sol/Trust.json";
+import TrustJson from "../../dist/artifacts/contracts/trust/Trust.sol/Trust.json";
+
+// import type { Trust } from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/typechain/Trust";
+// import type { RedeemableERC20Pool } from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/RedeemableERC20Pool";
+// import type { ConfigurableRightsPool } from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/ConfigurableRightsPool";
+// import type { BPool } from "@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/BPool";
+import type { Trust } from "../../dist/typechain/Trust";
+import type { RedeemableERC20Pool } from "../../dist/typechain/RedeemableERC20Pool";
+import type { ConfigurableRightsPool } from "../../dist/typechain/ConfigurableRightsPool";
+import type { BPool } from "../../dist/typechain/BPool";
 
 export enum Tier {
   NIL,

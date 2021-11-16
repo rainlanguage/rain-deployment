@@ -1,51 +1,64 @@
 let
  pkgs = import <nixpkgs> {};
 
- 
+   flush-all = pkgs.writeShellScriptBin "flush-all" ''
+    rm -rf artifacts
+    rm -rf cache
+    rm -rf typechain
+    rm -rf bin
+  '';
 
- build-solt = pkgs.writeShellScriptBin "build-solt" ''
-  mkdir -p solt
-  solt write contracts/balancer-core/contracts/BFactory.sol --npm --runs 100
-  find contracts/configurable-rights-pool -type f -not -path 'contracts/configurable-rights-pool/contracts/test/*' | xargs -i solt write '{}' --npm --runs 200
-  mv solc-* solt
- '';
+  cut-dist = pkgs.writeShellScriptBin "cut-dist" ''
+    flush-all
 
- json-compile = pkgs.writeShellScriptBin "json-compile" ''
-  mkdir -p new
-  solc --standard-json scripts/dist/solt/solc-input-redeemableerc20factory.json | cat > data-redeemableerc20factory.json
-  solc --standard-json scripts/dist/solt/solc-input-redeemableerc20poolfactory.json | cat > data-redeemableerc20poolfactory.json
-  solc --standard-json scripts/dist/solt/solc-input-seederc20factory.json | cat > data-seederc20factory.json
-  solc --standard-json scripts/dist/solt/solc-input-trustfactory.json | cat > data-trustfactory.json
-  mv data-* new
- '';
+    hardhat compile --force
+    rm -rf dist
+    mkdir -p "dist"
+    solt-the-earth
 
- compile = pkgs.writeShellScriptBin "compile" ''
-  yarn compile
- '';
+    cp -r "artifacts" "dist"
+    cp -r "typechain" "dist"
+    cp -r "solt" "dist"
+  '';
 
- deploy-rain = pkgs.writeShellScriptBin "deploy-rain" ''
-  yarn deploy-rain
- '';
+  solt-the-earth = pkgs.writeShellScriptBin "solt-the-earth" ''
+    mkdir -p solt
+    find contracts -type f -not -path 'contracts/test/*' | xargs -i solt write '{}' --npm --runs 100000
+    rain-protocol-solt
+    mv solc-* solt
+  '';
 
- deploy-rain-mumbai = pkgs.writeShellScriptBin "deploy-rain-mumbai" ''
-  yarn deploy-rain --network mumbai
- '';
- 
- deploy-rain-reef-testnet = pkgs.writeShellScriptBin "deploy-rain-reef-testnet" ''
-  yarn deploy-rain-reef --network reef_testnet
- '';
+  rain-protocol-solt = pkgs.writeShellScriptBin "rain-protocol-solt" ''
+    buildPath=`cat artifacts/contracts/trust/TrustFactory.sol/TrustFactory.dbg.json | jq '.buildInfo'`
+    buildPath=artifacts/"''${buildPath:10:(''${#buildPath}-11)}"
+    cat "''${buildPath}" | jq '.input' | cat > solc-input-rainprotocol.json
+  '';
+
+  deploy-rain = pkgs.writeShellScriptBin "deploy-rain" ''
+    yarn deploy-rain
+  '';
+
+  deploy-rain-mumbai = pkgs.writeShellScriptBin "deploy-rain-mumbai" ''
+    yarn deploy-rain --network mumbai
+  '';
+
+  deploy-rain-reef-testnet = pkgs.writeShellScriptBin "deploy-rain-reef-testnet" ''
+    yarn deploy-rain-reef --network reef_testnet
+  '';
   
 in
 pkgs.stdenv.mkDerivation {
  name = "shell";
  buildInputs = [
   pkgs.nodejs-14_x
-  json-compile
-  compile
-  build-solt
+  pkgs.jq
   deploy-rain-mumbai
   deploy-rain-reef-testnet
   deploy-rain
+  flush-all
+  cut-dist
+  rain-protocol-solt
+  solt-the-earth
  ];
 
  shellHook = ''
