@@ -16,16 +16,7 @@ async function main() {
     const signers = await ethers.getSigners();
     const signer = signers[0];
 
-    // // Deploying Verify
-    // const VerifyAddress = await deploy(Verify, signer, [signer.address]); // admin will be the deployer address
-    // console.log('- Verify deployed to: ', VerifyAddress);
-
-    // // Deploying VerifyTier
-    // const VerifyTierAddress = await deploy(VerifyTier, signer, [VerifyAddress]);
-    // console.log('- VerifyTier deployed to: ', VerifyTierAddress);
-
     // Deploying VerifyFactory
-    const blockBeforeTx = await ethers.provider.getBlockNumber();
     const VerifyFactoryAddress = await deploy(VerifyFactoryJson, signer, []);
     console.log('- Verify factory deployed to: ', VerifyFactoryAddress);
 
@@ -34,8 +25,21 @@ async function main() {
     const tx = await Vfactory["createChild(address)"](admin);
     const receipt = await tx.wait();
     const topic = receipt.events?.filter((x) => x.event == "NewContract")[0].topics[1]!
-    const addressChild = ethers.utils.hexZeroPad(ethers.utils.hexStripZeros(topic), 20);
-    console.log("- Verify child deployed to: ", addressChild);
+    const VerifyAddress = ethers.utils.getAddress(
+        ethers.utils.hexZeroPad(
+            ethers.utils.hexStripZeros(topic), 20
+        )
+    );
+    console.log("- Verify child deployed to: ", VerifyAddress);
+
+    // // Deploying Verify
+    // console.log(signer.address)
+    // const VerifyAddress = await deploy(Verify, signer, [signer.address]); // admin will be the deployer address
+    // console.log('- Verify deployed to: ', VerifyAddress);
+
+    // Deploying VerifyTier
+    const VerifyTierAddress = await deploy(VerifyTier, signer, [VerifyAddress]);
+    console.log('- VerifyTier deployed to: ', VerifyTierAddress);
 
 }
 main();

@@ -10,7 +10,7 @@ const TrustFactory = require("../dist/artifacts/contracts/trust/TrustFactory.sol
 export async function deploy(artifact:any, signer:any, argmts:any[]) {
     const iface = new ethers.utils.Interface(artifact.abi)
     const factory = new ethers.ContractFactory(iface, artifact.bytecode, signer)
-    const contract = await factory.deploy(argmts)
+    const contract = await factory.deploy(...argmts)
     await contract.deployTransaction.wait()
     return contract.address
 }

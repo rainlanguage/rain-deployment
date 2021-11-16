@@ -24,8 +24,9 @@ RedeemableERC20PoolFactory deployed to:  0xF447CeAE7e642e271e194a20A2Bed88526637
 SeedERC20Factory deployed to:  0x6EA02Efe7557B1bd9c3377e0f05Ef97C3a6c83B8 (verified) 
 Trust factory deployed to:  0xb5254bb93572c9F5CF1240E04f6C6F44617bc2Aa (verified) 
 -- aux --
-Verify factory deployed to:  0x394d229E00064f2dEcc4235F46C015C676415438
-Verify child deployed to:  0xd2490a291cf0fce26449d29fac9e740ab0980951
+Verify factory deployed to:  0xFD1E11c1F117f9eB2F004f1aD38faB09c49D9172 (verified
+Verify child deployed to:  0xdD0CdeF7f1590E968d550F7135C33DC24Bc95EA9 (verified
+VerifyTier deployed to:  0xCfCE0fc4536Fa1F8Cc9B50db58E6c7d435BBfC68 (verified
 ___________________________
 
 - Fuji
