@@ -161,99 +161,128 @@ enum Tier {
   
     console.log("Trust deployed to: " + trust.address);
 
-    // const redeemableERC20 = new ethers.Contract(
-    //   await trust.token(),
-    //    REDEEMABLEERC20.abi, 
-    //    creator
-    // ) as RedeemableERC20;
-    
-    // // Checking the TreasuryAsset event
-    // const eventFilter = redeemableERC20.filters.TreasuryAsset(); 
-    // const event = await redeemableERC20.queryFilter(eventFilter, blockBeforeTrust);
-    // const emitter = checkSumAddress(event[0].args.emitter)
-    // const asset = checkSumAddress(event[0].args.asset)
-    // expect(emitter).to.be.equal(checkSumAddress(trust.address));
-    // expect(asset).to.be.equal(reserveAddress);
-    // console.log("New redeemableERC20: " + await trust.token())
+    const redeemableERC20 = (
+      await hre.reef.getContractAt(REDEEMABLEERC20.abi, await trust.token(), creator)
+    )as RedeemableERC20;
+    console.log("New redeemableERC20: " + await trust.token())
 
-    // const seedERC20Address = await trust.seeder();
-    // const seedERC20 = (new ethers.Contract( seedERC20Address , SEED.abi , signers[0] )) as SeedERC20;
-    // console.log("Seeder at: " + seedERC20Address)
+    const seedERC20Address = await trust.seeder();
+    const seedERC20 = (await hre.reef.getContractAt(SEED.abi, seedERC20Address, seeder)) as SeedERC20;
+    console.log("Seeder at: " + seedERC20Address)
     
-    // // seeder needs some cash
-    // const tx0 = await reserve.transfer(seeder.address, seederFee, config);
-    // await tx0.wait();
-    // console.log("Seeder transfered seed")
+    // seeder needs some cash
+    const tx0 = await reserve.transfer(await seeder.getAddress(), seederFee, config);
+    await tx0.wait();
+    console.log("Seeder transfered seed")
   
-    // // seeder seeds via SeedERC20 contract (typically used when more than 1 seeder)
-    // await reserve.connect(seeder).approve(seedERC20.address, seederFee, config);
+    // seeder seeds via SeedERC20 contract (typically used when more than 1 seeder)
+    const reserveAttachSeeder = (
+      await hre.reef.getContractAt(RESERVE_TOKEN.abi, reserveAddress, seeder)
+    ) as ReserveToken;
+    await reserveAttachSeeder.approve(seedERC20.address, seederFee, config);
   
-    // // buy all units
-    // await seedERC20.connect(seeder).seed(0, seedUnits, config);
-    // console.log("Bought all seed units")
+    // buy all units
+    await seedERC20.seed(0, seedUnits, config);
+    console.log("Bought all seed units")
 
-    // const pool = new ethers.Contract(
-    //   await trust.pool(), 
-    //   POOL.abi, 
-    //   creator
-    // ) as RedeemableERC20Pool;
+    const pool = (
+      await hre.reef.getContractAt(POOL.abi, await trust.pool(), creator)
+    ) as RedeemableERC20Pool;
+
   
-    // // start raise
-    // const tx1 = await pool.startDutchAuction(config);
-    // await tx1.wait();
-    // console.log("Raise started")
+    // start raise
+    const tx1 = await pool.startDutchAuction(config);
+    await tx1.wait();
+    console.log("Raise started")
   
-    // const startBlock = await ethers.provider.getBlockNumber();
+    const startBlock = await provider.getBlockNumber();
   
-    // let [crp, bPool] = await Util.poolContracts(signers, pool);
+    let [crp, bPool] = await Util.poolContracts(signers, pool);
   
-    // const tokenAddress = await trust.token();
+    const tokenAddress = await trust.token();
   
-    // // // begin trading
-    // const swapReserveForTokens = async (signer:any, spend:any) => {
-    //   const tx = await reserve.transfer(signer.address, spend, config);
-    //   await tx.wait();
+    // begin trading
+    const swapReserveForTokens = async (signer:any, spend:any) => {
+      // Transfer from creator (signer in reserver) to the signer argument
+      const tx = await reserve.transfer(await signer.getAddress(), spend, config);
+      await tx.wait();
   
-    //   await reserve.connect(signer).approve(bPool.address, spend, config);
-    //   await crp.connect(signer).pokeWeights(config);
-    //   await bPool
-    //     .connect(signer)
-    //     .swapExactAmountIn(
-    //       reserveAddress,
-    //       spend,
-    //       tokenAddress,
-    //       ethers.BigNumber.from("1"),
-    //       ethers.BigNumber.from("1000000" + Util.sixZeros),
-    //       config
-    //     );
-    // };
+      await reserve.connect(signer).approve(bPool.address, spend, config);
+      await crp.connect(signer).pokeWeights(config);
+      await bPool
+        .connect(signer)
+        .swapExactAmountIn(
+          reserveAddress,
+          spend,
+          tokenAddress,
+          ethers.BigNumber.from("1"),
+          ethers.BigNumber.from("1000000" + Util.sixZeros),
+          config
+        );
+    };
   
-    // const reserveSpend = finalValuation.div(10);
+    const reserveSpend = finalValuation.div(10);
+    let i=0;
+    while ((await reserve.balanceOf(bPool.address)).lte(finalValuation)) {
+      await swapReserveForTokens(trader1, reserveSpend);
+      console.log(`Swap ${i}`);
+      i+=1;
+    }
+    console.log("All swaps done")
   
-    // while ((await reserve.balanceOf(bPool.address)).lte(finalValuation)) {
-    //   await swapReserveForTokens(trader1, reserveSpend);
-    // }
+    // wait until distribution can end
+    const waitForBlock = async (blockNumber:any): Promise<any> => {
+      const currentBlock = await provider.getBlockNumber();
+    
+      if (currentBlock >= blockNumber) {
+        return;
+      }
+    
+      console.log({
+        currentBlock,
+        awaitingBlock: blockNumber,
+      });
+    
+      await Util.timeout(2000);
+    
+      return await waitForBlock(blockNumber);
+    };
+
+    await waitForBlock(startBlock + minimumTradingDuration + 1);
+
   
-    // console.log("All swaps done")
+    console.log("Raise over")
+
+    // Attach the same trust to seeder as signer to call 
+    const trustAttchSeeder = (
+      await hre.reef.getContractAt(TRUST.abi, trust.address, seeder)
+    ) as Trust;
   
-    // // wait until distribution can end
-    // await Util.waitForBlock(startBlock + minimumTradingDuration + 1);
-  
-    // console.log("Raise over")
-  
+    await trustAttchSeeder.anonEndDistribution(config);
     // await trust.connect(seeder).anonEndDistribution(config);
   
-    // console.log("Raise ended")
+    console.log("Raise ended")
   
+    // The seedERC20 is already attached to seeder as signer
+    await seedERC20.redeem(seedUnits, config);
     // await seedERC20.connect(seeder).redeem(seedUnits, config);
+
   
-    // console.log("SeedERC20 redemeed")
+    console.log("SeedERC20 redemeed")
+
+    // Attach the same RedeemableERC20 to trader1 as signer to call 
+    const redeemableERC20AttchTrader1 = (
+      await hre.reef.getContractAt(REDEEMABLEERC20.abi, redeemableERC20.address, trader1)
+    )as RedeemableERC20;
   
-    // await redeemableERC20
-    //   .connect(trader1)
-    //   .redeem([reserveAddress], await redeemableERC20.balanceOf(trader1.address),config);
+    await redeemableERC20AttchTrader1
+      .redeem(
+        [reserveAddress], 
+        await redeemableERC20.balanceOf(await trader1.getAddress()),
+        config
+      );
   
-    // console.log("RedeemableERC20 redeemed")
+    console.log("RedeemableERC20 redeemed")
 }
   
   main();
