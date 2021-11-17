@@ -9,7 +9,7 @@
     "create-child": "hardhat run scripts/transactions/create-child.ts",
     "deploy-child-reef": "hardhat run scripts/transactions/create-child-reef.ts",
     "emit-events": "hardhat run scripts/transactions/emit-events.ts",
-    "emit-events-reef": "hardhat run scripts/transactions/emit-events-reef.ts --network reef_testnet"
+    "emit-events-reef": "hardhat run scripts/transactions/deploy-trust-swap-reef.ts --network reef_testnet"
   },
   "dependencies": {
     "@beehiveinnovation/balancer-core": "^0.0.7",
