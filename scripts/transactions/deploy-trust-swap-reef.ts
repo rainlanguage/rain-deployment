@@ -72,8 +72,8 @@ enum Tier {
     const trader1 = signers[3];
   
     // Reserve token
-    // const reserveAddress = await Util.deploy(RESERVE_TOKEN, creator, []);
-    const reserveAddress = "0x5591D95f1d6Bb41AD2c7735aDFFFAA70D4D31039";
+    const reserveAddress = await Util.deploy(RESERVE_TOKEN, creator, []);
+    // const reserveAddress = "0x5591D95f1d6Bb41AD2c7735aDFFFAA70D4D31039";
     const reserve = (await hre.reef.getContractAt(RESERVE_TOKEN.abi, reserveAddress, creator)) as ReserveToken;
     console.log("Reserve deployed to: " + reserveAddress)
   
@@ -101,8 +101,8 @@ enum Tier {
     const minimumTradingDuration = 30;
 
     // ReadWrite tier contract attached deployed by creator and attached to trader1 to do tx
-    // const readWriteTierAddress = await Util.deploy(READWRITE_TIER, creator, []);
-    const readWriteTierAddress = "0xB51CEd610076d26a8033A9EF119Aa06f92713C8B";
+    const readWriteTierAddress = await Util.deploy(READWRITE_TIER, creator, []);
+    // const readWriteTierAddress = "0xB51CEd610076d26a8033A9EF119Aa06f92713C8B";
     const readWriteTier = (
       await hre.reef.getContractAt(READWRITE_TIER.abi, readWriteTierAddress, trader1)
     ) as ReadWriteTier;
