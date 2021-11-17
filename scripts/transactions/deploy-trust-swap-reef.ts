@@ -106,7 +106,7 @@ enum Tier {
     const readWriteTier = (
       await hre.reef.getContractAt(READWRITE_TIER.abi, readWriteTierAddress, trader1)
     ) as ReadWriteTier;
-    console.log("Tier deployed to: " + readWriteTierAddress)
+    console.log("ReadWriteTier deployed to: " + readWriteTierAddress)
     const minimumStatus = Tier.ZERO;
   
     await readWriteTier.setTier(await trader1.getAddress(), Tier.THREE, []);
@@ -164,6 +164,14 @@ enum Tier {
     const redeemableERC20 = (
       await hre.reef.getContractAt(REDEEMABLEERC20.abi, await trust.token(), creator)
     )as RedeemableERC20;
+
+    // const eventFilter = redeemableERC20.filters.TreasuryAsset(); 
+    // const event = await redeemableERC20.queryFilter(eventFilter, blockBeforeTrust);
+    // const emitter = checkSumAddress(event[0].args.emitter)
+    // const asset = checkSumAddress(event[0].args.asset)
+    // expect(emitter).to.be.equal(checkSumAddress(trust.address));
+    // expect(asset).to.be.equal(reserveAddress);
+
     console.log("New redeemableERC20: " + await trust.token())
 
     const seedERC20Address = await trust.seeder();
@@ -222,7 +230,7 @@ enum Tier {
     };
   
     const reserveSpend = finalValuation.div(10);
-    let i=0;
+    let i=1;
     while ((await reserve.balanceOf(bPool.address)).lte(finalValuation)) {
       await swapReserveForTokens(trader1, reserveSpend);
       console.log(`Swap ${i}`);
@@ -258,7 +266,7 @@ enum Tier {
       await hre.reef.getContractAt(TRUST.abi, trust.address, seeder)
     ) as Trust;
   
-    await trustAttchSeeder.anonEndDistribution(config);
+    await trustAttchSeeder.anonEndDistribution({ customData: { storageLimit: MAX_STORAGE_LIMIT } });
     // await trust.connect(seeder).anonEndDistribution(config);
   
     console.log("Raise ended")

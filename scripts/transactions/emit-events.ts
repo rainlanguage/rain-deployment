@@ -222,8 +222,11 @@ enum Tier {
   
     const reserveSpend = finalValuation.div(10);
   
+    let i=1;
     while ((await reserve.balanceOf(bPool.address)).lte(finalValuation)) {
       await swapReserveForTokens(trader1, reserveSpend);
+      console.log(`Swap ${i}`);
+      i+=1;
     }
   
     console.log("All swaps done")
