@@ -6,9 +6,10 @@
     "deploy-verify-tier-reef": "hardhat run scripts/deploy-verify-tier-reef.ts",
     "flat-contracts": "sol-merger \"./contracts/**/*.sol\" ./scripts/dist/flaten-contracts",
     "compile": "hardhat compile --force",
-    "create-child": "hardhat run scripts/transactions/create-child-otherChain.ts",
+    "create-child": "hardhat run scripts/transactions/create-child.ts",
     "deploy-child-reef": "hardhat run scripts/transactions/create-child-reef.ts",
-    "emit-events": "hardhat run scripts/transactions/emit-events.ts"
+    "emit-events": "hardhat run scripts/transactions/emit-events.ts",
+    "emit-events-reef": "hardhat run scripts/transactions/emit-events-reef.ts"
   },
   "dependencies": {
     "@beehiveinnovation/balancer-core": "^0.0.7",
