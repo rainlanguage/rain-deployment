@@ -1,10 +1,10 @@
-import { ethers } from "hardhat";
 const hre = require("hardhat");
+const { MAX_STORAGE_LIMIT } = require("@reef-defi/evm-provider");
+import { ethers } from "hardhat";
 import { expect } from "chai";
 import * as Util from "./Utils"
-import { MAX_STORAGE_LIMIT } from "@reef-defi/evm-provider";
-const checkSumAddress = ethers.utils.getAddress;
 
+const checkSumAddress = ethers.utils.getAddress;
 const FACTORY_ADDRESS = "0x415FE28416c0747070b254Aa3C571C985f0865b5"; //reef
 
 import type { TierByConstructionClaim } from "../../dist/typechain/TierByConstructionClaim";
@@ -72,8 +72,8 @@ enum Tier {
     const trader1 = signers[3];
   
     // Reserve token
-    // const reserveAddress = "0x5591D95f1d6Bb41AD2c7735aDFFFAA70D4D31039";
-    const reserveAddress = await Util.deploy(RESERVE_TOKEN, creator, []);
+    const reserveAddress = "0xD18C5cd9F51d6a66E52d7142Aa00927c07a79673";
+    // const reserveAddress = await Util.deploy(RESERVE_TOKEN, creator, []);
     const reserve = (await hre.reef.getContractAt(RESERVE_TOKEN.abi, reserveAddress, creator)) as ReserveToken;
     console.log("Reserve deployed to: " + reserveAddress)
   
@@ -100,15 +100,15 @@ enum Tier {
   
     const minimumTradingDuration = 30;
 
-    // const readWriteTierAddress = "0xB51CEd610076d26a8033A9EF119Aa06f92713C8B";
-    const readWriteTierAddress = await Util.deploy(READWRITE_TIER, creator, []);
+    const readWriteTierAddress = "0x9348bd29267F9Ed736172823262eaf0C1E8220c8";
+    // const readWriteTierAddress = await Util.deploy(READWRITE_TIER, creator, []);
     const readWriteTier = (await hre.reef.getContractAt(READWRITE_TIER.abi, readWriteTierAddress, trader1)) as ReadWriteTier;
     console.log("ReadWriteTier deployed to: " + readWriteTierAddress)
     const minimumStatus = Tier.ZERO;
   
-    await readWriteTier.connect(trader1).setTier(trader1.address, Tier.THREE, []);
+    await readWriteTier.connect(trader1).setTier(await trader1.getAddress(), Tier.THREE, []);
   
-    // const tierByConstructionClaimAddress =  "0x7f4E4E1b55F734B881BA546Fc133E65d7Ba427BA";
+    // const tierByConstructionClaimAddress =  "0x0ed4Dffa8134F625F7b4196081c702F5049c2d6D";
     const tierByConstructionClaimAddress =  await Util.deploy(TIERBYCONSTRUCTION, creator, [
         readWriteTierAddress,
         minimumStatus
@@ -268,7 +268,7 @@ enum Tier {
   
     await redeemableERC20
       .connect(trader1)
-      .redeem([reserveAddress], await redeemableERC20.balanceOf(trader1.address),config);
+      .redeem([reserveAddress], await redeemableERC20.balanceOf(await trader1.getAddress()),config);
   
     console.log("RedeemableERC20 redeemed")
 }
