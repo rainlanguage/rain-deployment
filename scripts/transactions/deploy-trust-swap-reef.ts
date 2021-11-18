@@ -1,5 +1,5 @@
 import { ethers } from "hardhat";
-import hre from "hardhat";
+const hre = require("hardhat");
 import { expect } from "chai";
 import * as Util from "./Utils"
 import { MAX_STORAGE_LIMIT } from "@reef-defi/evm-provider";
@@ -72,8 +72,8 @@ enum Tier {
     const trader1 = signers[3];
   
     // Reserve token
-    const reserveAddress = await Util.deploy(RESERVE_TOKEN, creator, []);
     // const reserveAddress = "0x5591D95f1d6Bb41AD2c7735aDFFFAA70D4D31039";
+    const reserveAddress = await Util.deploy(RESERVE_TOKEN, creator, []);
     const reserve = (await hre.reef.getContractAt(RESERVE_TOKEN.abi, reserveAddress, creator)) as ReserveToken;
     console.log("Reserve deployed to: " + reserveAddress)
   
@@ -100,23 +100,19 @@ enum Tier {
   
     const minimumTradingDuration = 30;
 
-    // ReadWrite tier contract attached deployed by creator and attached to trader1 to do tx
-    const readWriteTierAddress = await Util.deploy(READWRITE_TIER, creator, []);
     // const readWriteTierAddress = "0xB51CEd610076d26a8033A9EF119Aa06f92713C8B";
-    const readWriteTier = (
-      await hre.reef.getContractAt(READWRITE_TIER.abi, readWriteTierAddress, trader1)
-    ) as ReadWriteTier;
+    const readWriteTierAddress = await Util.deploy(READWRITE_TIER, creator, []);
+    const readWriteTier = (await hre.reef.getContractAt(READWRITE_TIER.abi, readWriteTierAddress, trader1)) as ReadWriteTier;
     console.log("ReadWriteTier deployed to: " + readWriteTierAddress)
     const minimumStatus = Tier.ZERO;
   
-    await readWriteTier.setTier(await trader1.getAddress(), Tier.THREE, []);
+    await readWriteTier.connect(trader1).setTier(trader1.address, Tier.THREE, []);
   
-    // TierByConstructionClaimAddress deployed and attached to creator
+    // const tierByConstructionClaimAddress =  "0x7f4E4E1b55F734B881BA546Fc133E65d7Ba427BA";
     const tierByConstructionClaimAddress =  await Util.deploy(TIERBYCONSTRUCTION, creator, [
         readWriteTierAddress,
         minimumStatus
     ]);
-    // const tierByConstructionClaimAddress =  "0x7f4E4E1b55F734B881BA546Fc133E65d7Ba427BA";
     const tierByConstructionClaim = (
       await hre.reef.getContractAt(TIERBYCONSTRUCTION.abi, tierByConstructionClaimAddress, creator)
     ) as TierByConstructionClaim;
@@ -184,20 +180,16 @@ enum Tier {
     console.log("Seeder transfered seed")
   
     // seeder seeds via SeedERC20 contract (typically used when more than 1 seeder)
-    const reserveAttachSeeder = (
-      await hre.reef.getContractAt(RESERVE_TOKEN.abi, reserveAddress, seeder)
-    ) as ReserveToken;
-    await reserveAttachSeeder.approve(seedERC20.address, seederFee, config);
+    await reserve.connect(seeder).approve(seedERC20.address, seederFee, config);
   
     // buy all units
-    await seedERC20.seed(0, seedUnits, config);
+    await seedERC20.connect(seeder).seed(0, seedUnits, config);
     console.log("Bought all seed units")
 
     const pool = (
       await hre.reef.getContractAt(POOL.abi, await trust.pool(), creator)
     ) as RedeemableERC20Pool;
 
-  
     // start raise
     const tx1 = await pool.startDutchAuction(config);
     await tx1.wait();
@@ -261,21 +253,12 @@ enum Tier {
   
     console.log("Raise over")
 
-    // Attach the same trust to seeder as signer to call 
-    const trustAttchSeeder = (
-      await hre.reef.getContractAt(TRUST.abi, trust.address, seeder)
-    ) as Trust;
-  
-    await trustAttchSeeder.anonEndDistribution({ customData: { storageLimit: MAX_STORAGE_LIMIT } });
-    // await trust.connect(seeder).anonEndDistribution(config);
+    await trust.connect(seeder).anonEndDistribution(config);
   
     console.log("Raise ended")
   
-    // The seedERC20 is already attached to seeder as signer
-    await seedERC20.redeem(seedUnits, config);
-    // await seedERC20.connect(seeder).redeem(seedUnits, config);
+    await seedERC20.connect(seeder).redeem(seedUnits, config);
 
-  
     console.log("SeedERC20 redemeed")
 
     // Attach the same RedeemableERC20 to trader1 as signer to call 
@@ -283,12 +266,9 @@ enum Tier {
       await hre.reef.getContractAt(REDEEMABLEERC20.abi, redeemableERC20.address, trader1)
     )as RedeemableERC20;
   
-    await redeemableERC20AttchTrader1
-      .redeem(
-        [reserveAddress], 
-        await redeemableERC20.balanceOf(await trader1.getAddress()),
-        config
-      );
+    await redeemableERC20
+      .connect(trader1)
+      .redeem([reserveAddress], await redeemableERC20.balanceOf(trader1.address),config);
   
     console.log("RedeemableERC20 redeemed")
 }
