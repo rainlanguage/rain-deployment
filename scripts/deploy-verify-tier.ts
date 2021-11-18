@@ -21,7 +21,9 @@ async function main() {
     console.log('- Verify factory deployed to: ', VerifyFactoryAddress);
 
     const admin = "0x085a958427aaA3Ac8Be6174F630a96641538E280";
-    const Vfactory = (new ethers.Contract(VerifyFactoryAddress , VerifyFactoryJson.abi , signers[0] )) as VerifyFactory;
+    const Vfactory = (
+        new ethers.Contract(VerifyFactoryAddress , VerifyFactoryJson.abi , signers[0] )
+    ) as VerifyFactory;
     const tx = await Vfactory["createChild(address)"](admin);
     const receipt = await tx.wait();
     const topic = receipt.events?.filter((x) => x.event == "NewContract")[0].topics[1]!
@@ -38,7 +40,7 @@ async function main() {
     // console.log('- Verify deployed to: ', VerifyAddress);
 
     // Deploying VerifyTier
-    const VerifyTierAddress = await deploy(VerifyTier, signer, [VerifyAddress]);
+    const VerifyTierAddress = await deploy(VerifyTier, signer, VerifyAddress);
     console.log('- VerifyTier deployed to: ', VerifyTierAddress);
 
 }

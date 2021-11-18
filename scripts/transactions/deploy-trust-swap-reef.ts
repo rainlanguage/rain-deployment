@@ -1,9 +1,11 @@
+const hre = require("hardhat");
+const { MAX_STORAGE_LIMIT } = require("@reef-defi/evm-provider");
 import { ethers } from "hardhat";
 import { expect } from "chai";
 import * as Util from "./Utils"
-const checkSumAddress = ethers.utils.getAddress;
 
-const FACTORY_ADDRESS = "0xb5254bb93572c9F5CF1240E04f6C6F44617bc2Aa"; //mumbai
+const checkSumAddress = ethers.utils.getAddress;
+const FACTORY_ADDRESS = "0x415FE28416c0747070b254Aa3C571C985f0865b5"; //reef
 
 import type { TierByConstructionClaim } from "../../dist/typechain/TierByConstructionClaim";
 import type { ReadWriteTier } from "../../dist/typechain/ReadWriteTier";
@@ -61,18 +63,21 @@ enum Tier {
  async function main() {
 
     const config = { gasLimit: 20000000 }
-  
-    const signers = await ethers.getSigners();
+    const provider = await hre.reef.getProvider();
+    const signers = await hre.reef.getSigners();
   
     const creator = signers[0];
     const seeder = signers[1]; // seeder is not creator/owner
     const deployer = signers[2];
     const trader1 = signers[3];
   
-    const reserveAddress = await Util.deploy(RESERVE_TOKEN, signers[0], []);
-    const reserve = (new ethers.Contract( reserveAddress , RESERVE_TOKEN.abi , signers[0] )) as ReserveToken;
+    // Reserve token
+    const reserveAddress = "0xD18C5cd9F51d6a66E52d7142Aa00927c07a79673";
+    // const reserveAddress = await Util.deploy(RESERVE_TOKEN, creator, []);
+    const reserve = (await hre.reef.getContractAt(RESERVE_TOKEN.abi, reserveAddress, creator)) as ReserveToken;
     console.log("Reserve deployed to: " + reserveAddress)
   
+    // Properties 
     const tokenName = "Token";
     const tokenSymbol = "TKN";
   
@@ -95,38 +100,37 @@ enum Tier {
   
     const minimumTradingDuration = 30;
 
-    const readWriteTierAddress = await Util.deploy(READWRITE_TIER, signers[0], []);
-    const readWriteTier = (new ethers.Contract( readWriteTierAddress , READWRITE_TIER.abi , signers[0] )) as ReadWriteTier;
-    console.log("Tier deployed to: " + readWriteTierAddress)
+    const readWriteTierAddress = "0x9348bd29267F9Ed736172823262eaf0C1E8220c8";
+    // const readWriteTierAddress = await Util.deploy(READWRITE_TIER, creator, []);
+    const readWriteTier = (await hre.reef.getContractAt(READWRITE_TIER.abi, readWriteTierAddress, trader1)) as ReadWriteTier;
+    console.log("ReadWriteTier deployed to: " + readWriteTierAddress)
     const minimumStatus = Tier.ZERO;
   
-    await readWriteTier.connect(trader1).setTier(trader1.address, Tier.THREE, []);
+    await readWriteTier.connect(trader1).setTier(await trader1.getAddress(), Tier.THREE, []);
   
-    const tierByConstructionClaimAddress =  await Util.deploy(TIERBYCONSTRUCTION, signers[0], [
+    // const tierByConstructionClaimAddress =  "0x0ed4Dffa8134F625F7b4196081c702F5049c2d6D";
+    const tierByConstructionClaimAddress =  await Util.deploy(TIERBYCONSTRUCTION, creator, [
         readWriteTierAddress,
         minimumStatus
     ]);
-    const tierByConstructionClaim = (new ethers.Contract(
-        tierByConstructionClaimAddress, TIERBYCONSTRUCTION.abi , signers[0] 
-    )) as TierByConstructionClaim;
+    const tierByConstructionClaim = (
+      await hre.reef.getContractAt(TIERBYCONSTRUCTION.abi, tierByConstructionClaimAddress, creator)
+    ) as TierByConstructionClaim;
     console.log("Tier by construction deployed to: " + tierByConstructionClaimAddress)
   
-    await tierByConstructionClaim.claim(trader1.address, [], { gasLimit: 20000000 });
+    await tierByConstructionClaim.claim(await trader1.getAddress(), [], { gasLimit: 20000000 });
   
     // Existing trust factory deployment
-    const _trustFactoryContract = new ethers.Contract(
-      FACTORY_ADDRESS,
-      TRUSTFACTORY.abi
-    );
-    const trustFactory = _trustFactoryContract.connect(deployer) as TrustFactory;
+    const trustFactory = (
+      await hre.reef.getContractAt(TRUSTFACTORY.abi, FACTORY_ADDRESS, deployer)
+    ) as TrustFactory;
   
-
-    const blockBeforeTrust = await ethers.provider.getBlockNumber();
+    const blockBeforeTrust = await provider.getBlockNumber();
     const trust = await Util.trustDeploy(
       trustFactory,
       deployer,
       {
-        creator: creator.address,
+        creator: creator.getAddress(),
         minimumCreatorRaise,
         seeder: ethers.constants.AddressZero, // autogenerate seedERC20 contract
         seederFee: seederFee,
@@ -148,32 +152,30 @@ enum Tier {
         finalValuation,
         minimumTradingDuration,
       },
-      { gasLimit: 20000000 }
+      { customData: { storageLimit: MAX_STORAGE_LIMIT } }
     );
   
     console.log("Trust deployed to: " + trust.address);
 
-    const redeemableERC20 = new ethers.Contract(
-      await trust.token(),
-       REDEEMABLEERC20.abi, 
-       creator
-    ) as RedeemableERC20;
-    
-    // Checking the TreasuryAsset event
-    const eventFilter = redeemableERC20.filters.TreasuryAsset(); 
-    const event = await redeemableERC20.queryFilter(eventFilter, blockBeforeTrust);
-    const emitter = checkSumAddress(event[0].args.emitter)
-    const asset = checkSumAddress(event[0].args.asset)
-    expect(emitter).to.be.equal(checkSumAddress(trust.address));
-    expect(asset).to.be.equal(reserveAddress);
+    const redeemableERC20 = (
+      await hre.reef.getContractAt(REDEEMABLEERC20.abi, await trust.token(), creator)
+    )as RedeemableERC20;
+
+    // const eventFilter = redeemableERC20.filters.TreasuryAsset(); 
+    // const event = await redeemableERC20.queryFilter(eventFilter, blockBeforeTrust);
+    // const emitter = checkSumAddress(event[0].args.emitter)
+    // const asset = checkSumAddress(event[0].args.asset)
+    // expect(emitter).to.be.equal(checkSumAddress(trust.address));
+    // expect(asset).to.be.equal(reserveAddress);
+
     console.log("New redeemableERC20: " + await trust.token())
 
     const seedERC20Address = await trust.seeder();
-    const seedERC20 = (new ethers.Contract( seedERC20Address , SEED.abi , signers[0] )) as SeedERC20;
+    const seedERC20 = (await hre.reef.getContractAt(SEED.abi, seedERC20Address, seeder)) as SeedERC20;
     console.log("Seeder at: " + seedERC20Address)
     
     // seeder needs some cash
-    const tx0 = await reserve.transfer(seeder.address, seederFee, config);
+    const tx0 = await reserve.transfer(await seeder.getAddress(), seederFee, config);
     await tx0.wait();
     console.log("Seeder transfered seed")
   
@@ -184,26 +186,25 @@ enum Tier {
     await seedERC20.connect(seeder).seed(0, seedUnits, config);
     console.log("Bought all seed units")
 
-    const pool = new ethers.Contract(
-      await trust.pool(), 
-      POOL.abi, 
-      creator
+    const pool = (
+      await hre.reef.getContractAt(POOL.abi, await trust.pool(), creator)
     ) as RedeemableERC20Pool;
-  
+
     // start raise
     const tx1 = await pool.startDutchAuction(config);
     await tx1.wait();
     console.log("Raise started")
   
-    const startBlock = await ethers.provider.getBlockNumber();
+    const startBlock = await provider.getBlockNumber();
   
     let [crp, bPool] = await Util.poolContracts(signers, pool);
   
     const tokenAddress = await trust.token();
   
-    // // begin trading
+    // begin trading
     const swapReserveForTokens = async (signer:any, spend:any) => {
-      const tx = await reserve.transfer(signer.address, spend, config);
+      // Transfer from creator (signer in reserver) to the signer argument
+      const tx = await reserve.transfer(await signer.getAddress(), spend, config);
       await tx.wait();
   
       await reserve.connect(signer).approve(bPool.address, spend, config);
@@ -221,29 +222,53 @@ enum Tier {
     };
   
     const reserveSpend = finalValuation.div(10);
-  
+    let i=1;
     while ((await reserve.balanceOf(bPool.address)).lte(finalValuation)) {
       await swapReserveForTokens(trader1, reserveSpend);
+      console.log(`Swap ${i}`);
+      i+=1;
     }
-  
     console.log("All swaps done")
   
     // wait until distribution can end
-    await Util.waitForBlock(startBlock + minimumTradingDuration + 1);
+    const waitForBlock = async (blockNumber:any): Promise<any> => {
+      const currentBlock = await provider.getBlockNumber();
+    
+      if (currentBlock >= blockNumber) {
+        return;
+      }
+    
+      console.log({
+        currentBlock,
+        awaitingBlock: blockNumber,
+      });
+    
+      await Util.timeout(2000);
+    
+      return await waitForBlock(blockNumber);
+    };
+
+    await waitForBlock(startBlock + minimumTradingDuration + 1);
+
   
     console.log("Raise over")
-  
+
     await trust.connect(seeder).anonEndDistribution(config);
   
     console.log("Raise ended")
   
     await seedERC20.connect(seeder).redeem(seedUnits, config);
-  
+
     console.log("SeedERC20 redemeed")
+
+    // Attach the same RedeemableERC20 to trader1 as signer to call 
+    const redeemableERC20AttchTrader1 = (
+      await hre.reef.getContractAt(REDEEMABLEERC20.abi, redeemableERC20.address, trader1)
+    )as RedeemableERC20;
   
     await redeemableERC20
       .connect(trader1)
-      .redeem([reserveAddress], await redeemableERC20.balanceOf(trader1.address),config);
+      .redeem([reserveAddress], await redeemableERC20.balanceOf(await trader1.getAddress()),config);
   
     console.log("RedeemableERC20 redeemed")
 }

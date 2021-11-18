@@ -24,7 +24,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 // Go to https://hardhat.org/config/ to learn more
 
 const config:any = {
-  solidity: {
+  solidity: { 
     compilers: [
       {
         version: "0.6.12",
@@ -261,13 +261,19 @@ const config:any = {
     reef_mainnet: {
       url: "wss://rpc.reefscan.com/ws",
       seeds: {
-        "account": process.env.MNEMONIC
+        "account1": process.env.MNEMONIC_REEF1,
+        "account2": process.env.MNEMONIC_REEF2,
+        "account3": process.env.MNEMONIC_REEF3,
+        "account4": process.env.MNEMONIC_REEF4
       }
     },
     reef_testnet: {
       url: "wss://rpc-testnet.reefscan.com/ws",
       seeds: {
-        "account": process.env.MNEMONIC,
+        "account1": process.env.MNEMONIC_REEF1,
+        "account2": process.env.MNEMONIC_REEF2,
+        "account3": process.env.MNEMONIC_REEF3,
+        "account4": process.env.MNEMONIC_REEF4
       }
     },
     mumbai: {

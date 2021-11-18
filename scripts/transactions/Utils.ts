@@ -91,7 +91,7 @@ export const poolContracts = async (
   ) as BPool;
   return [crp, bPool];
 };
-function timeout(ms:any) {
+export function timeout(ms:any) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 

@@ -7,10 +7,10 @@ const RedeemableERC20PoolFactory = require("../dist/artifacts/contracts/pool/Red
 const SeedERC20Factory = require("../dist/artifacts/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json")
 const TrustFactory = require("../dist/artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json")
 
-export async function deploy(artifact:any, signer:any, argmts:any[]) {
+export async function deploy(artifact:any, signer:any, argmts:any[] | any) {
     const iface = new ethers.utils.Interface(artifact.abi)
     const factory = new ethers.ContractFactory(iface, artifact.bytecode, signer)
-    const contract = await factory.deploy(...argmts)
+    const contract = await factory.deploy(argmts);
     await contract.deployTransaction.wait()
     return contract.address
 }
