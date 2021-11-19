@@ -71,7 +71,7 @@ const _abi = [
     ],
     name: "setTier",
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "pure",
     type: "function",
   },
 ];

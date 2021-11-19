@@ -27,7 +27,7 @@ const config:any = {
   solidity: { 
     compilers: [
       {
-        version: "0.6.12",
+        version: "0.8.10",
         "settings": {
           "metadata": {
             "useLiteralContent": true
@@ -35,9 +35,17 @@ const config:any = {
           "optimizer": {
             "enabled": true,
             "runs": 100000
-          },
-          "evmVersion": 'istanbul'
+          }
         }
+      },
+      {
+        version: "0.6.12",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 100000,
+          },
+        },
       },
       {
         version: "0.5.12",
@@ -68,7 +76,7 @@ const config:any = {
         }
       },
       "contracts/test/ClaimERC1155Test.sol": {
-        version: "0.6.12",
+        version: "0.8.10",
         "settings": {
           "metadata": {
             "useLiteralContent": true
@@ -76,25 +84,11 @@ const config:any = {
           "optimizer": {
             "enabled": true,
             "runs": 200
-          },
-          evmVersion: 'istanbul'
-        }
-      },
-      "contracts/test/ConfigurableRightsPoolImports.sol": {
-        version: "0.6.12",
-        "settings": {
-          "metadata": {
-            "useLiteralContent": true
-          },
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          evmVersion: 'istanbul'
+          }
         }
       },
       "contracts/test/PhasedScheduleTest.sol": {
-        version: "0.6.12",
+        version: "0.8.10",
         "settings": {
           "metadata": {
             "useLiteralContent": true
@@ -102,12 +96,11 @@ const config:any = {
           "optimizer": {
             "enabled": true,
             "runs": 200
-          },
-          evmVersion: 'istanbul'
+          }
         }
       },
       "contracts/test/PhasedTest.sol": {
-        version: "0.6.12",
+        version: "0.8.10",
         "settings": {
           "metadata": {
             "useLiteralContent": true
@@ -115,12 +108,11 @@ const config:any = {
           "optimizer": {
             "enabled": true,
             "runs": 200
-          },
-          evmVersion: 'istanbul'
+          }
         }
       },
       "contracts/test/RedeemableERC20Reentrant.sol": {
-        version: "0.6.12",
+        version: "0.8.10",
         "settings": {
           "metadata": {
             "useLiteralContent": true
@@ -128,12 +120,11 @@ const config:any = {
           "optimizer": {
             "enabled": true,
             "runs": 200
-          },
-          evmVersion: 'istanbul'
+          }
         }
       },
       "contracts/test/ReserveToken.sol": {
-        version: "0.6.12",
+        version: "0.8.10",
         "settings": {
           "metadata": {
             "useLiteralContent": true
@@ -141,12 +132,11 @@ const config:any = {
           "optimizer": {
             "enabled": true,
             "runs": 200
-          },
-          evmVersion: 'istanbul'
+          }
         }
       },
       "contracts/test/ReserveTokenTest.sol": {
-        version: "0.6.12",
+        version: "0.8.10",
         "settings": {
           "metadata": {
             "useLiteralContent": true
@@ -154,12 +144,11 @@ const config:any = {
           "optimizer": {
             "enabled": true,
             "runs": 200
-          },
-          evmVersion: 'istanbul'
+          }
         }
       },
       "contracts/test/SeedERC20ForceSendEther.sol": {
-        version: "0.6.12",
+        version: "0.8.10",
         "settings": {
           "metadata": {
             "useLiteralContent": true
@@ -167,12 +156,11 @@ const config:any = {
           "optimizer": {
             "enabled": true,
             "runs": 200
-          },
-          evmVersion: 'istanbul'
+          }
         }
       },
       "contracts/test/SeedERC20Reentrant.sol": {
-        version: "0.6.12",
+        version: "0.8.10",
         "settings": {
           "metadata": {
             "useLiteralContent": true
@@ -180,12 +168,11 @@ const config:any = {
           "optimizer": {
             "enabled": true,
             "runs": 200
-          },
-          evmVersion: 'istanbul'
+          }
         }
       },
       "contracts/test/TierByConstructionClaimTest.sol": {
-        version: "0.6.12",
+        version: "0.8.10",
         "settings": {
           "metadata": {
             "useLiteralContent": true
@@ -193,12 +180,11 @@ const config:any = {
           "optimizer": {
             "enabled": true,
             "runs": 200
-          },
-          evmVersion: 'istanbul'
+          }
         }
       },
       "contracts/test/TierByConstructionTest.sol": {
-        version: "0.6.12",
+        version: "0.8.10",
         "settings": {
           "metadata": {
             "useLiteralContent": true
@@ -206,12 +192,11 @@ const config:any = {
           "optimizer": {
             "enabled": true,
             "runs": 200
-          },
-          evmVersion: 'istanbul'
+          }
         }
       },
       "contracts/test/TierUtilTest.sol": {
-        version: "0.6.12",
+        version: "0.8.10",
         "settings": {
           "metadata": {
             "useLiteralContent": true
@@ -219,12 +204,11 @@ const config:any = {
           "optimizer": {
             "enabled": true,
             "runs": 200
-          },
-          evmVersion: 'istanbul'
+          }
         }
       },
       "contracts/test/TrustReentrant.sol": {
-        version: "0.6.12",
+        version: "0.8.10",
         "settings": {
           "metadata": {
             "useLiteralContent": true
@@ -232,12 +216,11 @@ const config:any = {
           "optimizer": {
             "enabled": true,
             "runs": 200
-          },
-          evmVersion: 'istanbul'
+          }
         }
       },
       "contracts/test/ValueTierTest.sol": {
-        version: "0.6.12",
+        version: "0.8.10",
         "settings": {
           "metadata": {
             "useLiteralContent": true
@@ -245,8 +228,7 @@ const config:any = {
           "optimizer": {
             "enabled": true,
             "runs": 200
-          },
-          evmVersion: 'istanbul'
+          }
         }
       }
     }

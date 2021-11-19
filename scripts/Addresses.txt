@@ -15,19 +15,19 @@ VerifyTier deployed to:  0x20d0dDfD6B9F811D98803a9Fb5D476cB3c604D60
 ___________________
 
 - Mumbai:
-BFactory deployed to:  0x43fae79c2B376F21e5eCf478C78A865f302fFE97
-SmartPoolManager deployed to:  0xbcC13A1b06B44620c1A466F6Ac1e9c20a4056CF9
-BalancerSafeMath deployed to:  0xff510DB258aFfA9b7EB5d589EcB6496fD75A8f11
-RightsManager deployed to:  0x1fc83f5358a3058Fb954728d505535E9f3AAa860
-CRPFactory deployed to:  0x949ACce38b68158Ef0A731A5926De508BE580e5A
-RedeemableERC20Factory deployed to:  0x93797b86D9a5570B432bE6A7e8bF3CFff7B79869 (verified) 
-RedeemableERC20PoolFactory deployed to:  0xF447CeAE7e642e271e194a20A2Bed885266370AC (verified) 
-SeedERC20Factory deployed to:  0x6EA02Efe7557B1bd9c3377e0f05Ef97C3a6c83B8 (verified) 
-Trust factory deployed to:  0xb5254bb93572c9F5CF1240E04f6C6F44617bc2Aa (verified) 
+BFactory deployed to:  0x15901f099A6100BB4B9880A32600805C5Da1Bb19
+SmartPoolManager deployed to:  0x87479650462E1C6D3620d19d5A8560f62c2945e5
+BalancerSafeMath deployed to:  0xCA7ca7b004b06C82081Cc66caEE8eDe5455A4e45
+RightsManager deployed to:  0x04E49abb40c7169CB6311f8642dA94058f5D5A21
+CRPFactory deployed to:  0x6F9B5aABeedD2e73170c31c20F3447462c5CA150
+RedeemableERC20Factory deployed to:  0xF4B4FdbB1d57A774e154977189e9e80dEB520Ccb (verified)
+RedeemableERC20PoolFactory deployed to:  0x681e9CFF1840Ad8Eb8B71621C9BE9DbE78ec0dAc (verified)
+SeedERC20Factory deployed to:  0xc31Ff97b26d80BfD49f90142D9063AA597586311 (verified)
+Trust factory deployed to:  0xD84dc55459a62c7216A8939b0D5f5C41336D225b (verified)
 -- aux --
-Verify factory deployed to:  0xFD1E11c1F117f9eB2F004f1aD38faB09c49D9172 (verified
-Verify child deployed to:  0xdD0CdeF7f1590E968d550F7135C33DC24Bc95EA9 (verified
-VerifyTier deployed to:  0xCfCE0fc4536Fa1F8Cc9B50db58E6c7d435BBfC68 (verified
+Verify factory deployed to:  0xbb37EfD9354E572547f1D62cbcb04cb414427884 (verified)
+Verify child deployed to:  0xfe411c049EFeE2A5E9459daC3e0483f591e0402F (verified)
+VerifyTier deployed to:  0x3BbEd8482EA4d4bF001b0428b3881c7c37fd7007 (verified)
 ___________________________
 
 - Fuji

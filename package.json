@@ -14,7 +14,8 @@
   "dependencies": {
     "@beehiveinnovation/balancer-core": "^0.0.7",
     "@beehiveinnovation/configurable-rights-pool": "^0.0.1",
-    "@beehiveinnovation/rain-protocol": "^0.0.14"
+    "@beehiveinnovation/rain-protocol": "^0.0.14",
+    "@openzeppelin/contracts": "^4.3.3"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",

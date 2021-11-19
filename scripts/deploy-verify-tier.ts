@@ -8,8 +8,8 @@ const VerifyTier = require("../dist/artifacts/contracts/tier/VerifyTier.sol/Veri
 const VerifyFactoryJson = require("../dist/artifacts/contracts/verify/VerifyFactory.sol/VerifyFactory.json")
 
 
-// import type { VerifyFactory } from "../dist/typechain/VerifyFactory";
-import type { VerifyFactory } from "../typechain/VerifyFactory";
+import type { VerifyFactory } from "../dist/typechain/VerifyFactory";
+// import type { VerifyFactory } from "../typechain/VerifyFactory";
 
    
 async function main() {

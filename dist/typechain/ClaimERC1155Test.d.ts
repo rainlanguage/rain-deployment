@@ -331,8 +331,8 @@ export class ClaimERC1155Test extends BaseContract {
       arg0: string,
       arg1: BigNumberish,
       arg2: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: CallOverrides
+    ): Promise<[void]>;
 
     supportsInterface(
       interfaceId: BytesLike,
@@ -444,8 +444,8 @@ export class ClaimERC1155Test extends BaseContract {
     arg0: string,
     arg1: BigNumberish,
     arg2: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: CallOverrides
+  ): Promise<void>;
 
   supportsInterface(
     interfaceId: BytesLike,
@@ -771,7 +771,7 @@ export class ClaimERC1155Test extends BaseContract {
       arg0: string,
       arg1: BigNumberish,
       arg2: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     supportsInterface(
@@ -865,7 +865,7 @@ export class ClaimERC1155Test extends BaseContract {
       arg0: string,
       arg1: BigNumberish,
       arg2: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     supportsInterface(

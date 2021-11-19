@@ -2,10 +2,12 @@ let
  pkgs = import <nixpkgs> {};
 
    flush-all = pkgs.writeShellScriptBin "flush-all" ''
+    rm -rf node_modules
     rm -rf artifacts
     rm -rf cache
     rm -rf typechain
     rm -rf bin
+    yarn install
   '';
 
   cut-dist = pkgs.writeShellScriptBin "cut-dist" ''
@@ -24,14 +26,9 @@ let
   solt-the-earth = pkgs.writeShellScriptBin "solt-the-earth" ''
     mkdir -p solt
     find contracts -type f -not -path 'contracts/test/*' | xargs -i solt write '{}' --npm --runs 100000
-    rain-protocol-solt
+    for i in solc-* ; do  myVar=$(jq '.sources |= with_entries(.key |= sub("\\./"; ""))' "''${i}")
+    cat <<< $myVar > "''${i}"; done
     mv solc-* solt
-  '';
-
-  rain-protocol-solt = pkgs.writeShellScriptBin "rain-protocol-solt" ''
-    buildPath=`cat artifacts/contracts/trust/TrustFactory.sol/TrustFactory.dbg.json | jq '.buildInfo'`
-    buildPath=artifacts/"''${buildPath:10:(''${#buildPath}-11)}"
-    cat "''${buildPath}" | jq '.input' | cat > solc-input-rainprotocol.json
   '';
   
   deploy-rain = pkgs.writeShellScriptBin "deploy-rain" ''
@@ -57,7 +54,6 @@ pkgs.stdenv.mkDerivation {
   deploy-rain
   flush-all
   cut-dist
-  rain-protocol-solt
   solt-the-earth
  ];
 

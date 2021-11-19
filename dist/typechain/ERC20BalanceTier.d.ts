@@ -11,7 +11,6 @@ import {
   PopulatedTransaction,
   BaseContract,
   ContractTransaction,
-  Overrides,
   CallOverrides,
 } from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
@@ -110,8 +109,8 @@ export class ERC20BalanceTier extends BaseContract {
       arg0: string,
       arg1: BigNumberish,
       arg2: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: CallOverrides
+    ): Promise<[void]>;
 
     tierValues(
       overrides?: CallOverrides
@@ -150,8 +149,8 @@ export class ERC20BalanceTier extends BaseContract {
     arg0: string,
     arg1: BigNumberish,
     arg2: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: CallOverrides
+  ): Promise<void>;
 
   tierValues(
     overrides?: CallOverrides
@@ -225,7 +224,7 @@ export class ERC20BalanceTier extends BaseContract {
       arg0: string,
       arg1: BigNumberish,
       arg2: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     tierValues(overrides?: CallOverrides): Promise<BigNumber>;
@@ -243,7 +242,7 @@ export class ERC20BalanceTier extends BaseContract {
       arg0: string,
       arg1: BigNumberish,
       arg2: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     tierValues(overrides?: CallOverrides): Promise<PopulatedTransaction>;

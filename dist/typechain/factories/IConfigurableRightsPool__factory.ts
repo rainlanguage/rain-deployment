@@ -11,21 +11,21 @@ import type {
 
 const _abi = [
   {
-    inputs: [
+    inputs: [],
+    name: "bFactory",
+    outputs: [
       {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
+        internalType: "address",
+        name: "",
+        type: "address",
       },
     ],
-    name: "burnPoolShareFromLib",
-    outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
-    name: "getController",
+    name: "bPool",
     outputs: [
       {
         internalType: "address",
@@ -40,11 +40,21 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "amount",
+        name: "initialSupply",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "minimumWeightChangeBlockPeriodParam",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "addTokenTimeLockInBlocksParam",
         type: "uint256",
       },
     ],
-    name: "mintPoolShareFromLib",
+    name: "createPool",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -52,17 +62,17 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
         internalType: "uint256",
-        name: "amount",
+        name: "poolAmountIn",
         type: "uint256",
       },
+      {
+        internalType: "uint256[]",
+        name: "minAmountsOut",
+        type: "uint256[]",
+      },
     ],
-    name: "pullPoolShareFromLib",
+    name: "exitPool",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -70,32 +80,24 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "to",
-        type: "address",
+        internalType: "uint256[]",
+        name: "newWeights",
+        type: "uint256[]",
       },
       {
         internalType: "uint256",
-        name: "amount",
+        name: "startBlock",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "endBlock",
         type: "uint256",
       },
     ],
-    name: "pushPoolShareFromLib",
+    name: "updateWeightsGradually",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "totalSupply",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
 ];

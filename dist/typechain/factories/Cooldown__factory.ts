@@ -8,17 +8,6 @@ import type { Cooldown, CooldownInterface } from "../Cooldown";
 
 const _abi = [
   {
-    inputs: [
-      {
-        internalType: "uint16",
-        name: "cooldownDuration_",
-        type: "uint16",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "constructor",
-  },
-  {
     inputs: [],
     name: "cooldownDuration",
     outputs: [

@@ -11,7 +11,6 @@ import {
   PopulatedTransaction,
   BaseContract,
   ContractTransaction,
-  Overrides,
   CallOverrides,
 } from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
@@ -99,8 +98,8 @@ export class AlwaysTier extends BaseContract {
       arg0: string,
       arg1: BigNumberish,
       arg2: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: CallOverrides
+    ): Promise<[void]>;
   };
 
   report(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
@@ -109,8 +108,8 @@ export class AlwaysTier extends BaseContract {
     arg0: string,
     arg1: BigNumberish,
     arg2: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: CallOverrides
+  ): Promise<void>;
 
   callStatic: {
     report(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
@@ -150,7 +149,7 @@ export class AlwaysTier extends BaseContract {
       arg0: string,
       arg1: BigNumberish,
       arg2: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
@@ -164,7 +163,7 @@ export class AlwaysTier extends BaseContract {
       arg0: string,
       arg1: BigNumberish,
       arg2: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }
