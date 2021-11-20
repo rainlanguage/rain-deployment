@@ -3,7 +3,7 @@ import { expect } from "chai";
 import * as Util from "./Utils"
 const checkSumAddress = ethers.utils.getAddress;
 
-const FACTORY_ADDRESS = "0xb5254bb93572c9F5CF1240E04f6C6F44617bc2Aa"; //mumbai
+const FACTORY_ADDRESS = "0xD84dc55459a62c7216A8939b0D5f5C41336D225b"; //mumbai
 
 import type { TierByConstructionClaim } from "../../dist/typechain/TierByConstructionClaim";
 import type { ReadWriteTier } from "../../dist/typechain/ReadWriteTier";
