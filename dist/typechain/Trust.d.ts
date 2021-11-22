@@ -36,6 +36,7 @@ interface TrustInterface extends ethers.utils.Interface {
     "seederCooldownDuration()": FunctionFragment;
     "seederFee()": FunctionFragment;
     "seederUnits()": FunctionFragment;
+    "sendNotice(bytes)": FunctionFragment;
     "successBalance()": FunctionFragment;
     "token()": FunctionFragment;
   };
@@ -89,6 +90,10 @@ interface TrustInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "sendNotice",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "successBalance",
     values?: undefined
   ): string;
@@ -139,14 +144,23 @@ interface TrustInterface extends ethers.utils.Interface {
     functionFragment: "seederUnits",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "sendNotice", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "successBalance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "token", data: BytesLike): Result;
 
-  events: {};
+  events: {
+    "Notice(address,bytes)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "Notice"): EventFragment;
 }
+
+export type NoticeEvent = TypedEvent<
+  [string, string] & { sender: string; data: string }
+>;
 
 export class Trust extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -288,6 +302,11 @@ export class Trust extends BaseContract {
 
     seederUnits(overrides?: CallOverrides): Promise<[number]>;
 
+    sendNotice(
+      data_: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     successBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     token(overrides?: CallOverrides): Promise<[string]>;
@@ -383,6 +402,11 @@ export class Trust extends BaseContract {
 
   seederUnits(overrides?: CallOverrides): Promise<number>;
 
+  sendNotice(
+    data_: BytesLike,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   successBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
   token(overrides?: CallOverrides): Promise<string>;
@@ -476,12 +500,24 @@ export class Trust extends BaseContract {
 
     seederUnits(overrides?: CallOverrides): Promise<number>;
 
+    sendNotice(data_: BytesLike, overrides?: CallOverrides): Promise<void>;
+
     successBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
     token(overrides?: CallOverrides): Promise<string>;
   };
 
-  filters: {};
+  filters: {
+    "Notice(address,bytes)"(
+      sender?: string | null,
+      data?: null
+    ): TypedEventFilter<[string, string], { sender: string; data: string }>;
+
+    Notice(
+      sender?: string | null,
+      data?: null
+    ): TypedEventFilter<[string, string], { sender: string; data: string }>;
+  };
 
   estimateGas: {
     anonEndDistribution(
@@ -515,6 +551,11 @@ export class Trust extends BaseContract {
     seederFee(overrides?: CallOverrides): Promise<BigNumber>;
 
     seederUnits(overrides?: CallOverrides): Promise<BigNumber>;
+
+    sendNotice(
+      data_: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     successBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -561,6 +602,11 @@ export class Trust extends BaseContract {
     seederFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     seederUnits(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    sendNotice(
+      data_: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
     successBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

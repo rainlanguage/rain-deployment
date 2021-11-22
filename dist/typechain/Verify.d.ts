@@ -29,18 +29,20 @@ interface VerifyInterface extends ethers.utils.Interface {
     "REMOVER()": FunctionFragment;
     "REMOVER_ADMIN()": FunctionFragment;
     "UNINITIALIZED()": FunctionFragment;
-    "add(uint256)": FunctionFragment;
-    "approve(address)": FunctionFragment;
-    "ban(address)": FunctionFragment;
+    "add(bytes)": FunctionFragment;
+    "approve(address,bytes)": FunctionFragment;
+    "ban(address,bytes)": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
-    "remove(address)": FunctionFragment;
+    "remove(address,bytes)": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
+    "requestBan(address,bytes)": FunctionFragment;
+    "requestRemove(address,bytes)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
     "state(address)": FunctionFragment;
     "states(address)": FunctionFragment;
-    "statusAtBlock((uint256,uint32,uint32,uint32),uint32)": FunctionFragment;
+    "statusAtBlock((uint32,uint32,uint32),uint32)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
   };
 
@@ -67,9 +69,15 @@ interface VerifyInterface extends ethers.utils.Interface {
     functionFragment: "UNINITIALIZED",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "add", values: [BigNumberish]): string;
-  encodeFunctionData(functionFragment: "approve", values: [string]): string;
-  encodeFunctionData(functionFragment: "ban", values: [string]): string;
+  encodeFunctionData(functionFragment: "add", values: [BytesLike]): string;
+  encodeFunctionData(
+    functionFragment: "approve",
+    values: [string, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "ban",
+    values: [string, BytesLike]
+  ): string;
   encodeFunctionData(
     functionFragment: "getRoleAdmin",
     values: [BytesLike]
@@ -82,10 +90,21 @@ interface VerifyInterface extends ethers.utils.Interface {
     functionFragment: "hasRole",
     values: [BytesLike, string]
   ): string;
-  encodeFunctionData(functionFragment: "remove", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "remove",
+    values: [string, BytesLike]
+  ): string;
   encodeFunctionData(
     functionFragment: "renounceRole",
     values: [BytesLike, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "requestBan",
+    values: [string, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "requestRemove",
+    values: [string, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "revokeRole",
@@ -97,7 +116,6 @@ interface VerifyInterface extends ethers.utils.Interface {
     functionFragment: "statusAtBlock",
     values: [
       {
-        id: BigNumberish;
         addedSince: BigNumberish;
         approvedSince: BigNumberish;
         bannedSince: BigNumberish;
@@ -147,6 +165,11 @@ interface VerifyInterface extends ethers.utils.Interface {
     functionFragment: "renounceRole",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "requestBan", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "requestRemove",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "state", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "states", data: BytesLike): Result;
@@ -160,33 +183,59 @@ interface VerifyInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
-    "Add(address,uint256)": EventFragment;
-    "Approve(address)": EventFragment;
-    "Ban(address)": EventFragment;
-    "Remove(address)": EventFragment;
+    "Approve(address,address,bytes)": EventFragment;
+    "Ban(address,address,bytes)": EventFragment;
+    "Remove(address,address,bytes)": EventFragment;
+    "RequestApprove(address,bytes)": EventFragment;
+    "RequestBan(address,address,bytes)": EventFragment;
+    "RequestRemove(address,address,bytes)": EventFragment;
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "Add"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Approve"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Ban"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Remove"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RequestApprove"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RequestBan"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RequestRemove"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
 }
 
-export type AddEvent = TypedEvent<
-  [string, BigNumber] & { account: string; id: BigNumber }
+export type ApproveEvent = TypedEvent<
+  [string, string, string] & { approver: string; account: string; data: string }
 >;
 
-export type ApproveEvent = TypedEvent<[string] & { account: string }>;
+export type BanEvent = TypedEvent<
+  [string, string, string] & { banner: string; account: string; data: string }
+>;
 
-export type BanEvent = TypedEvent<[string] & { account: string }>;
+export type RemoveEvent = TypedEvent<
+  [string, string, string] & { remover: string; account: string; data: string }
+>;
 
-export type RemoveEvent = TypedEvent<[string] & { account: string }>;
+export type RequestApproveEvent = TypedEvent<
+  [string, string] & { account: string; data: string }
+>;
+
+export type RequestBanEvent = TypedEvent<
+  [string, string, string] & {
+    requestor: string;
+    account: string;
+    data: string;
+  }
+>;
+
+export type RequestRemoveEvent = TypedEvent<
+  [string, string, string] & {
+    requestor: string;
+    account: string;
+    data: string;
+  }
+>;
 
 export type RoleAdminChangedEvent = TypedEvent<
   [string, string, string] & {
@@ -265,17 +314,19 @@ export class Verify extends BaseContract {
     UNINITIALIZED(overrides?: CallOverrides): Promise<[number]>;
 
     add(
-      id_: BigNumberish,
+      data_: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     approve(
       account_: string,
+      data_: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     ban(
       account_: string,
+      data_: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -295,12 +346,25 @@ export class Verify extends BaseContract {
 
     remove(
       account_: string,
+      data_: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     renounceRole(
       role: BytesLike,
       account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    requestBan(
+      account_: string,
+      data_: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    requestRemove(
+      account_: string,
+      data_: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -315,8 +379,7 @@ export class Verify extends BaseContract {
       overrides?: CallOverrides
     ): Promise<
       [
-        [BigNumber, number, number, number] & {
-          id: BigNumber;
+        [number, number, number] & {
           addedSince: number;
           approvedSince: number;
           bannedSince: number;
@@ -328,8 +391,7 @@ export class Verify extends BaseContract {
       arg0: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, number, number, number] & {
-        id: BigNumber;
+      [number, number, number] & {
         addedSince: number;
         approvedSince: number;
         bannedSince: number;
@@ -338,12 +400,11 @@ export class Verify extends BaseContract {
 
     statusAtBlock(
       state_: {
-        id: BigNumberish;
         addedSince: BigNumberish;
         approvedSince: BigNumberish;
         bannedSince: BigNumberish;
       },
-      blockNumber: BigNumberish,
+      blockNumber_: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[number]>;
 
@@ -370,17 +431,19 @@ export class Verify extends BaseContract {
   UNINITIALIZED(overrides?: CallOverrides): Promise<number>;
 
   add(
-    id_: BigNumberish,
+    data_: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   approve(
     account_: string,
+    data_: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   ban(
     account_: string,
+    data_: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -400,12 +463,25 @@ export class Verify extends BaseContract {
 
   remove(
     account_: string,
+    data_: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   renounceRole(
     role: BytesLike,
     account: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  requestBan(
+    account_: string,
+    data_: BytesLike,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  requestRemove(
+    account_: string,
+    data_: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -419,8 +495,7 @@ export class Verify extends BaseContract {
     account_: string,
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, number, number, number] & {
-      id: BigNumber;
+    [number, number, number] & {
       addedSince: number;
       approvedSince: number;
       bannedSince: number;
@@ -431,8 +506,7 @@ export class Verify extends BaseContract {
     arg0: string,
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, number, number, number] & {
-      id: BigNumber;
+    [number, number, number] & {
       addedSince: number;
       approvedSince: number;
       bannedSince: number;
@@ -441,12 +515,11 @@ export class Verify extends BaseContract {
 
   statusAtBlock(
     state_: {
-      id: BigNumberish;
       addedSince: BigNumberish;
       approvedSince: BigNumberish;
       bannedSince: BigNumberish;
     },
-    blockNumber: BigNumberish,
+    blockNumber_: BigNumberish,
     overrides?: CallOverrides
   ): Promise<number>;
 
@@ -472,11 +545,19 @@ export class Verify extends BaseContract {
 
     UNINITIALIZED(overrides?: CallOverrides): Promise<number>;
 
-    add(id_: BigNumberish, overrides?: CallOverrides): Promise<void>;
+    add(data_: BytesLike, overrides?: CallOverrides): Promise<void>;
 
-    approve(account_: string, overrides?: CallOverrides): Promise<void>;
+    approve(
+      account_: string,
+      data_: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
-    ban(account_: string, overrides?: CallOverrides): Promise<void>;
+    ban(
+      account_: string,
+      data_: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
@@ -492,11 +573,27 @@ export class Verify extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    remove(account_: string, overrides?: CallOverrides): Promise<void>;
+    remove(
+      account_: string,
+      data_: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     renounceRole(
       role: BytesLike,
       account: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    requestBan(
+      account_: string,
+      data_: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    requestRemove(
+      account_: string,
+      data_: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -510,8 +607,7 @@ export class Verify extends BaseContract {
       account_: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, number, number, number] & {
-        id: BigNumber;
+      [number, number, number] & {
         addedSince: number;
         approvedSince: number;
         bannedSince: number;
@@ -522,8 +618,7 @@ export class Verify extends BaseContract {
       arg0: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, number, number, number] & {
-        id: BigNumber;
+      [number, number, number] & {
         addedSince: number;
         approvedSince: number;
         bannedSince: number;
@@ -532,12 +627,11 @@ export class Verify extends BaseContract {
 
     statusAtBlock(
       state_: {
-        id: BigNumberish;
         addedSince: BigNumberish;
         approvedSince: BigNumberish;
         bannedSince: BigNumberish;
       },
-      blockNumber: BigNumberish,
+      blockNumber_: BigNumberish,
       overrides?: CallOverrides
     ): Promise<number>;
 
@@ -548,45 +642,105 @@ export class Verify extends BaseContract {
   };
 
   filters: {
-    "Add(address,uint256)"(
+    "Approve(address,address,bytes)"(
+      approver?: string | null,
       account?: string | null,
-      id?: BigNumberish | null
+      data?: null
     ): TypedEventFilter<
-      [string, BigNumber],
-      { account: string; id: BigNumber }
+      [string, string, string],
+      { approver: string; account: string; data: string }
     >;
-
-    Add(
-      account?: string | null,
-      id?: BigNumberish | null
-    ): TypedEventFilter<
-      [string, BigNumber],
-      { account: string; id: BigNumber }
-    >;
-
-    "Approve(address)"(
-      account?: string | null
-    ): TypedEventFilter<[string], { account: string }>;
 
     Approve(
-      account?: string | null
-    ): TypedEventFilter<[string], { account: string }>;
+      approver?: string | null,
+      account?: string | null,
+      data?: null
+    ): TypedEventFilter<
+      [string, string, string],
+      { approver: string; account: string; data: string }
+    >;
 
-    "Ban(address)"(
-      account?: string | null
-    ): TypedEventFilter<[string], { account: string }>;
+    "Ban(address,address,bytes)"(
+      banner?: string | null,
+      account?: string | null,
+      data?: null
+    ): TypedEventFilter<
+      [string, string, string],
+      { banner: string; account: string; data: string }
+    >;
 
     Ban(
-      account?: string | null
-    ): TypedEventFilter<[string], { account: string }>;
+      banner?: string | null,
+      account?: string | null,
+      data?: null
+    ): TypedEventFilter<
+      [string, string, string],
+      { banner: string; account: string; data: string }
+    >;
 
-    "Remove(address)"(
-      account?: string | null
-    ): TypedEventFilter<[string], { account: string }>;
+    "Remove(address,address,bytes)"(
+      remover?: string | null,
+      account?: string | null,
+      data?: null
+    ): TypedEventFilter<
+      [string, string, string],
+      { remover: string; account: string; data: string }
+    >;
 
     Remove(
-      account?: string | null
-    ): TypedEventFilter<[string], { account: string }>;
+      remover?: string | null,
+      account?: string | null,
+      data?: null
+    ): TypedEventFilter<
+      [string, string, string],
+      { remover: string; account: string; data: string }
+    >;
+
+    "RequestApprove(address,bytes)"(
+      account?: string | null,
+      data?: null
+    ): TypedEventFilter<[string, string], { account: string; data: string }>;
+
+    RequestApprove(
+      account?: string | null,
+      data?: null
+    ): TypedEventFilter<[string, string], { account: string; data: string }>;
+
+    "RequestBan(address,address,bytes)"(
+      requestor?: string | null,
+      account?: string | null,
+      data?: null
+    ): TypedEventFilter<
+      [string, string, string],
+      { requestor: string; account: string; data: string }
+    >;
+
+    RequestBan(
+      requestor?: string | null,
+      account?: string | null,
+      data?: null
+    ): TypedEventFilter<
+      [string, string, string],
+      { requestor: string; account: string; data: string }
+    >;
+
+    "RequestRemove(address,address,bytes)"(
+      requestor?: string | null,
+      account?: string | null,
+      data?: null
+    ): TypedEventFilter<
+      [string, string, string],
+      { requestor: string; account: string; data: string }
+    >;
+
+    RequestRemove(
+      requestor?: string | null,
+      account?: string | null,
+      data?: null
+    ): TypedEventFilter<
+      [string, string, string],
+      { requestor: string; account: string; data: string }
+    >;
 
     "RoleAdminChanged(bytes32,bytes32,bytes32)"(
       role?: BytesLike | null,
@@ -661,17 +815,19 @@ export class Verify extends BaseContract {
     UNINITIALIZED(overrides?: CallOverrides): Promise<BigNumber>;
 
     add(
-      id_: BigNumberish,
+      data_: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     approve(
       account_: string,
+      data_: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     ban(
       account_: string,
+      data_: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -694,12 +850,25 @@ export class Verify extends BaseContract {
 
     remove(
       account_: string,
+      data_: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     renounceRole(
       role: BytesLike,
       account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    requestBan(
+      account_: string,
+      data_: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    requestRemove(
+      account_: string,
+      data_: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -715,12 +884,11 @@ export class Verify extends BaseContract {
 
     statusAtBlock(
       state_: {
-        id: BigNumberish;
         addedSince: BigNumberish;
         approvedSince: BigNumberish;
         bannedSince: BigNumberish;
       },
-      blockNumber: BigNumberish,
+      blockNumber_: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -750,17 +918,19 @@ export class Verify extends BaseContract {
     UNINITIALIZED(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     add(
-      id_: BigNumberish,
+      data_: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     approve(
       account_: string,
+      data_: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     ban(
       account_: string,
+      data_: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -783,12 +953,25 @@ export class Verify extends BaseContract {
 
     remove(
       account_: string,
+      data_: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     renounceRole(
       role: BytesLike,
       account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    requestBan(
+      account_: string,
+      data_: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    requestRemove(
+      account_: string,
+      data_: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -810,12 +993,11 @@ export class Verify extends BaseContract {
 
     statusAtBlock(
       state_: {
-        id: BigNumberish;
         addedSince: BigNumberish;
         approvedSince: BigNumberish;
         bannedSince: BigNumberish;
       },
-      blockNumber: BigNumberish,
+      blockNumber_: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

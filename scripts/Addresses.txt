@@ -15,19 +15,19 @@ VerifyTier deployed to:  0x20d0dDfD6B9F811D98803a9Fb5D476cB3c604D60
 ___________________
 
 - Mumbai:
-BFactory deployed to:  0x4CF14d695F3E5751bF0187a96A669Bc984aE0721
-SmartPoolManager deployed to:  0x727111dCEDB2e2D3Db7B91C0e36bEB9A6C747bf9
-BalancerSafeMath deployed to:  0x5fE2Db9d47e61E2f1A0F8F5DB14A223D864457b5
-RightsManager deployed to:  0xCd213886863DD1b319273e5bc2C0AC7176E0dD87
-CRPFactory deployed to:  0xF67E15b53E20132a335da4f04B01c03E8eaE37e7
-RedeemableERC20Factory deployed to:  0x1C64601bF478C54c52B452c713d0ADB7Fa8E45C4 (verified)
-RedeemableERC20PoolFactory deployed to:  0xf19e36CB03FD23E93Bc832C7aE9B751AC52B74f3 (verified)
-SeedERC20Factory deployed to:  0x874D72FD39F2b0e2d6D08eF306c802333f57e553 (verified)
-Trust factory deployed to:  0xc141A58F905be7fC67A316cAa26176A0d4084bC6 (verified)
+BFactory deployed to:  0x279fd7C01D8dffF1Cb5363b8c3081C4c59717840
+SmartPoolManager deployed to:  0x34cB7e20E2Acf06f4cD0D117ce2F4A1FaEf1A117
+BalancerSafeMath deployed to:  0x5dD887f82269473c61C3465b7a6f605EC0764A8c
+RightsManager deployed to:  0x2103E66a813E75E7E08576CFD1f7631c4E11fF11
+CRPFactory deployed to:  0x11d838267BD457b9D4aaCBE7a68cAF510940655f
+RedeemableERC20Factory deployed to:  0x302A96FA8ed6e4cc7cB7AA657Ad89A5dC63b3Cc1
+RedeemableERC20PoolFactory deployed to:  0xF07423d13789309286754837ABb005170AF0477D
+SeedERC20Factory deployed to:  0x39b11b788170FE42Dd0fB82c0907d5b61AAdc84e
+Trust factory deployed to:  0x3F5D9314d1483564106f53B390D2B15F87D11E52
 -- aux --
-Verify factory deployed to:  0x6c6AB71428Ae3F69B739c0b7B125c5f0950Af93C (verified)
-Verify child deployed to:  0x39F5746E330893408dE0C08313d3186FeB3E6df2 (verified)
-VerifyTier deployed to:  0x92f9d256855913cC1C4E5a2C6347c4F17642d9aB (verified)
+Verify factory deployed to:  0xbcB4789dBb306eA8A31AAEE36096459f67f4DE9e (verified)
+Verify child deployed to:  0xaDc2De2E4013dBC3ef6DA843d263eaC2eCFB0A80 (verified)
+VerifyTier deployed to:  0x80b7223d1eEC343904d062455d4ce8262b3806d2 (verified)
 ___________________________
 
 - Fuji
