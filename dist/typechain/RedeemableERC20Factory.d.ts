@@ -95,11 +95,10 @@ export class RedeemableERC20Factory extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    "createChild((address,string,string,address,uint8,uint256))"(
+    "createChild((address,(string,string),address,uint8,uint256))"(
       config_: {
         admin: string;
-        name: string;
-        symbol: string;
+        erc20Config: { name: string; symbol: string };
         tier: string;
         minimumStatus: BigNumberish;
         totalSupply: BigNumberish;
@@ -118,11 +117,10 @@ export class RedeemableERC20Factory extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  "createChild((address,string,string,address,uint8,uint256))"(
+  "createChild((address,(string,string),address,uint8,uint256))"(
     config_: {
       admin: string;
-      name: string;
-      symbol: string;
+      erc20Config: { name: string; symbol: string };
       tier: string;
       minimumStatus: BigNumberish;
       totalSupply: BigNumberish;
@@ -141,11 +139,10 @@ export class RedeemableERC20Factory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    "createChild((address,string,string,address,uint8,uint256))"(
+    "createChild((address,(string,string),address,uint8,uint256))"(
       config_: {
         admin: string;
-        name: string;
-        symbol: string;
+        erc20Config: { name: string; symbol: string };
         tier: string;
         minimumStatus: BigNumberish;
         totalSupply: BigNumberish;
@@ -172,11 +169,10 @@ export class RedeemableERC20Factory extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    "createChild((address,string,string,address,uint8,uint256))"(
+    "createChild((address,(string,string),address,uint8,uint256))"(
       config_: {
         admin: string;
-        name: string;
-        symbol: string;
+        erc20Config: { name: string; symbol: string };
         tier: string;
         minimumStatus: BigNumberish;
         totalSupply: BigNumberish;
@@ -196,11 +192,10 @@ export class RedeemableERC20Factory extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    "createChild((address,string,string,address,uint8,uint256))"(
+    "createChild((address,(string,string),address,uint8,uint256))"(
       config_: {
         admin: string;
-        name: string;
-        symbol: string;
+        erc20Config: { name: string; symbol: string };
         tier: string;
         minimumStatus: BigNumberish;
         totalSupply: BigNumberish;

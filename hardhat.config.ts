@@ -92,6 +92,11 @@ const config:any = {
       accounts: process.env.MNEMONIC !== undefined ? {mnemonic: process.env.MNEMONIC} : [process.env.MUMBAI_PRIVATE_KEY],
       gasPrice: 10e9,
     },
+    polygon: {
+      url: "https://rpc-mainnet.maticvigil.com",
+      accounts: [ process.env.POLYGON_PRIVATE_KEY],
+      gasPrice: 20e9
+    },
     avalanche: {
       url: 'https://api.avax.network/ext/bc/C/rpc',
       gasPrice: 225000000000,

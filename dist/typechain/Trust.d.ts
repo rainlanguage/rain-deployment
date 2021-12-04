@@ -27,7 +27,6 @@ interface TrustInterface extends ethers.utils.Interface {
     "getContracts()": FunctionFragment;
     "getDistributionProgress()": FunctionFragment;
     "getDistributionStatus()": FunctionFragment;
-    "getTrustConfig()": FunctionFragment;
     "minimumCreatorRaise()": FunctionFragment;
     "pool()": FunctionFragment;
     "redeemInit()": FunctionFragment;
@@ -60,10 +59,6 @@ interface TrustInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getDistributionStatus",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getTrustConfig",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -118,10 +113,6 @@ interface TrustInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getDistributionStatus",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getTrustConfig",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -260,32 +251,6 @@ export class Trust extends BaseContract {
 
     getDistributionStatus(overrides?: CallOverrides): Promise<[number]>;
 
-    getTrustConfig(
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        [
-          string,
-          BigNumber,
-          string,
-          string,
-          BigNumber,
-          number,
-          number,
-          BigNumber
-        ] & {
-          creator: string;
-          minimumCreatorRaise: BigNumber;
-          seedERC20Factory: string;
-          seeder: string;
-          seederFee: BigNumber;
-          seederUnits: number;
-          seederCooldownDuration: number;
-          redeemInit: BigNumber;
-        }
-      ]
-    >;
-
     minimumCreatorRaise(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     pool(overrides?: CallOverrides): Promise<[string]>;
@@ -362,30 +327,6 @@ export class Trust extends BaseContract {
 
   getDistributionStatus(overrides?: CallOverrides): Promise<number>;
 
-  getTrustConfig(
-    overrides?: CallOverrides
-  ): Promise<
-    [
-      string,
-      BigNumber,
-      string,
-      string,
-      BigNumber,
-      number,
-      number,
-      BigNumber
-    ] & {
-      creator: string;
-      minimumCreatorRaise: BigNumber;
-      seedERC20Factory: string;
-      seeder: string;
-      seederFee: BigNumber;
-      seederUnits: number;
-      seederCooldownDuration: number;
-      redeemInit: BigNumber;
-    }
-  >;
-
   minimumCreatorRaise(overrides?: CallOverrides): Promise<BigNumber>;
 
   pool(overrides?: CallOverrides): Promise<string>;
@@ -460,30 +401,6 @@ export class Trust extends BaseContract {
 
     getDistributionStatus(overrides?: CallOverrides): Promise<number>;
 
-    getTrustConfig(
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        string,
-        BigNumber,
-        string,
-        string,
-        BigNumber,
-        number,
-        number,
-        BigNumber
-      ] & {
-        creator: string;
-        minimumCreatorRaise: BigNumber;
-        seedERC20Factory: string;
-        seeder: string;
-        seederFee: BigNumber;
-        seederUnits: number;
-        seederCooldownDuration: number;
-        redeemInit: BigNumber;
-      }
-    >;
-
     minimumCreatorRaise(overrides?: CallOverrides): Promise<BigNumber>;
 
     pool(overrides?: CallOverrides): Promise<string>;
@@ -534,8 +451,6 @@ export class Trust extends BaseContract {
 
     getDistributionStatus(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getTrustConfig(overrides?: CallOverrides): Promise<BigNumber>;
-
     minimumCreatorRaise(overrides?: CallOverrides): Promise<BigNumber>;
 
     pool(overrides?: CallOverrides): Promise<BigNumber>;
@@ -580,8 +495,6 @@ export class Trust extends BaseContract {
     getDistributionStatus(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
-
-    getTrustConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     minimumCreatorRaise(
       overrides?: CallOverrides

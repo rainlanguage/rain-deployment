@@ -41,24 +41,12 @@ RedeemableERC20PoolFactory deployed to:  0xbBEB09Fe86536d66C43f76BFdc30e8802Fb7e
 SeedERC20Factory deployed to:  0xd1db393d3dEdE96ECF48CFED9De5f5ebE2df7d6F (verified) - sourcify
 Trust factory deployed to:  0x1E4432F8d3f16A41c79640a93dF221dEAa022f50 (verified) - sourcify
 
-- Ropsten:
-BFactory deployed to:  0xf4e8CeCC75280b1AEA8d6D37c88A1EeE7940b4e6 (verified) - etherscan and sourcify
-SmartPoolManager deployed to:  0x0C98Cb0d611F9Ba63034F1efd70aFEC1566F202E (verified) - etherscan and sourcify
-BalancerSafeMath deployed to:  0xdeDC4c86FbdFc14A543f15371579cbDD698377Fe (verified) - etherscan and sourcify
-RightsManager deployed to:  0xf1ce093711B6C60735AcfAAf924bb49d6791fA1D (verified) - etherscan and sourcify
-CRPFactory deployed to:  0x24D051624A41049A2e2ecbeC39eBEBA5001bF910 (verified) - etherscan and sourcify
-RedeemableERC20Factory deployed to:  0xA278f4C5b91386acB6899052e0bD93CC7aDa03Bf (verified) - etherscan and sourcify
-RedeemableERC20PoolFactory deployed to:  0xA5171C2bdb7f3862a44Af3cd4d30848CA78E0461 (verified) - etherscan and sourcify
-SeedERC20Factory deployed to:  0xc984859b5667E8abd95C6534cC6490199B51732D (verified) - etherscan and sourcify
-Trust factory deployed to:  0x565F26BfF52ecBF11336C022633d0B2E49Cd0bcc (verified) - etherscan and sourcify
-
-- Rinkeby 
-BFactory deployed to:  0xfc8d6a2f19Ec0f1C381c06162473Ee40aC1A360F (verified) - etherscan and sourcify
-SmartPoolManager deployed to:  0xFb4489D263b903E14E8706B42938d53BD636AE49 (verified) - etherscan and sourcify
-BalancerSafeMath deployed to:  0x93ccf2fca66F1135239873f51cCca91fD9C5Af6e (verified) - etherscan and sourcify
-RightsManager deployed to:  0x35e7b1C4cF02555Ab12f608DF15220A441b488F3 (verified) - etherscan and sourcify
-CRPFactory deployed to:  0x9dcFF52074943e29e0Ae9C5e484ddc5881aed8A2 (verified) - etherscan and sourcify
-RedeemableERC20Factory deployed to:  0xd0A109EC3a3094352654Fe7e1c486A50d4e976cd (verified) - etherscan and sourcify
-RedeemableERC20PoolFactory deployed to:  0xD8de02E1b85Ef954F938EE6dabeDa7b2241663B4 (verified) - etherscan and sourcify
-SeedERC20Factory deployed to:  0xEB3e554C121C481541989Ed96dEdf9457632fA3d (verified) - etherscan and sourcify
-Trust factory deployed to:  0x50385fD9C47fC33964438699542330Df4813c11c (verified) - etherscan and sourcify
+- Polygon Mainnet
+BFactory deployed to: 0xAF57a2eDEB0cFC20306E2B59Ed973fc10262d0c5
+SmartPoolManager deployed to: 0x6705200B867DE5E41164c5DFeE68D0F2B53Babef
+BalancerSafeMath deployed to: 0xF5A46454f64180e68F84df28F3798d2eB9089DA0
+RightsManager deployed to: 0x8A66Cc8A831A6ac783E5a0cf3A4943bd6C0ab334
+CRPFactory deployed to: 0x10d237b7263A052Ec0e2B4a8BF3454E5E7006446
+RedeemableERC20Factory deployed to:  0x31aa5951100e11b8A34Bc9D98a44De152Dc5d3a2
+RedeemableERC20PoolFactory deployed to:  0xd5d4373f3ac5846acede555debd9a13d318c0678
+SeedERC20Factory deployed to:  0xA102dd20ABD37F519e26Bbec9987BEE000cb86CF

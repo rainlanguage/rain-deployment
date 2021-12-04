@@ -21,13 +21,22 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface SeedERC20FactoryInterface extends ethers.utils.Interface {
   functions: {
-    "createChild(bytes)": FunctionFragment;
+    "createChild((address,address,uint256,uint16,uint16,(string,string)))": FunctionFragment;
     "isChild(address)": FunctionFragment;
   };
 
   encodeFunctionData(
     functionFragment: "createChild",
-    values: [BytesLike]
+    values: [
+      {
+        reserve: string;
+        recipient: string;
+        seedPrice: BigNumberish;
+        seedUnits: BigNumberish;
+        cooldownDuration: BigNumberish;
+        erc20Config: { name: string; symbol: string };
+      }
+    ]
   ): string;
   encodeFunctionData(functionFragment: "isChild", values: [string]): string;
 
@@ -90,21 +99,20 @@ export class SeedERC20Factory extends BaseContract {
   interface: SeedERC20FactoryInterface;
 
   functions: {
-    "createChild(bytes)"(
-      data_: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    "createChild((address,address,uint256,uint16,uint16,string,string))"(
+    "createChild((address,address,uint256,uint16,uint16,(string,string)))"(
       config_: {
         reserve: string;
         recipient: string;
         seedPrice: BigNumberish;
         seedUnits: BigNumberish;
         cooldownDuration: BigNumberish;
-        name: string;
-        symbol: string;
+        erc20Config: { name: string; symbol: string };
       },
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    "createChild(bytes)"(
+      data_: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -114,21 +122,20 @@ export class SeedERC20Factory extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  "createChild(bytes)"(
-    data_: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  "createChild((address,address,uint256,uint16,uint16,string,string))"(
+  "createChild((address,address,uint256,uint16,uint16,(string,string)))"(
     config_: {
       reserve: string;
       recipient: string;
       seedPrice: BigNumberish;
       seedUnits: BigNumberish;
       cooldownDuration: BigNumberish;
-      name: string;
-      symbol: string;
+      erc20Config: { name: string; symbol: string };
     },
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  "createChild(bytes)"(
+    data_: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -138,21 +145,20 @@ export class SeedERC20Factory extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    "createChild(bytes)"(
-      data_: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    "createChild((address,address,uint256,uint16,uint16,string,string))"(
+    "createChild((address,address,uint256,uint16,uint16,(string,string)))"(
       config_: {
         reserve: string;
         recipient: string;
         seedPrice: BigNumberish;
         seedUnits: BigNumberish;
         cooldownDuration: BigNumberish;
-        name: string;
-        symbol: string;
+        erc20Config: { name: string; symbol: string };
       },
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    "createChild(bytes)"(
+      data_: BytesLike,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -170,21 +176,20 @@ export class SeedERC20Factory extends BaseContract {
   };
 
   estimateGas: {
-    "createChild(bytes)"(
-      data_: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    "createChild((address,address,uint256,uint16,uint16,string,string))"(
+    "createChild((address,address,uint256,uint16,uint16,(string,string)))"(
       config_: {
         reserve: string;
         recipient: string;
         seedPrice: BigNumberish;
         seedUnits: BigNumberish;
         cooldownDuration: BigNumberish;
-        name: string;
-        symbol: string;
+        erc20Config: { name: string; symbol: string };
       },
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    "createChild(bytes)"(
+      data_: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -195,21 +200,20 @@ export class SeedERC20Factory extends BaseContract {
   };
 
   populateTransaction: {
-    "createChild(bytes)"(
-      data_: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "createChild((address,address,uint256,uint16,uint16,string,string))"(
+    "createChild((address,address,uint256,uint16,uint16,(string,string)))"(
       config_: {
         reserve: string;
         recipient: string;
         seedPrice: BigNumberish;
         seedUnits: BigNumberish;
         cooldownDuration: BigNumberish;
-        name: string;
-        symbol: string;
+        erc20Config: { name: string; symbol: string };
       },
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "createChild(bytes)"(
+      data_: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

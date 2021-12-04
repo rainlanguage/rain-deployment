@@ -21,7 +21,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface TrustFactoryInterface extends ethers.utils.Interface {
   functions: {
-    "createChild((address,uint256,address,uint256,uint16,uint16,uint256),(string,string,address,uint8,uint256),(address,uint256,uint256,uint256,uint256))": FunctionFragment;
+    "createChild((address,uint256,address,uint256,uint16,uint16,uint256,(string,string)),((string,string),address,uint8,uint256),(address,uint256,uint256,uint256,uint256))": FunctionFragment;
     "isChild(address)": FunctionFragment;
     "redeemableERC20Factory()": FunctionFragment;
     "redeemableERC20PoolFactory()": FunctionFragment;
@@ -39,10 +39,10 @@ interface TrustFactoryInterface extends ethers.utils.Interface {
         seederUnits: BigNumberish;
         seederCooldownDuration: BigNumberish;
         redeemInit: BigNumberish;
+        seedERC20Config: { name: string; symbol: string };
       },
       {
-        name: string;
-        symbol: string;
+        erc20Config: { name: string; symbol: string };
         tier: string;
         minimumStatus: BigNumberish;
         totalSupply: BigNumberish;
@@ -141,7 +141,7 @@ export class TrustFactory extends BaseContract {
   interface: TrustFactoryInterface;
 
   functions: {
-    "createChild((address,uint256,address,uint256,uint16,uint16,uint256),(string,string,address,uint8,uint256),(address,uint256,uint256,uint256,uint256))"(
+    "createChild((address,uint256,address,uint256,uint16,uint16,uint256,(string,string)),((string,string),address,uint8,uint256),(address,uint256,uint256,uint256,uint256))"(
       trustFactoryTrustConfig_: {
         creator: string;
         minimumCreatorRaise: BigNumberish;
@@ -150,10 +150,10 @@ export class TrustFactory extends BaseContract {
         seederUnits: BigNumberish;
         seederCooldownDuration: BigNumberish;
         redeemInit: BigNumberish;
+        seedERC20Config: { name: string; symbol: string };
       },
       trustFactoryTrustRedeemableERC20Config_: {
-        name: string;
-        symbol: string;
+        erc20Config: { name: string; symbol: string };
         tier: string;
         minimumStatus: BigNumberish;
         totalSupply: BigNumberish;
@@ -185,7 +185,7 @@ export class TrustFactory extends BaseContract {
     seedERC20Factory(overrides?: CallOverrides): Promise<[string]>;
   };
 
-  "createChild((address,uint256,address,uint256,uint16,uint16,uint256),(string,string,address,uint8,uint256),(address,uint256,uint256,uint256,uint256))"(
+  "createChild((address,uint256,address,uint256,uint16,uint16,uint256,(string,string)),((string,string),address,uint8,uint256),(address,uint256,uint256,uint256,uint256))"(
     trustFactoryTrustConfig_: {
       creator: string;
       minimumCreatorRaise: BigNumberish;
@@ -194,10 +194,10 @@ export class TrustFactory extends BaseContract {
       seederUnits: BigNumberish;
       seederCooldownDuration: BigNumberish;
       redeemInit: BigNumberish;
+      seedERC20Config: { name: string; symbol: string };
     },
     trustFactoryTrustRedeemableERC20Config_: {
-      name: string;
-      symbol: string;
+      erc20Config: { name: string; symbol: string };
       tier: string;
       minimumStatus: BigNumberish;
       totalSupply: BigNumberish;
@@ -229,7 +229,7 @@ export class TrustFactory extends BaseContract {
   seedERC20Factory(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
-    "createChild((address,uint256,address,uint256,uint16,uint16,uint256),(string,string,address,uint8,uint256),(address,uint256,uint256,uint256,uint256))"(
+    "createChild((address,uint256,address,uint256,uint16,uint16,uint256,(string,string)),((string,string),address,uint8,uint256),(address,uint256,uint256,uint256,uint256))"(
       trustFactoryTrustConfig_: {
         creator: string;
         minimumCreatorRaise: BigNumberish;
@@ -238,10 +238,10 @@ export class TrustFactory extends BaseContract {
         seederUnits: BigNumberish;
         seederCooldownDuration: BigNumberish;
         redeemInit: BigNumberish;
+        seedERC20Config: { name: string; symbol: string };
       },
       trustFactoryTrustRedeemableERC20Config_: {
-        name: string;
-        symbol: string;
+        erc20Config: { name: string; symbol: string };
         tier: string;
         minimumStatus: BigNumberish;
         totalSupply: BigNumberish;
@@ -281,7 +281,7 @@ export class TrustFactory extends BaseContract {
   };
 
   estimateGas: {
-    "createChild((address,uint256,address,uint256,uint16,uint16,uint256),(string,string,address,uint8,uint256),(address,uint256,uint256,uint256,uint256))"(
+    "createChild((address,uint256,address,uint256,uint16,uint16,uint256,(string,string)),((string,string),address,uint8,uint256),(address,uint256,uint256,uint256,uint256))"(
       trustFactoryTrustConfig_: {
         creator: string;
         minimumCreatorRaise: BigNumberish;
@@ -290,10 +290,10 @@ export class TrustFactory extends BaseContract {
         seederUnits: BigNumberish;
         seederCooldownDuration: BigNumberish;
         redeemInit: BigNumberish;
+        seedERC20Config: { name: string; symbol: string };
       },
       trustFactoryTrustRedeemableERC20Config_: {
-        name: string;
-        symbol: string;
+        erc20Config: { name: string; symbol: string };
         tier: string;
         minimumStatus: BigNumberish;
         totalSupply: BigNumberish;
@@ -326,7 +326,7 @@ export class TrustFactory extends BaseContract {
   };
 
   populateTransaction: {
-    "createChild((address,uint256,address,uint256,uint16,uint16,uint256),(string,string,address,uint8,uint256),(address,uint256,uint256,uint256,uint256))"(
+    "createChild((address,uint256,address,uint256,uint16,uint16,uint256,(string,string)),((string,string),address,uint8,uint256),(address,uint256,uint256,uint256,uint256))"(
       trustFactoryTrustConfig_: {
         creator: string;
         minimumCreatorRaise: BigNumberish;
@@ -335,10 +335,10 @@ export class TrustFactory extends BaseContract {
         seederUnits: BigNumberish;
         seederCooldownDuration: BigNumberish;
         redeemInit: BigNumberish;
+        seedERC20Config: { name: string; symbol: string };
       },
       trustFactoryTrustRedeemableERC20Config_: {
-        name: string;
-        symbol: string;
+        erc20Config: { name: string; symbol: string };
         tier: string;
         minimumStatus: BigNumberish;
         totalSupply: BigNumberish;
