@@ -50,4 +50,4 @@ CRPFactory deployed to: 0x10d237b7263A052Ec0e2B4a8BF3454E5E7006446
 RedeemableERC20Factory deployed to:  0x31aa5951100e11b8A34Bc9D98a44De152Dc5d3a2
 RedeemableERC20PoolFactory deployed to:  0xd5d4373f3ac5846acede555debd9a13d318c0678
 SeedERC20Factory deployed to:  0xA102dd20ABD37F519e26Bbec9987BEE000cb86CF
-Trust factory deployed to:  
+Trust factory deployed to:  0x8f72c8dd9a16a86519497d57fa7123268f95d9d1
