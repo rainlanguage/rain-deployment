@@ -62,7 +62,7 @@ async function main() {
         BFactoryAddress
     ];
     const RedeemableERC20PoolFactoryAddress = (
-        await deploy(RedeemableERC20PoolFactory, signer, ReedERC20PoolFactArgs)
+        await deploy(RedeemableERC20PoolFactory, signer, [ReedERC20PoolFactArgs])
     );
     console.log('- RedeemableERC20PoolFactory deployed to: ', RedeemableERC20PoolFactoryAddress);
     exportArgs(RedeemableERC20PoolFactory, ReedERC20PoolFactArgs, deployId);
@@ -75,7 +75,7 @@ async function main() {
         RedeemableERC20PoolFactoryAddress,
         SeedERC20FactoryAddress
     ];
-    const TrustFactoryAddress = await deploy(TrustFactory, signer, TrustFactoryArgs);
+    const TrustFactoryAddress = await deploy(TrustFactory, signer, [TrustFactoryArgs]);
     console.log('- Trust factory deployed to: ', TrustFactoryAddress);
     exportArgs(TrustFactory, TrustFactoryArgs, deployId);
 }

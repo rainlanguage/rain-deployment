@@ -10,6 +10,11 @@ import "@reef-defi/hardhat-reef";
 
 dotenv.config();
 
+//Custom tasks
+import "./scripts/hardhat-tasks/deploy-verify-tier";
+import "./scripts/hardhat-tasks/deploy-rain.ts";
+import "./scripts/hardhat-tasks/create-trust.ts";
+
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
 task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
