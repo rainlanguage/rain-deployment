@@ -5,7 +5,7 @@ import { expect } from "chai";
 import * as Util from "./Utils"
 
 const checkSumAddress = ethers.utils.getAddress;
-const FACTORY_ADDRESS = "0x415FE28416c0747070b254Aa3C571C985f0865b5"; //reef
+const FACTORY_ADDRESS = "0xDF6AB8e57267E2e31C99D14ee1259C062B814a17"; //reef
 
 import type { TierByConstructionClaim } from "../../dist/typechain/TierByConstructionClaim";
 import type { ReadWriteTier } from "../../dist/typechain/ReadWriteTier";
@@ -78,8 +78,8 @@ enum Tier {
     console.log("Reserve deployed to: " + reserveAddress)
   
     // Properties 
-    const tokenName = "Token";
-    const tokenSymbol = "TKN";
+    const erc20Config = { name: "Token", symbol: "TKN" };
+    const seedERC20Config = { name: "SeedToken", symbol: "SDT" };
   
     const reserveInit = ethers.BigNumber.from("2000" + Util.sixZeros);
     const redeemInit = ethers.BigNumber.from("2000" + Util.sixZeros);
@@ -137,10 +137,10 @@ enum Tier {
         seederUnits: seedUnits,
         seederCooldownDuration,
         redeemInit,
+        seedERC20Config
       },
       {
-        name: tokenName,
-        symbol: tokenSymbol,
+        erc20Config,
         tier: readWriteTierAddress,
         minimumStatus,
         totalSupply: totalTokenSupply,
@@ -273,4 +273,9 @@ enum Tier {
     console.log("RedeemableERC20 redeemed")
 }
   
-  main();
+  main()
+    .then(() => process.exit(0))
+    .catch((error) => {
+      console.error(error);
+      process.exit(1);
+    });

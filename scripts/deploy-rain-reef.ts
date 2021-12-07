@@ -79,4 +79,9 @@ async function main() {
     console.log('- Trust factory deployed to: ', TrustFactoryAddress);
     exportArgs(TrustFactory, TrustFactoryArgs, deployId);
 }
-main();
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

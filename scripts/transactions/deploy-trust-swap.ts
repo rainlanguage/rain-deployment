@@ -3,7 +3,7 @@ import { expect } from "chai";
 import * as Util from "./Utils"
 const checkSumAddress = ethers.utils.getAddress;
 
-const FACTORY_ADDRESS = "0x191F93ce7E36D56DAffbDf1D91443fd9D4dCf59D"; //mumbai
+const FACTORY_ADDRESS = "0x9F0CD7aCCf2e361aA228AdaCEAFEfbAA29C9fb4d"; //mumbai
 
 import type { TierByConstructionClaim } from "../../dist/typechain/TierByConstructionClaim";
 import type { ReadWriteTier } from "../../dist/typechain/ReadWriteTier";
@@ -73,8 +73,8 @@ enum Tier {
     const reserve = (new ethers.Contract( reserveAddress , RESERVE_TOKEN.abi , signers[0] )) as ReserveToken;
     console.log("Reserve deployed to: " + reserveAddress)
   
-    const tokenName = "Token";
-    const tokenSymbol = "TKN";
+    const erc20Config = { name: "Token", symbol: "TKN" };
+    const seedERC20Config = { name: "SeedToken", symbol: "SDT" };
   
     const reserveInit = ethers.BigNumber.from("2000" + Util.sixZeros);
     const redeemInit = ethers.BigNumber.from("2000" + Util.sixZeros);
@@ -133,10 +133,10 @@ enum Tier {
         seederUnits: seedUnits,
         seederCooldownDuration,
         redeemInit,
+        seedERC20Config
       },
       {
-        name: tokenName,
-        symbol: tokenSymbol,
+        erc20Config,
         tier: readWriteTierAddress,
         minimumStatus,
         totalSupply: totalTokenSupply,
@@ -251,4 +251,9 @@ enum Tier {
     console.log("RedeemableERC20 redeemed")
 }
   
-  main();
+  main()
+    .then(() => process.exit(0))
+    .catch((error) => {
+      console.error(error);
+      process.exit(1);
+    });

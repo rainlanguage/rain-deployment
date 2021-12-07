@@ -74,8 +74,8 @@ async function main() {
 
   // Trust properties
   const minimumStatus = Tier.NIL;
-  const tokenName = "Token";
-  const tokenSymbol = "TKN";
+  const erc20Config = { name: "Token", symbol: "TKN" };
+  const seedERC20Config = { name: "SeedToken", symbol: "SDT" };
   const reserveInit = ethers.BigNumber.from("2000" + sixZeros);
   const redeemInit = ethers.BigNumber.from("2000" + sixZeros);
   const totalTokenSupply = ethers.BigNumber.from("2000" + eighteenZeros);
@@ -102,11 +102,11 @@ async function main() {
       seederUnits,
       seederCooldownDuration,
       redeemInit,
+      seedERC20Config
     },
     {
       // The trustFactoryTrustRedeemableERC20Config_
-      name: tokenName,
-      symbol: tokenSymbol,
+      erc20Config,
       tier: tierAddress,
       minimumStatus,
       totalSupply: totalTokenSupply,

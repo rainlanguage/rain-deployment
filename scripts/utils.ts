@@ -10,19 +10,13 @@ const TrustFactory = require("../dist/artifacts/contracts/trust/TrustFactory.sol
 export async function deploy(artifact:any, signer:any, argmts:any[] | any) {
     const iface = new ethers.utils.Interface(artifact.abi)
     const factory = new ethers.ContractFactory(iface, artifact.bytecode, signer)
-    // const overrides = {
-    //   gasPrice: ethers.BigNumber.from("40000000000"),
-    //   gasLimit: ethers.BigNumber.from("20000000")
-    // };
-    const contract = await factory.deploy(
-      argmts, 
-      {
+    const overrides = {
         nonce: 20,
         gasPrice: ethers.BigNumber.from("75000000000"),
         gasLimit: ethers.BigNumber.from("20000000")
-      }
-    );
-    console.log(contract.deployTransaction)
+    };
+    const contract = await factory.deploy(argmts);
+    // console.log(contract.deployTransaction)
     await contract.deployTransaction.wait()
     return contract.address
 }

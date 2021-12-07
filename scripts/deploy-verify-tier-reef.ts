@@ -19,8 +19,7 @@ async function main() {
     const admin = "0xa96Bf6d23694F9A11490F1Bb7e51cA08ca9157a2"; // addr: 5Hg4whs2ntWvnbsbzDVBGh5WRLDbgjngnqakeiz31g2LFSDP 
 
     // Deploying VerifyFactory
-    // const VerifyFactoryAddress = await deploy(VerifyFactoryJson, signer, []);
-    const VerifyFactoryAddress = "0x58001242EFdCe6b667af5889deE44eb65BaE825A";
+    const VerifyFactoryAddress = await deploy(VerifyFactoryJson, signer, []);
     console.log('- Verify factory deployed to: ', VerifyFactoryAddress);
 
     const Vfactory = (
@@ -44,4 +43,9 @@ async function main() {
     const VerifyTierAddress = await deploy(VerifyTier, signer, VerifyAddress);
     console.log('- VerifyTier deployed to: ', VerifyTierAddress);
 }
-main();
+main()
+    .then(() => process.exit(0))
+    .catch((error) => {
+    console.error(error);
+    process.exit(1);
+    });
