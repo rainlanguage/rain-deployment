@@ -15,7 +15,7 @@ export async function deploy(artifact:any, signer:any, argmts:any[] | any) {
         gasPrice: ethers.BigNumber.from("75000000000"),
         gasLimit: ethers.BigNumber.from("20000000")
     };
-    const contract = await factory.deploy(argmts);
+    const contract = await factory.deploy(...argmts);
     // console.log(contract.deployTransaction)
     await contract.deployTransaction.wait()
     return contract.address

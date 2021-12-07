@@ -40,7 +40,7 @@ async function main() {
     // console.log('- Verify deployed to: ', VerifyAddress);
 
     // Deploying VerifyTier
-    const VerifyTierAddress = await deploy(VerifyTier, signer, VerifyAddress);
+    const VerifyTierAddress = await deploy(VerifyTier, signer, [VerifyAddress]);
     console.log('- VerifyTier deployed to: ', VerifyTierAddress);
 
 }
