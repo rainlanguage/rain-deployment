@@ -107,7 +107,7 @@ const config:any = {
       url: 'https://api.avax-test.network/ext/bc/C/rpc',
       gasPrice: 25000000000,
       chainId: 43113,
-      accounts: process.env.AVALANCHE_PRIVATE_KEY !== undefined ? [process.env.AVALANCHE_PRIVATE_KEY] : [],
+      accounts: process.env.MNEMONIC !== undefined ? {mnemonic: process.env.MNEMONIC} : [process.env.AVALANCHE_PRIVATE_KEY],
     },
     rinkeby: {
       url: process.env.RINKEBY_URL || "",
