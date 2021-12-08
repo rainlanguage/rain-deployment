@@ -21,6 +21,7 @@ task(
         const Vfactory = (
             new hre.ethers.Contract(VerifyFactoryAddress , VerifyFactoryJson.abi , signers[0] )
         ) as VerifyFactory;
+        console.log(taskArguments.adminAddress);
         const tx = await Vfactory["createChild(address)"](taskArguments.adminAddress);
         const receipt = await tx.wait();
         const topic = receipt.events?.filter((x) => x.event == "NewContract")[0].topics[1]!

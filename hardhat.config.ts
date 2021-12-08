@@ -119,6 +119,18 @@ const config:any = {
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
       gasPrice: 10e9,
     },
+    fantom: {
+      url: "https://rpc.ftm.tools/",
+      chainId: 250,
+      accounts: process.env.MNEMONIC !== undefined ? {mnemonic: process.env.MNEMONIC} : [process.env.MUMBAI_PRIVATE_KEY],
+      gasPrice: 225000000000,
+    },
+    fantom_testnet: {
+      url: "https://rpc.testnet.fantom.network",
+      chainId: 4002,
+      accounts: process.env.MNEMONIC !== undefined ? {mnemonic: process.env.MNEMONIC} : [process.env.MUMBAI_PRIVATE_KEY],
+      gasPrice: 225000000000,
+    }
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,

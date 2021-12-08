@@ -35,7 +35,7 @@ task(
         console.log('- BFactory deployed to: ', BFactoryAddress);
 
         // Deploying CRP
-        const SmartPoolManagerAddress = "await deploy(SmartPoolManager, signer, [], hre)";
+        const SmartPoolManagerAddress = await deploy(SmartPoolManager, signer, [], hre);
         console.log('- SmartPoolManager deployed to: ', SmartPoolManagerAddress);
 
         const BalancerSafeMathAddress = await deploy(BalancerSafeMath, signer, [], hre);
