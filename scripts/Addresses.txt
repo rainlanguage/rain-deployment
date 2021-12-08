@@ -63,16 +63,16 @@ VerifyTier deployed to:  0x25ACA096cbEF597Aa3B99CDD747805e58d1aea81
 ___________________________
 
 - Fantom Testnet
-BFactory deployed to:  0xc50aAf61BAE0b5c69DAf59aED1Fe8dC793C44595 (verified)
-SmartPoolManager deployed to:  0xFB7Cd2084f0C745193DF635413dFbc1a682bD494 (verified)
-BalancerSafeMath deployed to:  0x16D33236D7Af17ca55E60EcE64e9F6CeD32Ba416 (verified)
-RightsManager deployed to:  0xa018eAB945De7e8073d1995284b78FC0cfE45B76 (verified)
-CRPFactory deployed to:  0x333F9355Bc47A22f64ac5C5F3d7cC5408544851f
-RedeemableERC20Factory deployed to:  0xbA9Ce92a65e172ADd70A71B6E280D9941fb9185C (verified)
-RedeemableERC20PoolFactory deployed to:  0xcF75a4bc22AD40D6DA6f57b5174D39D28bC85a96 (verified)
-SeedERC20Factory deployed to:  0x34A0946CEAD3417E629B2679D05C0A24d49a1eB4 (verified)
-Trust factory deployed to:  0xa76F06F09346141977cF652A1EDFD09D779AA22a (verified)
+BFactory deployed to:  0x66EB2ba594f6a2160a5d2C6436C212F0E16e7684 (verified)
+SmartPoolManager deployed to:  0x9FbA4876bBb2d139D2151DC04444099D3B3dC99d (verified)
+BalancerSafeMath deployed to:  0x23e2A8564a6B0A74fa4297A1a1CddD2A0250c047 (verified)
+RightsManager deployed to:  0xc0D32D37D69cCeB4019913a74DDfb05DfCC9C183 (verified)
+CRPFactory deployed to:  0x795D6340DFbC87660d48554827f05a4eb504453e
+RedeemableERC20Factory deployed to:  0x73B1363ffd4A722C663FdD403A4E2f432715Ac73 (verified)
+RedeemableERC20PoolFactory deployed to:  0x2923289858521F52284cb4339156Ef3B8e5711C3 (verified)
+SeedERC20Factory deployed to:  0xf75A66C535FbE97BeEcd1a465E32C8AfD846765D (verified)
+Trust factory deployed to:  0x2b730c060FFA83Ce5D2B29016591874f31405A23 (verified)
 -- aux --- (with 0.8.10)
-Verify factory deployed to:  0xD5D4373F3ac5846ACEdE555DEbD9a13D318c0678 (verified)
-Verify child deployed to:  0x701A846c1BfEc3917F5fBD6a49294790a63f7441
-VerifyTier deployed to:  0x8F72c8dD9A16A86519497D57fa7123268f95D9d1 (verified)
+Verify factory deployed to:  0x42e7fD29921fEAA880301095c32AF20ad3222D2C (verified)
+Verify child deployed to:  0x1f3E35A786F6Df86C7a501b57C4D343B097ea422
+VerifyTier deployed to:  0xaDb1efb43D0e5Dad2BA68F3750652493e1Ca8859 (verified)
