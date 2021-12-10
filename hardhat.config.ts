@@ -130,6 +130,13 @@ const config:any = {
       chainId: 4002,
       accounts: process.env.MNEMONIC !== undefined ? {mnemonic: process.env.MNEMONIC} : [process.env.MUMBAI_PRIVATE_KEY],
       gasPrice: 225000000000,
+    },
+    arbitrum: {
+
+    },
+    arbitrum_testnet: {
+      url: "https://rinkeby.arbitrum.io/rpc",
+      chainId: "421611"
     }
   },
   gasReporter: {
