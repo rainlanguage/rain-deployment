@@ -76,3 +76,15 @@ Trust factory deployed to:  0x2b730c060FFA83Ce5D2B29016591874f31405A23 (verified
 Verify factory deployed to:  0x42e7fD29921fEAA880301095c32AF20ad3222D2C (verified)
 Verify child deployed to:  0x1f3E35A786F6Df86C7a501b57C4D343B097ea422
 VerifyTier deployed to:  0xaDb1efb43D0e5Dad2BA68F3750652493e1Ca8859 (verified)
+
+- Polygon - d6e1d217bdc58d5baee248fa40ad364d68c1c68f
+RedeemableERC20Factory: 0x000d44350a4340b129681c95c7b35433d3fa9142
+RedeemableERC20PoolFactory:  0x42e7fD29921fEAA880301095c32AF20ad3222D2C
+SeedERC20Factory: 0x272d49FAd91cefb9Aba87c6A7ae63b6AE3eac007
+Trust Factory: 0xaDb1efb43D0e5Dad2BA68F3750652493e1Ca8859
+
+- Mumbai - d6e1d217bdc58d5baee248fa40ad364d68c1c68f
+RedeemableERC20Factory deployed to:  0xd893FA42B025766e33C8f1f6E2544Be28F7beFD9
+RedeemableERC20PoolFactory deployed to:  0x6Ba3c3849a4bB29618998a4E65372fE457300d88
+SeedERC20Factory deployed to:  0x72AAF9dDA7e43f17847892c6409495B9E827A2Df
+Trust factory deployed to:  0xD84c71011BAFD6dF8d1e14A0aE5Cb9F0ceA78533
