@@ -1,5 +1,5 @@
-import { ethers } from "hardhat";
 import {
+    getSigner,
     deploy, 
     linkBytecode, 
     exportArgs,
@@ -15,19 +15,16 @@ const SmartPoolManager = require(`@beehiveinnovation/configurable-rights-pool/ar
 const BalancerSafeMath = require(`@beehiveinnovation/configurable-rights-pool/artifacts/BalancerSafeMath.json`);
 
 // Rain protocol
-// const RedeemableERC20Factory = require("@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/artifacts/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json")
-// const RedeemableERC20PoolFactory = require("@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/artifacts/contracts/pool/RedeemableERC20PoolFactory.sol/RedeemableERC20PoolFactory.json")
-// const SeedERC20Factory = require("@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/artifacts/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json")
-// const TrustFactory = require("@beehiveinnovation/rain-protocol/dist/e07af1be5703ebddd8faf546df1e98f23164c253/artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json")
-const RedeemableERC20Factory = require("../dist/artifacts/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json")
-const RedeemableERC20PoolFactory = require("../dist/artifacts/contracts/pool/RedeemableERC20PoolFactory.sol/RedeemableERC20PoolFactory.json")
-const SeedERC20Factory = require("../dist/artifacts/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json")
-const TrustFactory = require("../dist/artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json")
+const RedeemableERC20Factory = require("../dist/artifacts/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json");
+const RedeemableERC20PoolFactory = require("../dist/artifacts/contracts/pool/RedeemableERC20PoolFactory.sol/RedeemableERC20PoolFactory.json");
+const SeedERC20Factory = require("../dist/artifacts/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json");
+const TrustFactory = require("../dist/artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json");
+
 
 async function main() {
-    const signers = await ethers.getSigners();
+    const deployId = await getDeployID();
+    const signers = await getSigner();
     const signer = signers[0];
-    const deployId = getDeployID();
 
     // Deploying Balancer
     const BFactoryAddress = await deploy(BFactory, signer, []);
@@ -53,7 +50,7 @@ async function main() {
     const CRPFactoryAddress = await deploy(_CRPFactory, signer, []);
     console.log('- CRPFactory deployed to: ', CRPFactoryAddress);
 
-    // Deploying Rain Protocol
+    // // Deploying Rain Protocol
     const RedeemableERC20FactoryAddress = await deploy(RedeemableERC20Factory, signer, []);
     console.log('- RedeemableERC20Factory deployed to: ', RedeemableERC20FactoryAddress);
 
@@ -78,9 +75,12 @@ async function main() {
     const TrustFactoryAddress = await deploy(TrustFactory, signer, [TrustFactoryArgs]);
     console.log('- Trust factory deployed to: ', TrustFactoryAddress);
     exportArgs(TrustFactory, TrustFactoryArgs, deployId);
-}
+};
+
 main()
-    .then(() => process.exit(0))
+    .then((a) => {
+        process.exit(0)
+    })
     .catch((error) => {
     console.error(error);
     process.exit(1);

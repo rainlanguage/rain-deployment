@@ -1,10 +1,9 @@
 {
   "scripts": {
-    "deploy-verify": "hardhat deploy-verify-tier --admin-address",
-    "deploy-rain-protocol": "hardhat deploy-rain",
-    "create-trust": "hardhat create-trust --factory-address",
+    "deploy-rain": "npx hardhat run scripts/deploy-rain.ts --network",
+    "deploy-verify": "func() {export AdminAddress=$1; npx hardhat run scripts/deploy-verify-tier.ts --network \"$2\";}; func",
+    "create-trust": "func() {export TrustFactory=$1; npx hardhat run scripts/create-trust.ts --network \"$2\";}; func",
     "compile": "hardhat compile --force",
-    "task-beta": "func() { npx hardhat deploy-rain --balancer-factory \"$1\" --balancer-safemath \"$2\" --rights-manager \"$3\"  --smartpool-manager \"$4\" --crp-factory \"$5\" --network \"$6\"; }; func"
   },
   "dependencies": {
     "@beehiveinnovation/balancer-core": "^0.0.7",

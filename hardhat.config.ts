@@ -10,11 +10,6 @@ import "@reef-defi/hardhat-reef";
 
 dotenv.config();
 
-//Custom tasks
-import "./scripts/hardhat-tasks/deploy-verify-tier";
-import "./scripts/hardhat-tasks/deploy-rain.ts";
-import "./scripts/hardhat-tasks/create-trust.ts";
-
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
 task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
@@ -131,12 +126,14 @@ const config:any = {
       accounts: process.env.MNEMONIC !== undefined ? {mnemonic: process.env.MNEMONIC} : [process.env.MUMBAI_PRIVATE_KEY],
       gasPrice: 225000000000,
     },
-    arbitrum: {
+    // arbitrum: {
 
-    },
+    // },
     arbitrum_testnet: {
       url: "https://rinkeby.arbitrum.io/rpc",
-      chainId: "421611"
+      chainId: 421611,
+      accounts: process.env.MNEMONIC !== undefined ? {mnemonic: process.env.MNEMONIC} : [],
+      gasPrice: 225000000000
     }
   },
   gasReporter: {

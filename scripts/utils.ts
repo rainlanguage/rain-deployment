@@ -1,27 +1,77 @@
-import { EtherscanProvider } from "@ethersproject/providers"
+import hre from "hardhat";
 import { ethers, artifacts, network } from "hardhat"
-const fs = require('fs')
+import fs from "fs";
+// const fs = require('fs');
+const config = require("../deployment-config.json");
 
-const RedeemableERC20Factory = require("../dist/artifacts/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json")
-const RedeemableERC20PoolFactory = require("../dist/artifacts/contracts/pool/RedeemableERC20PoolFactory.sol/RedeemableERC20PoolFactory.json")
-const SeedERC20Factory = require("../dist/artifacts/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json")
-const TrustFactory = require("../dist/artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json")
+import ConfigurableRightsPoolJson from "@beehiveinnovation/configurable-rights-pool/artifacts/ConfigurableRightsPool.json";
+import BPoolJson from "@beehiveinnovation/configurable-rights-pool/artifacts/BPool.json";
+import TrustJson from "../dist/artifacts/contracts/trust/Trust.sol/Trust.json";
 
-export async function deploy(artifact:any, signer:any, argmts:any[] | any) {
-    const iface = new ethers.utils.Interface(artifact.abi)
-    const factory = new ethers.ContractFactory(iface, artifact.bytecode, signer)
-    const overrides = {
-        nonce: 20,
-        gasPrice: ethers.BigNumber.from("75000000000"),
-        gasLimit: ethers.BigNumber.from("20000000")
-    };
-    const contract = await factory.deploy(...argmts);
-    // console.log(contract.deployTransaction)
-    await contract.deployTransaction.wait()
-    return contract.address
+import type { Trust } from "../dist/typechain/Trust";
+import type { RedeemableERC20Pool } from "../dist/typechain/RedeemableERC20Pool";
+import type { ConfigurableRightsPool } from "../dist/typechain/ConfigurableRightsPool";
+import type { BPool } from "../dist/typechain/BPool";
+
+export enum Tier {
+  NIL,
+  COPPER,
+  BRONZE,
+  SILVER,
+  GOLD,
+  PLATINUM,
+  DIAMOND,
+  CHAD,
+  JAWAD,
 }
 
-export function linkBytecode(bytecode:any, links:any) {
+export const eighteenZeros = "000000000000000000";
+export const sixZeros = "000000";
+
+export const checkNetwork = async () => {
+    let network:any;
+        try {
+            network =  await ethers.provider.getNetwork();
+        } catch (error) {
+            try {
+                network =  await (await hre.reef.getProvider()).getNetwork();
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    return network;
+};
+
+export const getSigner = async (): Promise<any> => {
+    const network = await checkNetwork();
+    try {
+        const signers =  network.name != "reef" ? 
+            await hre.ethers.getSigners() : await hre.reef.getSigners();
+        return signers;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+export const deploy = async (artifact:any, signer:any, argmts:any[] | any) => {
+    const networkName= hre.network.name ? hre.network.name : "networkName";
+    if(config.network[networkName] && config.network[networkName][artifact.contractName]){
+        return config.network[networkName][artifact.contractName];
+    } else {
+        const iface = new hre.ethers.utils.Interface(artifact.abi)
+        const factory = new hre.ethers.ContractFactory(iface, artifact.bytecode, signer)
+        const overrides = (await checkNetwork()).name != "reef" ? config.deploy_config : {};
+        const contract = await factory.deploy(...argmts, overrides);
+        if (config.show_tx) {
+            console.log("Nonce:", contract.deployTransaction.nonce);
+            console.log("Tx hash:", contract.deployTransaction.hash);
+        }
+        await contract.deployTransaction.wait();
+        return contract.address;
+    }
+}
+
+export const linkBytecode = (bytecode:any, links:any) => {
     Object.keys(links).forEach(library_name => {
       const library_address = links[library_name];
       const regex = new RegExp(`__${library_name}_+`, "g");
@@ -31,42 +81,7 @@ export function linkBytecode(bytecode:any, links:any) {
     return bytecode;
 }
 
-export async function deployFromTx(artifact:any, signer:any) {
-    const tx = {
-        data: artifact.deploy_tx,
-        chainId: await signer.provider.send('eth_chainId')
-    }
-    const deployTx = await signer.sendTransaction(tx)
-    return deployTx.creates
-}
-
-export async function factoriesDeploy(crpFactory: string, balancerFactory: string, signer:any) {
-    const redeemableERC20FactoryAddress = await deploy(RedeemableERC20Factory, signer, []);
-    console.log('- RedeemableERC20Factory deployed to: ', redeemableERC20FactoryAddress);
-    
-    const redeemableERC20PoolFactoryAddress = await deploy(RedeemableERC20PoolFactory, signer, [
-      crpFactory,
-      balancerFactory
-    ]);
-    console.log('- RedeemableERC20PoolFactory deployed to: ', redeemableERC20PoolFactoryAddress);
-    
-    const seedERC20FactoryAddress = await deploy(SeedERC20Factory, signer, []);
-    console.log('- SeedERC20Factory deployed to: ', seedERC20FactoryAddress);
-
-    const trustFactoryAddress = await deploy(TrustFactory, signer, [
-      redeemableERC20FactoryAddress,
-      redeemableERC20PoolFactoryAddress,
-      seedERC20FactoryAddress
-    ]);
-    return {
-      redeemableERC20FactoryAddress,
-      redeemableERC20PoolFactoryAddress,
-      seedERC20FactoryAddress,
-      trustFactoryAddress,
-    };
-  };
-
-  export function exportArgs(artifact:any, args:string[], deployId:string) {
+export const exportArgs = (artifact:any, args:string[], deployId:string) => {
     let pathTo = `${__dirname}/verification/${deployId}`;
     checkPath(pathTo);
     pathTo = `${pathTo}/arguments.json`;
@@ -79,37 +94,131 @@ export async function factoriesDeploy(crpFactory: string, balancerFactory: strin
     writeFile(pathTo, JSON.stringify(content, null, 4));
   }
 
-  export function getDeployID() {
-    const networkName= network.name ? network.name : "networkName";
+export const getDeployID = async() => {
+    const networkName= hre.network.name ? hre.network.name : "networkName";
     const date = new Date(Date.now())
-      .toLocaleString('en-GB', {timeStyle:"medium", dateStyle:"medium"})
-      .replace(", ","-").replace(/ /g, "").replace(/:/g, "");
+        .toLocaleString('en-GB', {timeStyle:"medium", dateStyle:"medium"})
+        .replace(", ","-").replace(/ /g, "").replace(/:/g, "");
     return `${networkName}-${date}`;
-  }
+}
 
-  function fetchFile(_path:string) {
+const fetchFile = (_path:string) => {
     try {
-      return JSON.parse(fs.readFileSync(_path).toString())
+        return JSON.parse(fs.readFileSync(_path).toString())
     } catch (error) {
-      console.log(error)
-      return {}
-    }
-  }
-
-  function writeFile(_path:string, file:any) {
-    try {
-      fs.writeFileSync(_path, file);
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  function checkPath(_path:string) {
-    if(!fs.existsSync(_path)) {
-      try {
-        fs.mkdirSync(_path);
-      } catch (error) {
         console.log(error)
-      }
+        return {}
     }
-  }
+}
+
+const writeFile = (_path:string, file:any) => {
+    try {
+        fs.writeFileSync(_path, file);
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const checkPath = (_path:string) => {
+    if(!fs.existsSync(_path)) {
+        try {
+        fs.mkdirSync(_path);
+        } catch (error) {
+        console.log(error)
+        }
+    }
+}
+
+export const trustDeploy = async (
+    trustFactory: any,
+    creator: any,
+    ...args: any
+  ) => {
+    const tx = await trustFactory[
+      // "createChild((address,uint256,address,uint256,uint16,uint16,uint256),(string,string,address,uint8,uint256),(address,uint256,uint256,uint256,uint256))"
+      "createChild((address,uint256,address,uint256,uint16,uint16,uint256,(string,string)),((string,string),address,uint8,uint256),(address,uint256,uint256,uint256,uint256))"
+    ](...args);
+    const receipt = await tx.wait();
+  
+    // Getting the address, and get the contract abstraction
+    const trust = new hre.ethers.Contract(
+      hre.ethers.utils.hexZeroPad(
+        hre.ethers.utils.hexStripZeros(
+          receipt.events?.filter(
+            (x: any) =>
+              x.event == "NewContract" &&
+              hre.ethers.utils.getAddress(x.address) ==
+                hre.ethers.utils.getAddress(trustFactory.address)
+          )[0].topics[1]
+        ),
+        20 // address bytes length
+      ),
+      TrustJson.abi,
+      creator
+    ) as Trust;
+  
+    if (!hre.ethers.utils.isAddress(trust.address)) {
+      throw new Error(
+        `invalid trust address: ${trust.address} (${trust.address.length} chars)`
+      );
+    }
+  
+    await trust.deployed();
+  
+    return trust;
+  };
+
+export const poolContracts = async (
+    signers: any,
+    pool: RedeemableERC20Pool
+    ): Promise<[ConfigurableRightsPool, BPool]> => {
+    const crp = new hre.ethers.Contract(
+        await pool.crp(),
+        ConfigurableRightsPoolJson.abi,
+        signers[0]
+    ) as ConfigurableRightsPool;
+    const bPool = new hre.ethers.Contract(
+        await crp.bPool(),
+        BPoolJson.abi,
+        signers[0]
+    ) as BPool;
+    return [crp, bPool];
+};
+
+export function timeout(ms:any) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+  
+export const waitForBlock = async (blockNumber:any, networkInfo:any, ): Promise<any> => {
+    const currentBlock = await getActualBlock(networkInfo);
+
+    if (currentBlock >= blockNumber) {
+        return;
+    }
+
+    console.log({
+        currentBlock,
+        awaitingBlock: blockNumber,
+    });
+
+    await timeout(2000);
+
+    return await waitForBlock(blockNumber, networkInfo);
+};
+
+export const getContract = async (address:string, abi:any, signer:any, networkInfo:any, ) => {
+    if (networkInfo.name != "reef") {
+        return new hre.ethers.Contract( address , abi , signer);
+    } else {
+        return hre.reef.getContractAt(abi, address, signer);
+    }
+}
+
+export const getActualBlock = async (networkInfo?:any):Promise<number> => {
+    if(networkInfo){
+        return networkInfo.name != "reef" ? 
+          await hre.ethers.provider.getBlockNumber() : await (await hre.reef.getProvider()).getBlockNumber();
+    } else {
+        return await getActualBlock(await checkNetwork());
+    }
+};
