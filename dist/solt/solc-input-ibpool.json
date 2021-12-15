@@ -1,0 +1,31 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/pool/IBPool.sol": {
+      "content": "// SPDX-License-Identifier: CAL\npragma solidity ^0.8.10;\n\ninterface IBPool {\n    function getBalance(address token) external view returns (uint256);\n\n    function gulp(address token) external;\n}"
+    }
+  },
+  "settings": {
+    "metadata": {
+      "useLiteralContent": true
+    },
+    "optimizer": {
+      "enabled": true,
+      "runs": 100000
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers"
+        ],
+        "": [
+          "id",
+          "ast"
+        ]
+      }
+    }
+  }
+}

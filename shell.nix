@@ -2,7 +2,7 @@ let
  pkgs = import <nixpkgs> {};
 
    flush-all = pkgs.writeShellScriptBin "flush-all" ''
-    rm -rf node_modules
+    # rm -rf node_modules
     rm -rf artifacts
     rm -rf cache
     rm -rf typechain
@@ -25,10 +25,11 @@ let
   '';
 
   cut-dist = pkgs.writeShellScriptBin "cut-dist" ''
-
-
-    # flush-all
-    copy-commit $1
+    if [ -z "$1" ]; then echo "ERROR: Missing commit argument. Exiting..."; exit 0; fi
+    flush-all
+    commit=$1; copy-commit $1
+    sed -i '$s/.*/COMMIT='$commit'/' .env
+    sed -i '$s/.*/COMMIT='$commit'/' .env.example
     hardhat compile --force
     rm -rf dist
     mkdir -p "dist"
@@ -40,7 +41,7 @@ let
   '';
 
   copy-commit = pkgs.writeShellScriptBin "copy-commit" ''
-    (cd rain-protocol; git checkout $1)
+    (cd rain-protocol; git checkout develop; git pull; git checkout $1)
     rm -rf contracts; cp -r rain-protocol/contracts ./
   '';
 

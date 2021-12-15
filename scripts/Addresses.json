@@ -1,0 +1,23 @@
+{
+    "e89d90ce13440c44e829ab77de1ab21402d32e23": {
+        "polygon": {
+            "RedeemableERC20Factory": "0x31aa5951100e11b8A34Bc9D98a44De152Dc5d3a2",
+            "RedeemableERC20PoolFactory": "0xd5d4373f3ac5846acede555debd9a13d318c0678",
+            "SeedERC20Factory": "0xA102dd20ABD37F519e26Bbec9987BEE000cb86CF",
+            "TrustFactory": "0x8f72c8dd9a16a86519497d57fa7123268f95d9d1"
+        }
+    },
+    "d6e1d217bdc58d5baee248fa40ad364d68c1c68f": {
+        "mumbai": {
+            "RedeemableERC20Factory": "0xd893FA42B025766e33C8f1f6E2544Be28F7beFD9",
+            "RedeemableERC20PoolFactory": "0x6Ba3c3849a4bB29618998a4E65372fE457300d88",
+            "SeedERC20Factory": "0x72AAF9dDA7e43f17847892c6409495B9E827A2Df",
+            "TrustFactory": "0xD84c71011BAFD6dF8d1e14A0aE5Cb9F0ceA78533"
+        }
+    },
+    "9fc3971751e2e134526aca44596e6fe168c16dd1": {
+        "polygon": {
+            "TrustFactory": "0x19B5aCe714b7231Fa6596e25e4E15CcDc5dc09eA"
+        }
+    }
+}

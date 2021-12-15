@@ -1,8 +1,10 @@
 import hre from "hardhat";
 import { ethers, artifacts, network } from "hardhat"
 import fs from "fs";
-// const fs = require('fs');
 const config = require("../deployment-config.json");
+const bookAddresses = require("./Addresses.json");
+const commit:any = process.env.COMMIT;
+const BALANCER_NAMES = ["BFactory", "SmartPoolManager", "BalancerSafeMath", "RightsManager", "CRPFactory"];
 
 import ConfigurableRightsPoolJson from "@beehiveinnovation/configurable-rights-pool/artifacts/ConfigurableRightsPool.json";
 import BPoolJson from "@beehiveinnovation/configurable-rights-pool/artifacts/BPool.json";
@@ -53,10 +55,54 @@ export const getSigner = async (): Promise<any> => {
     }
 };
 
+const checkContract = async (contractName:string, networkName:string):Promise<string>=> {
+    if(config.network[networkName] && config.network[networkName][contractName]){
+        return config.network[networkName][contractName];
+    } else if (
+        bookAddresses[commit] && 
+        bookAddresses[commit][networkName] && 
+        bookAddresses[commit][networkName][contractName]
+    ) {
+        return bookAddresses[commit][networkName][contractName];
+    } else {
+        return '';
+    }
+};
+
+const writeAddress = async (address:string, contractName:string, networkName:string) => {
+    let pathTo, content;
+    if(BALANCER_NAMES.includes(contractName)) {
+        pathTo = __dirname.replace("scripts", "deployment-config.json");
+        content = fs.existsSync(pathTo) ? fetchFile(pathTo) : {};
+        if(!content.network.hasOwnProperty(networkName)){
+            content.nework[networkName] = {};
+        }
+        if(!content.network[networkName].hasOwnProperty(contractName)){
+            content.network[networkName][contractName]  = {};
+        }
+        content.network[networkName][contractName] = address;
+    } else {
+        pathTo = __dirname + "/Addresses.json";
+        content = fs.existsSync(pathTo) ? fetchFile(pathTo) : {};
+        if(!content.hasOwnProperty(commit)){
+            content[commit] = {};
+        }
+        if(!content[commit].hasOwnProperty(networkName)) {
+            content[commit][networkName] = {};
+        }
+        if(!content[commit][networkName].hasOwnProperty(contractName)) {
+            content[commit][networkName][contractName] = {};
+        }
+        content[commit][networkName][contractName] = address;
+    }
+    writeFile(pathTo, JSON.stringify(content, null, 4));
+};
+
 export const deploy = async (artifact:any, signer:any, argmts:any[] | any) => {
-    const networkName= hre.network.name ? hre.network.name : "networkName";
-    if(config.network[networkName] && config.network[networkName][artifact.contractName]){
-        return config.network[networkName][artifact.contractName];
+    const networkName = hre.network.name ? hre.network.name : "networkName";
+    const address = await checkContract(artifact.contractName, networkName);
+    if (address) {
+        return address;
     } else {
         const iface = new hre.ethers.utils.Interface(artifact.abi)
         const factory = new hre.ethers.ContractFactory(iface, artifact.bytecode, signer)
@@ -67,6 +113,7 @@ export const deploy = async (artifact:any, signer:any, argmts:any[] | any) => {
             console.log("Tx hash:", contract.deployTransaction.hash);
         }
         await contract.deployTransaction.wait();
+        await writeAddress(contract.address, artifact.contractName, networkName);
         return contract.address;
     }
 }

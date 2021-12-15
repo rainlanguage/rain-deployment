@@ -50,7 +50,7 @@ async function main() {
     const CRPFactoryAddress = await deploy(_CRPFactory, signer, []);
     console.log('- CRPFactory deployed to: ', CRPFactoryAddress);
 
-    // // Deploying Rain Protocol
+    // Deploying Rain Protocol
     const RedeemableERC20FactoryAddress = await deploy(RedeemableERC20Factory, signer, []);
     console.log('- RedeemableERC20Factory deployed to: ', RedeemableERC20FactoryAddress);
 
