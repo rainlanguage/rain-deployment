@@ -1,6 +1,7 @@
-# Tools used in this repo
-Yarn: `v1.22.10`
-Solt: `0.5.2`
+**Tools used in this repo**
+
+- Yarn: `v1.22.10`
+- Solt: `0.5.2`
 
 Before start to deploy and run scrips, fill your own enviroment file - the repository provide a template which we STRICLY recommend use. To start, run the nix-shell which will check if you have all the dependencies installed: 
 ```shell
@@ -34,7 +35,7 @@ deploy-verify <ADMIN_ADDRESS> <NETWORK>
  - If the Rain Contract are already deployed to the `NETWORK`, stored on the `Addresses.json` file AND have the same commit stored, those contract will NOT be deployed. This avoid waste time, and redeploy existing commits, take that on count. In this case, just will create a new `Verify` contract from a `VerifyFactory` that already exist on the `NETWORK` that have the same commit that the project.
 
 # Create a trust
-You can create a trust with a basic config. Onyl is necesary provide a `TRUST_FACTORY_ADDRESS` and the `NETWORK` which correspond that factory. To create the trust, run the following script inside `nix-shell`:
+You can create a trust with a basic config. Only is necesary provide a `TRUST_FACTORY_ADDRESS` and the `NETWORK` which correspond that factory. To create the trust, run the following script inside `nix-shell`:
 ```shell
 create-trust <TRUST_FACTORY_ADDRESS> <NETWORK>
 ```
