@@ -1,4 +1,3 @@
-# TODO Add doc
 # Tools used in this repo
 Yarn: `v1.22.10`
 Solt: `0.5.2`
