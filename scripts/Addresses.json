@@ -17,6 +17,9 @@
     },
     "9fc3971751e2e134526aca44596e6fe168c16dd1": {
         "polygon": {
+            "RedeemableERC20Factory": "0x7B5e7D03757aa39D046794FF7D4C47b6aE7067B9",
+            "RedeemableERC20PoolFactory": "0x819a15d401cf3556f3f329fca3391c5f5580d5b3",
+            "SeedERC20Factory": "0xD0a805b687bD17263700B8939C5f4534399370cB",
             "TrustFactory": "0x19B5aCe714b7231Fa6596e25e4E15CcDc5dc09eA"
         }
     }
