@@ -1,13 +1,7 @@
 import { ethers } from "hardhat";
-const { MAX_STORAGE_LIMIT } = require("@reef-defi/evm-provider");
+import { MAX_STORAGE_LIMIT } from "@reef-defi/evm-provider";
 import * as Util from "./utils";
-import { 
-  getSigner,  
-  checkNetwork, 
-  getContract, 
-  getActualBlock
-} from "./utils";
-
+import { getSigner, checkNetwork, getContract, getActualBlock } from "./utils";
 
 import type { TierByConstructionClaim } from "../dist/typechain/TierByConstructionClaim";
 import type { ReadWriteTier } from "../dist/typechain/ReadWriteTier";
@@ -17,10 +11,9 @@ import type { RedeemableERC20Pool } from "../dist/typechain/RedeemableERC20Pool"
 import type { RedeemableERC20 } from "../dist/typechain/RedeemableERC20";
 import type { TrustFactory } from "../dist/typechain/TrustFactory";
 
-// Until we get the new version in @beehiveinnovation package or using 
+// Until we get the new version in @beehiveinnovation package or using
 // directly the sub-module, compile with the new hardhat config, and target to those artifacts
 const TRUSTFACTORY = require("../dist/artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json");
-const TRUST = require("../dist/artifacts/contracts/trust/Trust.sol/Trust.json");
 const SEED = require("../dist/artifacts/contracts/seed/SeedERC20.sol/SeedERC20.json");
 const POOL = require("../dist/artifacts/contracts/pool/RedeemableERC20Pool.sol/RedeemableERC20Pool.json");
 const REDEEMABLEERC20 = require("../dist/artifacts/contracts/redeemableERC20/RedeemableERC20.sol/RedeemableERC20.json");
@@ -30,46 +23,35 @@ const RESERVE_TOKEN = require("../dist/artifacts/contracts/test/ReserveToken.sol
 const READWRITE_TIER = require("../dist/artifacts/contracts/tier/ReadWriteTier.sol/ReadWriteTier.json");
 const TIERBYCONSTRUCTION = require("../dist/artifacts/contracts/claim/TierByConstructionClaim.sol/TierByConstructionClaim.json");
 
-const FactoryAddress:any = process.env.TrustFactory;
-
-enum Tier {
-  ZERO,
-  ONE,
-  TWO,
-  THREE,
-  FOUR,
-  FIVE,
-  SIX,
-  SEVEN,
-  EIGHT,
-}
+const FactoryAddress: any = process.env.TrustFactory;
 
 /**
-* Events
-*
-* [x] TierByConstructionClaim
-* [x] -> Claim
-* [x] -> TierChange
-*
-* [x] Factory -> IFactory.NewContract
-*
-* [x] Phased -> PhaseShiftScheduled
-* [x] RedeemableERC20 -> Redeem
-* [x] RedeemableERC20 -> AddRedeemable
-*
-* OZ ERC20
-* [x]   -> Transfer
-*
-*/
+ * Events
+ *
+ * [x] TierByConstructionClaim
+ * [x] -> Claim
+ * [x] -> TierChange
+ *
+ * [x] Factory -> IFactory.NewContract
+ *
+ * [x] Phased -> PhaseShiftScheduled
+ * [x] RedeemableERC20 -> Redeem
+ * [x] RedeemableERC20 -> AddRedeemable
+ *
+ * OZ ERC20
+ * [x]   -> Transfer
+ *
+ */
 
 async function main() {
-  const config = { gasLimit: 20000000 }
-    
+  const config = { gasLimit: 20000000 };
+
   const networkInfo = await checkNetwork();
   const signers = await getSigner();
-  const configFactory = networkInfo.name != "reef" ? 
-    config : { customData: { storageLimit: MAX_STORAGE_LIMIT } };
-
+  const configFactory =
+    networkInfo.name !== "reef"
+      ? config
+      : { customData: { storageLimit: MAX_STORAGE_LIMIT } };
 
   const creator = signers[0];
   const seeder = signers[1]; // seeder is not creator/owner
@@ -77,8 +59,13 @@ async function main() {
   const trader1 = signers[3];
 
   const reserveAddress = await Util.deploy(RESERVE_TOKEN, signers[0], []);
-  const reserve = (await getContract(reserveAddress, RESERVE_TOKEN.abi , signers[0], networkInfo)) as ReserveToken;
-  console.log("Reserve deployed to: " + reserveAddress)
+  const reserve = (await getContract(
+    reserveAddress,
+    RESERVE_TOKEN.abi,
+    signers[0],
+    networkInfo
+  )) as ReserveToken;
+  console.log("Reserve deployed to: " + reserveAddress);
 
   const erc20Config = { name: "Token", symbol: "TKN" };
   const seedERC20Config = { name: "SeedToken", symbol: "SDT" };
@@ -102,35 +89,47 @@ async function main() {
 
   const minimumTradingDuration = 30;
 
-  const readWriteTierAddress = await Util.deploy(READWRITE_TIER, signers[0], []);
-  const readWriteTier = (await getContract(readWriteTierAddress , READWRITE_TIER.abi , signers[0], networkInfo)) as ReadWriteTier;
-  console.log("Tier deployed to: " + readWriteTierAddress)
-  const minimumStatus = Tier.ZERO;
+  const readWriteTierAddress = await Util.deploy(
+    READWRITE_TIER,
+    signers[0],
+    []
+  );
+  const readWriteTier = (await getContract(
+    readWriteTierAddress,
+    READWRITE_TIER.abi,
+    signers[0],
+    networkInfo
+  )) as ReadWriteTier;
+  console.log("Tier deployed to: " + readWriteTierAddress);
+  const minimumStatus = 0; // Tier.ZERO
 
-  await readWriteTier.connect(trader1).setTier(await trader1.getAddress(), Tier.THREE, []);
+  await readWriteTier
+    .connect(trader1)
+    .setTier(await trader1.getAddress(), 3, []); // Tier.THREE
 
-  const tierByConstructionClaimAddress =  await Util.deploy(
-    TIERBYCONSTRUCTION, 
-    signers[0], 
-    [
-      readWriteTierAddress,
-      minimumStatus
-    ]
+  const tierByConstructionClaimAddress = await Util.deploy(
+    TIERBYCONSTRUCTION,
+    signers[0],
+    [readWriteTierAddress, minimumStatus]
   );
   const tierByConstructionClaim = (await getContract(
-      tierByConstructionClaimAddress, 
-      TIERBYCONSTRUCTION.abi, 
-      signers[0], 
-      networkInfo
+    tierByConstructionClaimAddress,
+    TIERBYCONSTRUCTION.abi,
+    signers[0],
+    networkInfo
   )) as TierByConstructionClaim;
-  console.log("Tier by construction deployed to: " + tierByConstructionClaimAddress)
+  console.log(
+    "Tier by construction deployed to: " + tierByConstructionClaimAddress
+  );
 
-  await tierByConstructionClaim.claim(await trader1.getAddress(), [], { gasLimit: 20000000 });
+  await tierByConstructionClaim.claim(await trader1.getAddress(), [], {
+    gasLimit: 20000000,
+  });
 
   // Existing trust factory deployment
   const _trustFactoryContract = await getContract(
     FactoryAddress,
-    TRUSTFACTORY.abi, 
+    TRUSTFACTORY.abi,
     signers[0],
     networkInfo
   );
@@ -147,7 +146,7 @@ async function main() {
       seederUnits: seedUnits,
       seederCooldownDuration,
       redeemInit,
-      seedERC20Config
+      seedERC20Config,
     },
     {
       erc20Config,
@@ -167,49 +166,58 @@ async function main() {
 
   console.log("Trust deployed to: " + trust.address);
 
-  const redeemableERC20 = await getContract(
+  const redeemableERC20 = (await getContract(
     await trust.token(),
-     REDEEMABLEERC20.abi, 
-     creator, 
-     networkInfo
-  ) as RedeemableERC20;
+    REDEEMABLEERC20.abi,
+    creator,
+    networkInfo
+  )) as RedeemableERC20;
 
   const seedERC20Address = await trust.seeder();
-  const seedERC20 = (await getContract( seedERC20Address , SEED.abi , signers[0], networkInfo)) as SeedERC20;
-  console.log("Seeder at: " + seedERC20Address)
-  
+  const seedERC20 = (await getContract(
+    seedERC20Address,
+    SEED.abi,
+    signers[0],
+    networkInfo
+  )) as SeedERC20;
+  console.log("Seeder at: " + seedERC20Address);
+
   // seeder needs some cash
-  const tx0 = await reserve.transfer(await seeder.getAddress(), seederFee, config);
+  const tx0 = await reserve.transfer(
+    await seeder.getAddress(),
+    seederFee,
+    config
+  );
   await tx0.wait();
-  console.log("Seeder transfered seed")
+  console.log("Seeder transfered seed");
 
   // seeder seeds via SeedERC20 contract (typically used when more than 1 seeder)
   await reserve.connect(seeder).approve(seedERC20.address, seederFee, config);
 
   // buy all units
   await seedERC20.connect(seeder).seed(0, seedUnits, config);
-  console.log("Bought all seed units")
+  console.log("Bought all seed units");
 
-  const pool = await getContract(
-    await trust.pool(), 
-    POOL.abi, 
-    creator, 
+  const pool = (await getContract(
+    await trust.pool(),
+    POOL.abi,
+    creator,
     networkInfo
-  ) as RedeemableERC20Pool;
+  )) as RedeemableERC20Pool;
 
   // start raise
   const tx1 = await pool.startDutchAuction(config);
   await tx1.wait();
-  console.log("Raise started")
+  console.log("Raise started");
 
   const startBlock = await getActualBlock(networkInfo);
 
-  let [crp, bPool] = await Util.poolContracts(signers, pool);
+  const [crp, bPool] = await Util.poolContracts(signers, pool);
 
   const tokenAddress = await trust.token();
 
   // // begin trading
-  const swapReserveForTokens = async (signer:any, spend:any) => {
+  const swapReserveForTokens = async (signer: any, spend: any) => {
     const tx = await reserve.transfer(await signer.getAddress(), spend, config);
     await tx.wait();
 
@@ -229,38 +237,46 @@ async function main() {
 
   const reserveSpend = finalValuation.div(10);
 
-  let i=1;
+  let i = 1;
   while ((await reserve.balanceOf(bPool.address)).lte(finalValuation)) {
     await swapReserveForTokens(trader1, reserveSpend);
     console.log(`Swap ${i}`);
-    i+=1;
+    i += 1;
   }
 
-  console.log("All swaps done")
+  console.log("All swaps done");
 
   // wait until distribution can end
   await Util.waitForBlock(startBlock + minimumTradingDuration + 1, networkInfo);
 
-  console.log("Raise over")
+  console.log("Raise over");
 
   await trust.connect(seeder).anonEndDistribution(config);
 
-  console.log("Raise ended")
+  console.log("Raise ended");
 
   await seedERC20.connect(seeder).redeem(seedUnits, config);
 
-  console.log("SeedERC20 redemeed")
+  console.log("SeedERC20 redemeed");
 
   await redeemableERC20
     .connect(trader1)
-    .redeem([reserveAddress], await redeemableERC20.balanceOf(await trader1.getAddress()), config);
+    .redeem(
+      [reserveAddress],
+      await redeemableERC20.balanceOf(await trader1.getAddress()),
+      config
+    );
 
-  console.log("RedeemableERC20 redeemed")
-};
+  console.log("RedeemableERC20 redeemed");
+}
 
 main()
-    .then(() => process.exit(0))
-    .catch((error) => {
+  .then(() => {
+    const exit = process.exit;
+    exit(0);
+  })
+  .catch((error) => {
     console.error(error);
-    process.exit(1);
-    });
+    const exit = process.exit;
+    exit(1);
+  });

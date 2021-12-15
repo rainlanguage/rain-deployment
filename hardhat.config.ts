@@ -28,13 +28,13 @@ const config:any = {
     compilers: [
       {
         version: "0.8.10",
-        "settings": {
-          "metadata": {
-            "useLiteralContent": true
+        settings: {
+          metadata: {
+            useLiteralContent: true
           },
-          "optimizer": {
-            "enabled": true,
-            "runs": 100000
+          optimizer: {
+            enabled: true,
+            runs: 100000
           }
         }
       },
@@ -49,13 +49,13 @@ const config:any = {
       },
       {
         version: "0.5.12",
-        "settings": {
-          "metadata": {
-            "useLiteralContent": true
+        settings: {
+          metadata: {
+            useLiteralContent: true
           },
-          "optimizer": {
-            "enabled": true,
-            "runs": 100
+          optimizer: {
+            enabled: true,
+            runs: 100
           },
           evmVersion: "byzantium"
         }
@@ -72,19 +72,19 @@ const config:any = {
     reef_mainnet: {
       url: "wss://rpc.reefscan.com/ws",
       seeds: {
-        "account1": process.env.MNEMONIC_REEF1,
-        "account2": process.env.MNEMONIC_REEF2,
-        "account3": process.env.MNEMONIC_REEF3,
-        "account4": process.env.MNEMONIC_REEF4
+        "account1": process.env.MNEMONIC_REEF1 !== undefined ? process.env.MNEMONIC_REEF1 : "",
+        "account2": process.env.MNEMONIC_REEF2 !== undefined ? process.env.MNEMONIC_REEF2 : "",
+        "account3": process.env.MNEMONIC_REEF3 !== undefined ? process.env.MNEMONIC_REEF3 : "",
+        "account4": process.env.MNEMONIC_REEF4 !== undefined ? process.env.MNEMONIC_REEF4 : ""
       }
     },
     reef_testnet: {
       url: "wss://rpc-testnet.reefscan.com/ws",
       seeds: {
-        "account1": process.env.MNEMONIC_REEF1,
-        "account2": process.env.MNEMONIC_REEF2,
-        "account3": process.env.MNEMONIC_REEF3,
-        "account4": process.env.MNEMONIC_REEF4
+        "account1": process.env.MNEMONIC_REEF1 !== undefined ? process.env.MNEMONIC_REEF1 : "",
+        "account2": process.env.MNEMONIC_REEF2 !== undefined ? process.env.MNEMONIC_REEF2 : "",
+        "account3": process.env.MNEMONIC_REEF3 !== undefined ? process.env.MNEMONIC_REEF3 : "",
+        "account4": process.env.MNEMONIC_REEF4 !== undefined ? process.env.MNEMONIC_REEF4 : ""
       }
     },
     mumbai: {
@@ -94,7 +94,7 @@ const config:any = {
     },
     polygon: {
       url: "https://rpc-mainnet.maticvigil.com",
-      accounts: [ process.env.POLYGON_PRIVATE_KEY],
+      accounts: process.env.POLYGON_PRIVATE_KEY !== undefined ? [process.env.POLYGON_PRIVATE_KEY] : [],
       gasPrice: 20e9
     },
     avalanche: {

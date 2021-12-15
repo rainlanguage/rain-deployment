@@ -3,7 +3,8 @@
     "deploy-rain": "npx hardhat run scripts/deploy-rain.ts --network",
     "deploy-verify": "func() {export AdminAddress=$1; npx hardhat run scripts/deploy-verify-tier.ts --network \"$2\";}; func",
     "create-trust": "func() {export TrustFactory=$1; npx hardhat run scripts/create-trust.ts --network \"$2\";}; func",
-    "compile": "hardhat compile --force"
+    "compile": "hardhat compile --force",
+    "lint": "eslint */**.ts"
   },
   "dependencies": {
     "@beehiveinnovation/balancer-core": "^0.0.7",

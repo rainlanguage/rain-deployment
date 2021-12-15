@@ -1,5 +1,5 @@
 {
-    "dist": null,
+    "dist": "",
     "show_tx": false,
     "deploy_config": {
         "nonce": null,
@@ -23,10 +23,10 @@
         },
         "reef_mainnet": {
             "BFactory": "",
-            "SmartPoolManager": null,
-            "BalancerSafeMath": null,
-            "RightsManager": null,
-            "CRPFactory": null
+            "SmartPoolManager": "",
+            "BalancerSafeMath": "",
+            "RightsManager": "",
+            "CRPFactory": ""
         },
         "reef_testnet": {
             "BFactory": "0xe123e3Dc098D6E191C9B666253C90B71d85a2053",
@@ -36,11 +36,11 @@
             "CRPFactory": "0x4b591Edd0cB14c4f806442384a167f7D87e3152a"
         },
         "avalanche": {
-            "BFactory": null,
-            "SmartPoolManager": null,
-            "BalancerSafeMath": null,
-            "RightsManager": null,
-            "CRPFactory": null
+            "BFactory": "",
+            "SmartPoolManager": "",
+            "BalancerSafeMath": "",
+            "RightsManager": "",
+            "CRPFactory": ""
         },
         "fuji": {
             "BFactory": "0x2381523Dac2D060F73A117a14BF6077A7C1688A9",
@@ -50,11 +50,11 @@
             "CRPFactory": "0xf66c32C3E6f4c592CF7BA42146552A9523739310"
         },
         "fantom": {
-            "BFactory": null,
-            "SmartPoolManager": null,
-            "BalancerSafeMath": null,
-            "RightsManager": null,
-            "CRPFactory": null
+            "BFactory": "",
+            "SmartPoolManager": "",
+            "BalancerSafeMath": "",
+            "RightsManager": "",
+            "CRPFactory": ""
         },
         "fantom_testnet": {
             "BFactory": "0x66EB2ba594f6a2160a5d2C6436C212F0E16e7684",

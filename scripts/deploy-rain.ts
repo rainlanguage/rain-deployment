@@ -1,15 +1,15 @@
 import {
-    getSigner,
-    deploy, 
-    linkBytecode, 
-    exportArgs,
-    getDeployID
+  getSigner,
+  deploy,
+  linkBytecode,
+  exportArgs,
+  getDeployID,
 } from "./utils";
 
 // Balancer
 const BFactory = require(`@beehiveinnovation/balancer-core/artifacts/BFactory.json`);
 // CRP
-const CRPFactory = require(`@beehiveinnovation/configurable-rights-pool/artifacts/CRPFactory.json`); 
+const CRPFactory = require(`@beehiveinnovation/configurable-rights-pool/artifacts/CRPFactory.json`);
 const RightsManager = require(`@beehiveinnovation/configurable-rights-pool/artifacts/RightsManager.json`);
 const SmartPoolManager = require(`@beehiveinnovation/configurable-rights-pool/artifacts/SmartPoolManager.json`);
 const BalancerSafeMath = require(`@beehiveinnovation/configurable-rights-pool/artifacts/BalancerSafeMath.json`);
@@ -20,68 +20,80 @@ const RedeemableERC20PoolFactory = require("../dist/artifacts/contracts/pool/Red
 const SeedERC20Factory = require("../dist/artifacts/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json");
 const TrustFactory = require("../dist/artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json");
 
-
 async function main() {
-    const deployId = await getDeployID();
-    const signers = await getSigner();
-    const signer = signers[0];
+  const deployId = await getDeployID();
+  const signers = await getSigner();
+  const signer = signers[0];
 
-    // Deploying Balancer
-    const BFactoryAddress = await deploy(BFactory, signer, []);
-    console.log('- BFactory deployed to: ', BFactoryAddress);
+  // Deploying Balancer
+  const BFactoryAddress = await deploy(BFactory, signer, []);
+  console.log("- BFactory deployed to: ", BFactoryAddress);
 
-    // Deploying CRP
-    const SmartPoolManagerAddress = await deploy(SmartPoolManager, signer, []);
-    console.log('- SmartPoolManager deployed to: ', SmartPoolManagerAddress);
+  // Deploying CRP
+  const SmartPoolManagerAddress = await deploy(SmartPoolManager, signer, []);
+  console.log("- SmartPoolManager deployed to: ", SmartPoolManagerAddress);
 
-    const BalancerSafeMathAddress = await deploy(BalancerSafeMath, signer, []);
-    console.log('- BalancerSafeMath deployed to: ', BalancerSafeMathAddress);
+  const BalancerSafeMathAddress = await deploy(BalancerSafeMath, signer, []);
+  console.log("- BalancerSafeMath deployed to: ", BalancerSafeMathAddress);
 
-    const RightsManagerAddress = await deploy(RightsManager, signer, []);
-    console.log('- RightsManager deployed to: ', RightsManagerAddress);
+  const RightsManagerAddress = await deploy(RightsManager, signer, []);
+  console.log("- RightsManager deployed to: ", RightsManagerAddress);
 
-    const libraries = {
-        "SmartPoolManager" : SmartPoolManagerAddress,
-        "BalancerSafeMath" : BalancerSafeMathAddress,
-        "RightsManager" : RightsManagerAddress
-    }
-    let _CRPFactory = CRPFactory;
-    _CRPFactory.bytecode = linkBytecode(_CRPFactory.bytecode, libraries);
-    const CRPFactoryAddress = await deploy(_CRPFactory, signer, []);
-    console.log('- CRPFactory deployed to: ', CRPFactoryAddress);
+  const libraries = {
+    SmartPoolManager: SmartPoolManagerAddress,
+    BalancerSafeMath: BalancerSafeMathAddress,
+    RightsManager: RightsManagerAddress,
+  };
+  const _CRPFactory = CRPFactory;
+  _CRPFactory.bytecode = linkBytecode(_CRPFactory.bytecode, libraries);
+  const CRPFactoryAddress = await deploy(_CRPFactory, signer, []);
+  console.log("- CRPFactory deployed to: ", CRPFactoryAddress);
 
-    // Deploying Rain Protocol
-    const RedeemableERC20FactoryAddress = await deploy(RedeemableERC20Factory, signer, []);
-    console.log('- RedeemableERC20Factory deployed to: ', RedeemableERC20FactoryAddress);
+  // Deploying Rain Protocol
+  const RedeemableERC20FactoryAddress = await deploy(
+    RedeemableERC20Factory,
+    signer,
+    []
+  );
+  console.log(
+    "- RedeemableERC20Factory deployed to: ",
+    RedeemableERC20FactoryAddress
+  );
 
-    const ReedERC20PoolFactArgs = [
-        CRPFactoryAddress, 
-        BFactoryAddress
-    ];
-    const RedeemableERC20PoolFactoryAddress = (
-        await deploy(RedeemableERC20PoolFactory, signer, [ReedERC20PoolFactArgs])
-    );
-    console.log('- RedeemableERC20PoolFactory deployed to: ', RedeemableERC20PoolFactoryAddress);
-    exportArgs(RedeemableERC20PoolFactory, ReedERC20PoolFactArgs, deployId);
+  const ReedERC20PoolFactArgs = [CRPFactoryAddress, BFactoryAddress];
+  const RedeemableERC20PoolFactoryAddress = await deploy(
+    RedeemableERC20PoolFactory,
+    signer,
+    [ReedERC20PoolFactArgs]
+  );
+  console.log(
+    "- RedeemableERC20PoolFactory deployed to: ",
+    RedeemableERC20PoolFactoryAddress
+  );
+  exportArgs(RedeemableERC20PoolFactory, ReedERC20PoolFactArgs, deployId);
 
-    const SeedERC20FactoryAddress = await deploy(SeedERC20Factory, signer, []);
-    console.log('- SeedERC20Factory deployed to: ', SeedERC20FactoryAddress);
+  const SeedERC20FactoryAddress = await deploy(SeedERC20Factory, signer, []);
+  console.log("- SeedERC20Factory deployed to: ", SeedERC20FactoryAddress);
 
-    const TrustFactoryArgs = [
-        RedeemableERC20FactoryAddress,
-        RedeemableERC20PoolFactoryAddress,
-        SeedERC20FactoryAddress
-    ];
-    const TrustFactoryAddress = await deploy(TrustFactory, signer, [TrustFactoryArgs]);
-    console.log('- Trust factory deployed to: ', TrustFactoryAddress);
-    exportArgs(TrustFactory, TrustFactoryArgs, deployId);
-};
+  const TrustFactoryArgs = [
+    RedeemableERC20FactoryAddress,
+    RedeemableERC20PoolFactoryAddress,
+    SeedERC20FactoryAddress,
+  ];
+  const TrustFactoryAddress = await deploy(TrustFactory, signer, [
+    TrustFactoryArgs,
+  ]);
+  console.log("- Trust factory deployed to: ", TrustFactoryAddress);
+  exportArgs(TrustFactory, TrustFactoryArgs, deployId);
+}
 
 main()
-    .then((a) => {
-        process.exit(0)
-    })
-    .catch((error) => {
+  .then(() => {
+    const exit = process.exit;
+    exit(0);
+  })
+  .catch((error) => {
     console.error(error);
-    process.exit(1);
-    });
+    const exit = process.exit;
+    exit(1);
+  });

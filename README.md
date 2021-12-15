@@ -12,7 +12,7 @@ The repository use a sub-module that contain all the contracts and they update. 
 ```shell
 cut-dist <COMMIT>
 ```
-This will copy the exact copy from rain-protocol to the deployment project. Also will be deleted all old files related with the contracts and will install all the dependencies again. This commit is update inside you `.env` file to track the commit, and inside the `.env.example` to push the actual commit that have the repo with the contract (pushing actual contract with the correct commit). That is why we recommend work with the `.env` file provided
+This will copy the exact copy from rain-protocol to the deployment project. Also will be deleted all old files related with the contracts and will install all the dependencies again. This commit is update inside you `.env` file to make easy track and check the actual commit.
 
 # Contract deployment
 The repository provide two types of scripts which deploy several contracts. 
