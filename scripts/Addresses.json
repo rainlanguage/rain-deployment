@@ -22,6 +22,12 @@
             "SeedERC20Factory": "0xD0a805b687bD17263700B8939C5f4534399370cB",
             "TrustFactory": "0x19B5aCe714b7231Fa6596e25e4E15CcDc5dc09eA"
         },
+        "polygon-polinate": {
+            "RedeemableERC20Factory": "0x9FbA4876bBb2d139D2151DC04444099D3B3dC99d",
+            "RedeemableERC20PoolFactory": "0x23e2A8564a6B0A74fa4297A1a1CddD2A0250c047",
+            "SeedERC20Factory": "0xc0D32D37D69cCeB4019913a74DDfb05DfCC9C183",
+            "TrustFactory": "0x795D6340DFbC87660d48554827f05a4eb504453e"
+        },
         "mumbai": {
             "RedeemableERC20Factory": "0x09CC546375104De36ee01D1842D396B8d939cb42",
             "RedeemableERC20PoolFactory": "0x486219D71E798460e6Fbb4d52E410afb338b496a",

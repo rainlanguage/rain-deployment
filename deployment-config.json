@@ -1,11 +1,11 @@
 {
     "dist": "",
-    "show_tx": false,
+    "show_tx": true,
     "new_entity": true,
     "deploy_config": {
         "nonce": null,
-        "gasPrice": null,
-        "gasLimit": null
+        "gasPrice": 180000000000,
+        "gasLimit": 20000000
     },
     "network": {
         "polygon": {
