@@ -20,5 +20,11 @@ module.exports = {
       "error",
       { ignores: ["modules"] },
     ],
+    "node/no-missing-import": ["error", {
+      "tryExtensions": [".ts", ".json", ".d.ts"]
+    }],
+    "camelcase": ["error", {
+      "allow": ["library_name", "library_address"]
+    }]
   },
 };

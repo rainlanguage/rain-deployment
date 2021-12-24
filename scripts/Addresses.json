@@ -1,0 +1,38 @@
+{
+    "e89d90ce13440c44e829ab77de1ab21402d32e23": {
+        "polygon": {
+            "RedeemableERC20Factory": "0x31aa5951100e11b8A34Bc9D98a44De152Dc5d3a2",
+            "RedeemableERC20PoolFactory": "0xd5d4373f3ac5846acede555debd9a13d318c0678",
+            "SeedERC20Factory": "0xA102dd20ABD37F519e26Bbec9987BEE000cb86CF",
+            "TrustFactory": "0x8f72c8dd9a16a86519497d57fa7123268f95d9d1"
+        }
+    },
+    "d6e1d217bdc58d5baee248fa40ad364d68c1c68f": {
+        "mumbai": {
+            "RedeemableERC20Factory": "0xd893FA42B025766e33C8f1f6E2544Be28F7beFD9",
+            "RedeemableERC20PoolFactory": "0x6Ba3c3849a4bB29618998a4E65372fE457300d88",
+            "SeedERC20Factory": "0x72AAF9dDA7e43f17847892c6409495B9E827A2Df",
+            "TrustFactory": "0xD84c71011BAFD6dF8d1e14A0aE5Cb9F0ceA78533"
+        }
+    },
+    "9fc3971751e2e134526aca44596e6fe168c16dd1": {
+        "polygon": {
+            "RedeemableERC20Factory": "0x7B5e7D03757aa39D046794FF7D4C47b6aE7067B9",
+            "RedeemableERC20PoolFactory": "0x819a15d401cf3556f3f329fca3391c5f5580d5b3",
+            "SeedERC20Factory": "0xD0a805b687bD17263700B8939C5f4534399370cB",
+            "TrustFactory": "0x19B5aCe714b7231Fa6596e25e4E15CcDc5dc09eA"
+        },
+        "polygon-polinate": {
+            "RedeemableERC20Factory": "0x9FbA4876bBb2d139D2151DC04444099D3B3dC99d",
+            "RedeemableERC20PoolFactory": "0x23e2A8564a6B0A74fa4297A1a1CddD2A0250c047",
+            "SeedERC20Factory": "0xc0D32D37D69cCeB4019913a74DDfb05DfCC9C183",
+            "TrustFactory": "0x795D6340DFbC87660d48554827f05a4eb504453e"
+        },
+        "mumbai": {
+            "RedeemableERC20Factory": "0x09CC546375104De36ee01D1842D396B8d939cb42",
+            "RedeemableERC20PoolFactory": "0x486219D71E798460e6Fbb4d52E410afb338b496a",
+            "SeedERC20Factory": "0x5c2AE197F097b2666410cffDBe810eEB5dE97754",
+            "TrustFactory": "0x56CdCBcc1aaB520964f9D24fa3BFAa97258fDdC1"
+        }
+    }
+}

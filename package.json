@@ -1,15 +1,10 @@
 {
   "scripts": {
-    "deploy-rain": "hardhat run scripts/deploy-rain.ts",
-    "deploy-verify-tier": "hardhat run scripts/deploy-verify-tier.ts",
-    "deploy-rain-reef": "hardhat run scripts/deploy-rain-reef.ts",
-    "deploy-verify-tier-reef": "hardhat run scripts/deploy-verify-tier-reef.ts",
-    "flat-contracts": "sol-merger \"./contracts/**/*.sol\" ./scripts/dist/flaten-contracts",
+    "deploy-rain": "npx hardhat run scripts/deploy-rain.ts --network",
+    "deploy-verify": "func() {export AdminAddress=$1; npx hardhat run scripts/deploy-verify-tier.ts --network \"$2\";}; func",
+    "create-trust": "func() {export TrustFactory=$1; npx hardhat run scripts/create-trust.ts --network \"$2\";}; func",
     "compile": "hardhat compile --force",
-    "create-child": "hardhat run scripts/transactions/create-child.ts",
-    "deploy-child-reef": "hardhat run scripts/transactions/create-child-reef.ts",
-    "deploy-trust-swap": "hardhat run scripts/transactions/deploy-trust-swap.ts",
-    "deploy-trust-swap-reef": "hardhat run scripts/transactions/deploy-trust-swap-reef.ts --network reef_testnet"
+    "lint": "eslint */**.ts"
   },
   "dependencies": {
     "@beehiveinnovation/balancer-core": "^0.0.7",
@@ -45,7 +40,6 @@
     "hardhat-gas-reporter": "^1.0.4",
     "prettier": "^2.4.1",
     "prettier-plugin-solidity": "^1.0.0-beta.13",
-    "sol-merger": "^3.1.0",
     "solhint": "^3.3.6",
     "solidity-coverage": "^0.7.17",
     "ts-node": "^10.2.1",
