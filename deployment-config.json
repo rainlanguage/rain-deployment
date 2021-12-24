@@ -1,6 +1,7 @@
 {
     "dist": "",
     "show_tx": false,
+    "new_entity": true,
     "deploy_config": {
         "nonce": null,
         "gasPrice": null,

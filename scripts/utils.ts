@@ -20,6 +20,7 @@ const BALANCER_NAMES = [
   "RightsManager",
   "CRPFactory",
 ];
+let newEntity: string;
 
 export const eighteenZeros = "000000000000000000";
 export const sixZeros = "000000";
@@ -65,7 +66,11 @@ const checkContract = async (
     bookAddresses[commit][networkName] &&
     bookAddresses[commit][networkName][contractName]
   ) {
-    return bookAddresses[commit][networkName][contractName];
+    if (config.new_entity) {
+      return "";
+    } else {
+      return bookAddresses[commit][networkName][contractName];
+    }
   } else {
     return "";
   }
@@ -138,7 +143,11 @@ export const deploy = async (
       console.log("Tx hash:", contract.deployTransaction.hash);
     }
     await contract.deployTransaction.wait();
-    await writeAddress(contract.address, artifact.contractName, networkName);
+    if(config.new_entity) {
+      await writeAddress(contract.address, artifact.contractName, newEntity);
+    } else {
+      await writeAddress(contract.address, artifact.contractName, networkName);
+    }
     return contract.address;
   }
 };
@@ -168,6 +177,19 @@ export const exportArgs = (artifact: any, args: string[], deployId: string) => {
 
 export const getDeployID = async () => {
   const networkName = hre.network.name ? hre.network.name : "networkName";
+  const addressesPath = path.join(__dirname, "Addresses.json");
+  const content = fs.existsSync(addressesPath) ? fetchFile(addressesPath) : {};
+  if (Object.prototype.hasOwnProperty.call(content, commit)) {
+    let name = networkName;
+    let num = 2;
+    while(Object.prototype.hasOwnProperty.call(content[commit], name)) {
+      name = `${networkName}-${num}`;
+      num += 1;
+    }
+    newEntity = name;
+  } else {
+    newEntity = networkName;
+  }
   const date = new Date(Date.now())
     .toLocaleString("en-GB", { timeStyle: "medium", dateStyle: "medium" })
     .replace(", ", "-")
