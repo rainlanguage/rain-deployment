@@ -4,8 +4,8 @@
     "new_entity": true,
     "deploy_config": {
         "nonce": null,
-        "gasPrice": 180000000000,
-        "gasLimit": 20000000
+        "gasPrice": null,
+        "gasLimit": null
     },
     "network": {
         "polygon": {
