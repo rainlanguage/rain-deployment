@@ -2236,7 +2236,7 @@
     "@reef-defi/api-derive" "^1.0.1"
     "@reef-defi/types" "^1.0.1"
 
-"@reef-defi/evm-provider@^1.0.2", "@reef-defi/evm-provider@^1.0.4":
+"@reef-defi/evm-provider@^1.0.3", "@reef-defi/evm-provider@^1.0.4":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@reef-defi/evm-provider/-/evm-provider-1.0.4.tgz#4c02a1d22b6f302edb8ec49ac9e525581485f2b5"
   integrity sha512-Sl+fjcZr3AHeUPNfX2/39qGY5DSyI2cUGzHciCP29v64VYZGwbcVVgTYk6gQL7ZKiqkg5jCZ4rqxySfFg5Fr+Q==
@@ -2256,16 +2256,14 @@
     blakejs "~1.1.0"
     ethers "~5.5.0"
 
-"@reef-defi/hardhat-reef@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@reef-defi/hardhat-reef/-/hardhat-reef-1.0.0.tgz#017a208c72732c3960d0bec29ba87baba60eb6c0"
-  integrity sha512-K4R8nhMHYM/IrXlMK1NA268spwfC64EUVy5OpCmZ/hX9vYtJ0QgIBH4ZterAQTr1AjDOEXeNc3ODPy6Hp18wCQ==
+"@reef-defi/hardhat-reef@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@reef-defi/hardhat-reef/-/hardhat-reef-1.0.7.tgz#36945714b3fdce27ff183347691c9574f5b61083"
+  integrity sha512-x0HIwZLzyjV/i/XSRtZEivwN4Fh9ioz/Bb2cgt/xFKpIsnhOa2+YJ0Tggn8o8Yof9ElQgyTzNqJjJLuFlMrJsw==
   dependencies:
-    "@polkadot/api" "^6.3.1"
-    "@polkadot/types" "^6.3.1"
-    "@reef-defi/evm-provider" "^1.0.2"
+    "@reef-defi/evm-provider" "^1.0.3"
     "@types/validator" "^13.1.3"
-    ethers "~5.5.0"
+    axios "^0.24.0"
     fs-extra "^9.1.0"
     node-fetch "^2.6.1"
     portscanner "^2.2.0"
@@ -3578,6 +3576,13 @@ axios@0.19.2:
   integrity sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==
   dependencies:
     follow-redirects "1.5.10"
+
+axios@^0.24.0:
+  version "0.24.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.24.0.tgz#804e6fa1e4b9c5288501dd9dff56a7a0940d20d6"
+  integrity sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==
+  dependencies:
+    follow-redirects "^1.14.4"
 
 babel-code-frame@^6.26.0:
   version "6.26.0"
@@ -7479,6 +7484,11 @@ follow-redirects@^1.12.1:
   version "1.14.5"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.5.tgz#f09a5848981d3c772b5392309778523f8d85c381"
   integrity sha512-wtphSXy7d4/OR+MvIFbCVBDzZ5520qV8XfPklSN5QtxuMUJZ+b0Wnst1e1lCDocfzuCkHqj8k0FpZqO+UIaKNA==
+
+follow-redirects@^1.14.4:
+  version "1.14.7"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.7.tgz#2004c02eb9436eee9a21446a6477debf17e81685"
+  integrity sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==
 
 for-each@^0.3.3, for-each@~0.3.3:
   version "0.3.3"

@@ -13,6 +13,12 @@
             "RedeemableERC20PoolFactory": "0x6Ba3c3849a4bB29618998a4E65372fE457300d88",
             "SeedERC20Factory": "0x72AAF9dDA7e43f17847892c6409495B9E827A2Df",
             "TrustFactory": "0xD84c71011BAFD6dF8d1e14A0aE5Cb9F0ceA78533"
+        },
+        "reef_testnet": {
+            "RedeemableERC20Factory": "0xD5359a9016f5EA7e1F0C4bBD9D6c5915417774cb",
+            "RedeemableERC20PoolFactory": "0x980662D3377224e02693618a2264953Dc07faBf4",
+            "SeedERC20Factory": "0xBc82E671EFd5bdefE89b54670869d4a9550B8891",
+            "TrustFactory": "0x729B80EBBF19276223343FBf4183d2Ed3bE7F3C6"
         }
     },
     "9fc3971751e2e134526aca44596e6fe168c16dd1": {
