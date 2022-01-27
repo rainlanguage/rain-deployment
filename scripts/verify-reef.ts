@@ -10,13 +10,18 @@ async function main() {
   const CRPFactoryAddress = "0x4b591Edd0cB14c4f806442384a167f7D87e3152a";
   const BFactoryAddress = "0xe123e3Dc098D6E191C9B666253C90B71d85a2053";
 
-  const RedeemableERC20PoolFactoryAddress = "0x980662D3377224e02693618a2264953Dc07faBf4";
-  const ReedERC20PoolFactArgs = [CRPFactoryAddress, BFactoryAddress];
+  // const RedeemableERC20PoolFactoryAddress = "0x980662D3377224e02693618a2264953Dc07faBf4";
+  // const ReedERC20PoolFactArgs = [CRPFactoryAddress, BFactoryAddress];
+  const ReedERC20PoolFactArgs = {
+    CRPFactoryAddress, 
+    BFactoryAddress
+  };
 
-  // const contract = await RedeemableERC20PoolFactory.deploy(ReedERC20PoolFactArgs);
-  // await contract.deployed();
-  // console.log("Contract address: ",contract.address)
-  // await wait(10000);
+  const contract = await RedeemableERC20PoolFactory.deploy([CRPFactoryAddress, BFactoryAddress]);
+  await contract.deployed();
+  const RedeemableERC20PoolFactoryAddress = contract.address;
+  await wait(10000);
+  console.log("Contract address: ",contract.address)
   await hre.reef.verifyContract(RedeemableERC20PoolFactoryAddress, "RedeemableERC20PoolFactory", ReedERC20PoolFactArgs);
   await hre.reef.verifyContract(RedeemableERC20PoolFactoryAddress, "RedeemableERC20PoolFactory", [ReedERC20PoolFactArgs]);
 }
