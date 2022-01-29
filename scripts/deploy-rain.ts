@@ -15,15 +15,16 @@ const SmartPoolManager = require(`@beehiveinnovation/configurable-rights-pool/ar
 const BalancerSafeMath = require(`@beehiveinnovation/configurable-rights-pool/artifacts/BalancerSafeMath.json`);
 
 // Rain protocol
-const RedeemableERC20Factory = require("../dist/artifacts/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json");
-const RedeemableERC20PoolFactory = require("../dist/artifacts/contracts/pool/RedeemableERC20PoolFactory.sol/RedeemableERC20PoolFactory.json");
-const SeedERC20Factory = require("../dist/artifacts/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json");
-const TrustFactory = require("../dist/artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json");
+const RedeemableERC20Factory = require("@beehiveinnovation/rain-protocol/artifacts/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json");
+const SeedERC20Factory = require("@beehiveinnovation/rain-protocol/artifacts/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json");
+const TrustFactory = require("@beehiveinnovation/rain-protocol/artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json");
 
 async function main() {
   const deployId = await getDeployID();
   const signers = await getSigner();
   const signer = signers[0];
+  const creatorFundsReleaseTimeout = 100;
+  const maxRaiseDuration = 100;
 
   // Deploying Balancer
   const BFactoryAddress = await deploy(BFactory, signer, []);
@@ -60,31 +61,22 @@ async function main() {
     RedeemableERC20FactoryAddress
   );
 
-  const ReedERC20PoolFactArgs = [CRPFactoryAddress, BFactoryAddress];
-  const RedeemableERC20PoolFactoryAddress = await deploy(
-    RedeemableERC20PoolFactory,
-    signer,
-    [ReedERC20PoolFactArgs]
-  );
-  console.log(
-    "- RedeemableERC20PoolFactory deployed to: ",
-    RedeemableERC20PoolFactoryAddress
-  );
-  exportArgs(RedeemableERC20PoolFactory, ReedERC20PoolFactArgs, deployId);
-
   const SeedERC20FactoryAddress = await deploy(SeedERC20Factory, signer, []);
   console.log("- SeedERC20Factory deployed to: ", SeedERC20FactoryAddress);
 
   const TrustFactoryArgs = [
     RedeemableERC20FactoryAddress,
-    RedeemableERC20PoolFactoryAddress,
     SeedERC20FactoryAddress,
+    CRPFactoryAddress,
+    BFactoryAddress,
+    creatorFundsReleaseTimeout,
+    maxRaiseDuration
   ];
   const TrustFactoryAddress = await deploy(TrustFactory, signer, [
     TrustFactoryArgs,
   ]);
   console.log("- Trust factory deployed to: ", TrustFactoryAddress);
-  exportArgs(TrustFactory, TrustFactoryArgs, deployId);
+  // exportArgs(TrustFactory, TrustFactoryArgs, deployId);
 }
 
 main()

@@ -73,5 +73,7 @@ pkgs.stdenv.mkDerivation {
   export PATH=$( npm bin ):$PATH
   # keep it fresh
   yarn install
+  (cd node_modules/@beehiveinnovation/rain-protocol; solt-the-earth)
+  cp -r "node_modules/@beehiveinnovation/rain-protocol/solt" "solt"
  '';
 }

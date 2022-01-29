@@ -1,11 +1,7 @@
 import * as dotenv from "dotenv";
 
 import { HardhatUserConfig, task } from "hardhat/config";
-import "@nomiclabs/hardhat-etherscan";
-import "@nomiclabs/hardhat-waffle";
-import "@typechain/hardhat";
-import "hardhat-gas-reporter";
-import "solidity-coverage";
+import "@nomiclabs/hardhat-ethers";
 import "@reef-defi/hardhat-reef";
 
 dotenv.config();
@@ -37,29 +33,7 @@ const config:any = {
             runs: 100000
           }
         }
-      },
-      {
-        version: "0.6.12",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 100000,
-          },
-        },
-      },
-      {
-        version: "0.5.12",
-        settings: {
-          metadata: {
-            useLiteralContent: true
-          },
-          optimizer: {
-            enabled: true,
-            runs: 100
-          },
-          evmVersion: "byzantium"
-        }
-      },
+      }
     ],
   },
   networks: {

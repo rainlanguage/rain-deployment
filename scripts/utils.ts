@@ -1,15 +1,26 @@
 import hre, { ethers } from "hardhat";
 import * as path from "path";
 import fs from "fs";
+import { Result } from "ethers/lib/utils";
 
 import ConfigurableRightsPoolJson from "@beehiveinnovation/configurable-rights-pool/artifacts/ConfigurableRightsPool.json";
 import BPoolJson from "@beehiveinnovation/configurable-rights-pool/artifacts/BPool.json";
-import TrustJson from "../dist/artifacts/contracts/trust/Trust.sol/Trust.json";
+import TrustJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/trust/Trust.sol/Trust.json";
 
-import type { Trust } from "../dist/typechain/Trust";
-import type { RedeemableERC20Pool } from "../dist/typechain/RedeemableERC20Pool";
-import type { ConfigurableRightsPool } from "../dist/typechain/ConfigurableRightsPool";
-import type { BPool } from "../dist/typechain/BPool";
+import type {
+  Trust,
+  TrustConfigStruct,
+  TrustRedeemableERC20ConfigStruct,
+  TrustSeedERC20ConfigStruct,
+} from "@beehiveinnovation/rain-protocol/typechain/Trust";
+import type { TrustFactory } from "@beehiveinnovation/rain-protocol/typechain/TrustFactory";
+import type { ConfigurableRightsPool } from "@beehiveinnovation/rain-protocol/typechain/ConfigurableRightsPool";
+import type { BPool } from "@beehiveinnovation/rain-protocol/typechain/BPool";
+import type {
+  Contract,
+  ContractTransaction,
+} from "ethers";
+
 const config = require("../deployment-config.json");
 const bookAddresses = require("./Addresses.json");
 const commit: any = process.env.COMMIT;
@@ -22,6 +33,7 @@ const BALANCER_NAMES = [
 ];
 let newEntity: string;
 
+export const zeroAddress = ethers.constants.AddressZero;
 export const eighteenZeros = "000000000000000000";
 export const sixZeros = "000000";
 
@@ -226,34 +238,32 @@ const checkPath = (_path: string) => {
 };
 
 export const trustDeploy = async (
-  trustFactory: any,
+  trustFactory: TrustFactory & Contract,
   creator: any,
+  trustConfig: TrustConfigStruct,
+  trustRedeemableERC20Config: TrustRedeemableERC20ConfigStruct,
+  trustSeedERC20Config: TrustSeedERC20ConfigStruct,
   ...args: any
-) => {
-  const tx = await trustFactory[
-    // "createChild((address,uint256,address,uint256,uint16,uint16,uint256),(string,string,address,uint8,uint256),(address,uint256,uint256,uint256,uint256))"
-    "createChild((address,uint256,address,uint256,uint16,uint16,uint256,(string,string)),((string,string),address,uint8,uint256),(address,uint256,uint256,uint256,uint256))"
-  ](...args);
-  const receipt = await tx.wait();
+): Promise<Trust & Contract> => {
+  const txDeploy = await trustFactory.createChildTyped(
+    trustConfig,
+    trustRedeemableERC20Config,
+    trustSeedERC20Config,
+    ...args
+  );
 
-  // Getting the address, and get the contract abstraction
-  const trust = new hre.ethers.Contract(
-    hre.ethers.utils.hexZeroPad(
-      hre.ethers.utils.hexStripZeros(
-        receipt.events?.filter(
-          (x: any) =>
-            x.event === "NewContract" &&
-            hre.ethers.utils.getAddress(x.address) ===
-              hre.ethers.utils.getAddress(trustFactory.address)
-        )[0].topics[1]
+  const trust = new ethers.Contract(
+    ethers.utils.hexZeroPad(
+      ethers.utils.hexStripZeros(
+        (await getEventArgs(txDeploy, "NewChild", trustFactory)).child
       ),
       20 // address bytes length
     ),
     TrustJson.abi,
     creator
-  ) as Trust;
+  ) as Trust & Contract;
 
-  if (!hre.ethers.utils.isAddress(trust.address)) {
+  if (!ethers.utils.isAddress(trust.address)) {
     throw new Error(
       `invalid trust address: ${trust.address} (${trust.address.length} chars)`
     );
@@ -261,23 +271,27 @@ export const trustDeploy = async (
 
   await trust.deployed();
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  trust.deployTransaction = txDeploy;
+
   return trust;
 };
 
 export const poolContracts = async (
-  signers: any,
-  pool: RedeemableERC20Pool
-): Promise<[ConfigurableRightsPool, BPool]> => {
-  const crp = new hre.ethers.Contract(
-    await pool.crp(),
+  signer: any,
+  trust: Trust & Contract
+): Promise<[ConfigurableRightsPool & Contract, BPool & Contract]> => {
+  const crp = new ethers.Contract(
+    await trust.crp(),
     ConfigurableRightsPoolJson.abi,
-    signers[0]
-  ) as ConfigurableRightsPool;
-  const bPool = new hre.ethers.Contract(
+    signer
+  ) as ConfigurableRightsPool & Contract;
+  const bPool = new ethers.Contract(
     await crp.bPool(),
     BPoolJson.abi,
-    signers[0]
-  ) as BPool;
+    signer
+  ) as BPool & Contract;
   return [crp, bPool];
 };
 
@@ -326,4 +340,32 @@ export const getActualBlock = async (networkInfo?: any): Promise<number> => {
   } else {
     return await getActualBlock(await checkNetwork());
   }
+};
+
+/**
+ *
+ * @param tx - transaction where event occurs
+ * @param eventName - name of event
+ * @param contract - contract object holding the address, filters, interface
+ * @param contractAddressOverride - (optional) override the contract address which emits this event
+ * @returns Event arguments, can be deconstructed by array index or by object key
+ */
+ export const getEventArgs = async (
+  tx: ContractTransaction,
+  eventName: string,
+  contract: Contract,
+  contractAddressOverride: string = null
+): Promise<Result> => {
+  const eventObj = (await tx.wait()).events.find(
+    (x) =>
+      x.topics[0] == contract.filters[eventName]().topics[0] &&
+      x.address ==
+        (contractAddressOverride ? contractAddressOverride : contract.address)
+  );
+
+  if (!eventObj) {
+    throw new Error(`Could not find event with name ${eventName}`);
+  }
+
+  return contract.interface.decodeEventLog(eventName, eventObj.data);
 };
