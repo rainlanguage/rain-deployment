@@ -66,6 +66,10 @@ const checkContract = async (
   contractName: string,
   networkName: string
 ): Promise<string> => {
+  if(networkName === "localhost") {
+    return "";
+  }
+  
   if (
     config.network[networkName] &&
     config.network[networkName][contractName]

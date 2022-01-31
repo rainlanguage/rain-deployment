@@ -34,5 +34,14 @@
             "SeedERC20Factory": "0x5c2AE197F097b2666410cffDBe810eEB5dE97754",
             "TrustFactory": "0x56CdCBcc1aaB520964f9D24fa3BFAa97258fDdC1"
         }
+    },
+    "d90af97f1549e118a11dc7e0c83c898ce997fe55": {
+        "mumbai": {
+            "RedeemableERC20Factory": "0x34f498CDDe118FB754D9614eb6FC6deE9b87B3F6",
+            "SeedERC20Factory": "0xe1B58f230979d9929304aac2BcE8E365bdb04ab4",
+            "TrustFactory": "0x26beFc81A74Bb6e7e5eDB041844BE48e64b5A142",
+            "VerifyFactory": "0x463f5301D232e07F20B5a5cBCB5E058A03d9132A",
+            "VerifyTierFactory": "0x3a916B8c945b6aC0ad4ba08b91Ad28BB68C190B4"
+        }
     }
 }

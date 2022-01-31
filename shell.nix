@@ -30,7 +30,6 @@ let
     flush-all
     commit=$1; copy-commit $1
     sed -i '$s/.*/COMMIT='$commit'/' .env
-    sed -i '$s/.*/COMMIT='$commit'/' .env.example
     hardhat compile --force
     rm -rf dist
     mkdir -p "dist"
@@ -58,7 +57,6 @@ let
       commit=`echo $commit | sed 's/\^//' | sed 's/\~//'`;commit=''${commit:1:-1}
     fi
     sed -i '$s/.*/COMMIT='$commit'/' .env
-    sed -i '$s/.*/COMMIT='$commit'/' .env.example
     cp -r "node_modules/@beehiveinnovation/rain-protocol/solt" "solt"
   '';
   

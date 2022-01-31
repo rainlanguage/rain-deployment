@@ -37,6 +37,7 @@ const config:any = {
     ],
   },
   networks: {
+    localhost: createLocalHostConfig(),
     ropsten: {
       url: process.env.ROPSTEN_URL || "",
       accounts:
@@ -120,3 +121,17 @@ const config:any = {
 };
 
 export default config;
+
+function createLocalHostConfig() {
+  const url: string = "http://localhost:8545";
+  const mnemonic: string = "test test test test test test test test test test test junk";
+  return {
+    accounts: {
+      count: 10,
+      initialIndex: 0,
+      mnemonic,
+      path: "m/44'/60'/0'/0",
+    },
+    url
+  };
+};

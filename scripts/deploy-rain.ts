@@ -5,20 +5,21 @@ import {
   exportArgs,
   getDeployID,
 } from "./utils";
-import { ethers } from "hardhat";
 
 // Balancer
-const BFactory = require(`@beehiveinnovation/balancer-core/artifacts/BFactory.json`);
+import BFactory from "@beehiveinnovation/balancer-core/artifacts/BFactory.json";
 // CRP
-const CRPFactory = require(`@beehiveinnovation/configurable-rights-pool/artifacts/CRPFactory.json`);
-const RightsManager = require(`@beehiveinnovation/configurable-rights-pool/artifacts/RightsManager.json`);
-const SmartPoolManager = require(`@beehiveinnovation/configurable-rights-pool/artifacts/SmartPoolManager.json`);
-const BalancerSafeMath = require(`@beehiveinnovation/configurable-rights-pool/artifacts/BalancerSafeMath.json`);
+import CRPFactory from "@beehiveinnovation/configurable-rights-pool/artifacts/CRPFactory.json";
+import RightsManager from "@beehiveinnovation/configurable-rights-pool/artifacts/RightsManager.json";
+import SmartPoolManager from "@beehiveinnovation/configurable-rights-pool/artifacts/SmartPoolManager.json";
+import BalancerSafeMath from "@beehiveinnovation/configurable-rights-pool/artifacts/BalancerSafeMath.json";
 
 // Rain protocol
-const RedeemableERC20Factory = require("@beehiveinnovation/rain-protocol/artifacts/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json");
-const SeedERC20Factory = require("@beehiveinnovation/rain-protocol/artifacts/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json");
-const TrustFactory = require("@beehiveinnovation/rain-protocol/artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json");
+import RedeemableERC20Factory from "@beehiveinnovation/rain-protocol/artifacts/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json";
+import SeedERC20Factory from "@beehiveinnovation/rain-protocol/artifacts/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json";
+import TrustFactory from "@beehiveinnovation/rain-protocol/artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json";
+import VerifyFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/verify/VerifyFactory.sol/VerifyFactory.json";
+import VerifyTierFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/tier/VerifyTierFactory.sol/VerifyTierFactory.json";
 
 async function main() {
   const deployId = await getDeployID();
@@ -78,6 +79,14 @@ async function main() {
   ]);
   console.log("- Trust factory deployed to: ", TrustFactoryAddress);
   exportArgs(TrustFactory, TrustFactoryArgs, deployId);
+
+  // Deploying VerifyFactory
+  const VerifyFactoryAddress = await deploy(VerifyFactoryJson, signer, []);
+  console.log("- Verify factory deployed to: ", VerifyFactoryAddress);
+
+  // Deploying VerifyTierFactory
+  const VerifyTierAddress = await deploy(VerifyTierFactoryJson, signer, []);
+  console.log("- VerifyTierFactory deployed to: ", VerifyTierAddress);
 }
 
 main()

@@ -1,16 +1,16 @@
 import { ethers } from "hardhat";
-import { getSigner, deploy } from "./utils";
-import type { VerifyFactory } from "../dist/typechain/VerifyFactory";
+import { getSigner, deploy, getEventArgs } from "./utils";
+import type { VerifyFactory } from "@beehiveinnovation/rain-protocol/typechain/VerifyFactory";
 
-const VerifyTier = require("../dist/artifacts/contracts/tier/VerifyTier.sol/VerifyTier.json");
-const VerifyFactoryJson = require("../dist/artifacts/contracts/verify/VerifyFactory.sol/VerifyFactory.json");
+import VerifyFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/verify/VerifyFactory.sol/VerifyFactory.json";
+import VerifyTierFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/tier/VerifyTierFactory.sol/VerifyTierFactory.json";
 
 const adminAddress: any = process.env.AdminAddress;
 
 async function main() {
   const signers = await getSigner();
   const signer = signers[0];
-
+  // TODO: Get actual commit and network and run tx
   // Deploying VerifyFactory
   const VerifyFactoryAddress = await deploy(VerifyFactoryJson, signer, []);
   console.log("- Verify factory deployed to: ", VerifyFactoryAddress);
@@ -18,20 +18,15 @@ async function main() {
   const Vfactory = new ethers.Contract(
     VerifyFactoryAddress,
     VerifyFactoryJson.abi,
-    signers[0]
+    signer
   ) as VerifyFactory;
-  const tx = await Vfactory["createChild(address)"](adminAddress);
-  const receipt = await tx.wait();
-  const topic = receipt.events?.filter((x) => x.event === "NewContract")[0]
-    .topics[1]!;
-  const VerifyAddress = ethers.utils.getAddress(
-    ethers.utils.hexZeroPad(ethers.utils.hexStripZeros(topic), 20)
-  );
+  const tx = await Vfactory.createChildTyped(adminAddress);
+  const VerifyAddress = (await getEventArgs(tx, "NewChild", Vfactory)).child;
   console.log("- Verify child deployed to: ", VerifyAddress);
 
-  // Deploying VerifyTier
-  const VerifyTierAddress = await deploy(VerifyTier, signer, [VerifyAddress]);
-  console.log("- VerifyTier deployed to: ", VerifyTierAddress);
+  // Deploying VerifyTierFactory
+  const VerifyTierAddress = await deploy(VerifyTierFactoryJson, signer, []);
+  console.log("- VerifyTierFactory deployed to: ", VerifyTierAddress);
 }
 main()
   .then(() => {
