@@ -16,10 +16,8 @@ import type {
 import type { TrustFactory } from "@beehiveinnovation/rain-protocol/typechain/TrustFactory";
 import type { ConfigurableRightsPool } from "@beehiveinnovation/rain-protocol/typechain/ConfigurableRightsPool";
 import type { BPool } from "@beehiveinnovation/rain-protocol/typechain/BPool";
-import type {
-  Contract,
-  ContractTransaction,
-} from "ethers";
+import { Artifact } from "hardhat/types";
+import type { Contract, ContractTransaction } from "ethers";
 
 const config = require("../deployment-config.json");
 const bookAddresses = require("./Addresses.json");
@@ -155,7 +153,7 @@ export const deploy = async (
       console.log("Tx hash:", contract.deployTransaction.hash);
     }
     await contract.deployTransaction.wait();
-    if(config.new_entity) {
+    if (config.new_entity) {
       await writeAddress(contract.address, artifact.contractName, newEntity);
     } else {
       await writeAddress(contract.address, artifact.contractName, networkName);
@@ -174,14 +172,23 @@ export const linkBytecode = (bytecode: any, links: any) => {
   return bytecode;
 };
 
-export const exportArgs = (artifact: any, args: string[], deployId: string) => {
+export const exportArgs = (
+  artifact: Artifact,
+  args: (string | number)[],
+  deployId: string
+) => {
   let pathTo = path.join(__dirname, "verification", deployId);
   checkPath(pathTo);
   pathTo = path.join(pathTo, "arguments.json");
   const content = fs.existsSync(pathTo) ? fetchFile(pathTo) : {};
-  const TwelveBytes = "000000000000000000000000";
   const encodeABIArgs = args.reduce((prev, current) => {
-    return prev + TwelveBytes + current.replace("0x", "");
+    return (
+      prev +
+      (typeof current === "number"
+        ? ethers.utils.hexZeroPad(ethers.utils.hexlify(current), 32)
+        : ethers.utils.hexZeroPad(current, 32)
+      ).replace("0x", "")
+    );
   }, "");
   content[artifact.contractName] = encodeABIArgs;
   writeFile(pathTo, JSON.stringify(content, null, 4));
@@ -194,7 +201,7 @@ export const getDeployID = async () => {
   if (Object.prototype.hasOwnProperty.call(content, commit)) {
     let name = networkName;
     let num = 2;
-    while(Object.prototype.hasOwnProperty.call(content[commit], name)) {
+    while (Object.prototype.hasOwnProperty.call(content[commit], name)) {
       name = `${networkName}-${num}`;
       num += 1;
     }
@@ -350,17 +357,16 @@ export const getActualBlock = async (networkInfo?: any): Promise<number> => {
  * @param contractAddressOverride - (optional) override the contract address which emits this event
  * @returns Event arguments, can be deconstructed by array index or by object key
  */
- export const getEventArgs = async (
+export const getEventArgs = async (
   tx: ContractTransaction,
   eventName: string,
   contract: Contract,
-  contractAddressOverride: string = null
+  contractAddressOverride?: string
 ): Promise<Result> => {
-  const eventObj = (await tx.wait()).events.find(
+  const eventObj = (await tx.wait())?.events?.find(
     (x) =>
-      x.topics[0] == contract.filters[eventName]().topics[0] &&
-      x.address ==
-        (contractAddressOverride ? contractAddressOverride : contract.address)
+      x.topics[0] === contract.filters[eventName]().topics?.[0] &&
+      x.address === (contractAddressOverride || contract.address)
   );
 
   if (!eventObj) {

@@ -25,6 +25,7 @@ let
   '';
 
   cut-dist = pkgs.writeShellScriptBin "cut-dist" ''
+    // WIP
     if [ -z "$1" ]; then echo "ERROR: Missing commit argument. Exiting..."; exit 0; fi
     flush-all
     commit=$1; copy-commit $1
@@ -40,17 +41,25 @@ let
     cp -r "solt" "dist"
   '';
 
-  copy-commit = pkgs.writeShellScriptBin "copy-commit" ''
-    (cd rain-protocol; git checkout develop; git pull; git checkout $1)
-    rm -rf contracts; cp -r rain-protocol/contracts ./
-  '';
-
   solt-the-earth = pkgs.writeShellScriptBin "solt-the-earth" ''
     mkdir -p solt
     find contracts -type f -not -path 'contracts/test/*' | xargs -i solt write '{}' --npm --runs 100000
     for name in solc-* ; do  content=$(jq '.sources |= with_entries(.key |= sub("\\./"; ""))' "''${name}")
     cat <<< $content > "''${name}"; done
     mv solc-* solt
+  '';
+
+  get-commit = pkgs.writeShellScriptBin "get-commit" ''
+    (cd node_modules/@beehiveinnovation/rain-protocol; solt-the-earth)
+    commit=`jq '.dependencies."@beehiveinnovation/rain-protocol"' package.json`
+    if [[ $commit == *"#"* ]]; then
+      commit=''${commit#*\#}; commit=''${commit::-1}
+    else
+      commit=`echo $commit | sed 's/\^//' | sed 's/\~//'`;commit=''${commit:1:-1}
+    fi
+    sed -i '$s/.*/COMMIT='$commit'/' .env
+    sed -i '$s/.*/COMMIT='$commit'/' .env.example
+    cp -r "node_modules/@beehiveinnovation/rain-protocol/solt" "solt"
   '';
   
 in
@@ -65,7 +74,7 @@ pkgs.stdenv.mkDerivation {
   flush-all
   cut-dist
   solt-the-earth
-  copy-commit
+  get-commit
  ];
 
  shellHook = ''
@@ -73,7 +82,7 @@ pkgs.stdenv.mkDerivation {
   export PATH=$( npm bin ):$PATH
   # keep it fresh
   yarn install
-  (cd node_modules/@beehiveinnovation/rain-protocol; solt-the-earth)
-  cp -r "node_modules/@beehiveinnovation/rain-protocol/solt" "solt"
+  get-commit
  '';
 }
+

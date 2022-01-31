@@ -5,6 +5,7 @@ import {
   exportArgs,
   getDeployID,
 } from "./utils";
+import { ethers } from "hardhat";
 
 // Balancer
 const BFactory = require(`@beehiveinnovation/balancer-core/artifacts/BFactory.json`);
@@ -76,7 +77,7 @@ async function main() {
     TrustFactoryArgs,
   ]);
   console.log("- Trust factory deployed to: ", TrustFactoryAddress);
-  // exportArgs(TrustFactory, TrustFactoryArgs, deployId);
+  exportArgs(TrustFactory, TrustFactoryArgs, deployId);
 }
 
 main()
