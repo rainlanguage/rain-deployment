@@ -43,5 +43,19 @@
             "VerifyFactory": "0x463f5301D232e07F20B5a5cBCB5E058A03d9132A",
             "VerifyTierFactory": "0x3a916B8c945b6aC0ad4ba08b91Ad28BB68C190B4"
         }
+    },
+    "develop-sale": {
+        "mumbai": {
+            "RedeemableERC20Factory": "0xc925F1dB977c06D549e684B4942Ae8E8E71f96a9",
+            "SeedERC20Factory": "0x985a0FD12cF324949e72E4e90Bc37511Cf63310E",
+            "TrustFactory": "0x53bbC4BdA175e7DA1BaD7d4e99A9adfbf1665999",
+            "VerifyFactory": "0xaE41cc6EF8239B6C10ebae2764cF14490bc78cd0",
+            "VerifyTierFactory": "0xde3C00783953A7292396FbE490042F1Db9C5f3da",
+            "ERC20BalanceTierFactory": "0xAcdBCb99f934C1B6C7f603FF7E567C1cAf04bb9B",
+            "ERC20TransferTierFactory": "0xa43eA34c1CF2a94C976ECFC7ee5E4F4F3EEd174A",
+            "CombineTierFactory": "0xBC019fd03295aB1A2d6E121493c5A63b398364ed",
+            "ERC721BalanceTierFactory": "0xC484FF99DE2d64c08305125ddacb92b72E4d069E",
+            "SaleFactory": "0xC92d7B2214F70F4C10eB5080Efe141A8Cac6D7f3"
+        }
     }
 }

@@ -18,8 +18,16 @@ import BalancerSafeMath from "@beehiveinnovation/configurable-rights-pool/artifa
 import RedeemableERC20Factory from "@beehiveinnovation/rain-protocol/artifacts/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json";
 import SeedERC20Factory from "@beehiveinnovation/rain-protocol/artifacts/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json";
 import TrustFactory from "@beehiveinnovation/rain-protocol/artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json";
-import VerifyFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/verify/VerifyFactory.sol/VerifyFactory.json";
-import VerifyTierFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/tier/VerifyTierFactory.sol/VerifyTierFactory.json";
+
+//
+import verifyFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/verify/VerifyFactory.sol/VerifyFactory.json";
+import verifyTierFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/tier/VerifyTierFactory.sol/VerifyTierFactory.json";
+import erc20BalanceTierFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/tier/ERC20BalanceTierFactory.sol/ERC20BalanceTierFactory.json";
+import erc20TransferTierFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/tier/ERC20TransferTierFactory.sol/ERC20TransferTierFactory.json";
+import combineTierFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/tier/CombineTierFactory.sol/CombineTierFactory.json";
+import saleFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/sale/SaleFactory.sol/SaleFactory.json";
+// Should be changed later
+import erc721BalanceTierFactoryJson from "@vishalkale15107/rain-protocol/artifacts/contracts/tier/ERC721BalanceTierFactory.sol/ERC721BalanceTierFactory.json";
 
 async function main() {
   const deployId = await getDeployID();
@@ -72,7 +80,7 @@ async function main() {
     CRPFactoryAddress,
     BFactoryAddress,
     creatorFundsReleaseTimeout,
-    maxRaiseDuration
+    maxRaiseDuration,
   ];
   const TrustFactoryAddress = await deploy(TrustFactory, signer, [
     TrustFactoryArgs,
@@ -81,12 +89,57 @@ async function main() {
   exportArgs(TrustFactory, TrustFactoryArgs, deployId);
 
   // Deploying VerifyFactory
-  const VerifyFactoryAddress = await deploy(VerifyFactoryJson, signer, []);
+  const VerifyFactoryAddress = await deploy(verifyFactoryJson, signer, []);
   console.log("- Verify factory deployed to: ", VerifyFactoryAddress);
 
-  // Deploying VerifyTierFactory
-  const VerifyTierAddress = await deploy(VerifyTierFactoryJson, signer, []);
+  // Deploying Tiers Factores
+  const VerifyTierAddress = await deploy(verifyTierFactoryJson, signer, []);
   console.log("- VerifyTierFactory deployed to: ", VerifyTierAddress);
+
+  const ERC20BalanceTierFactoryAddress = await deploy(
+    erc20BalanceTierFactoryJson,
+    signer,
+    []
+  );
+  console.log(
+    "- ERC20BalanceTierFactory deployed to: ",
+    ERC20BalanceTierFactoryAddress
+  );
+
+  const ERC20TransferTierFactoryAddress = await deploy(
+    erc20TransferTierFactoryJson,
+    signer,
+    []
+  );
+  console.log(
+    "- ERC20TransferTierFactory deployed to: ",
+    ERC20TransferTierFactoryAddress
+  );
+
+  const CombineTierFactoryAddress = await deploy(
+    combineTierFactoryJson,
+    signer,
+    []
+  );
+  console.log("- CombineTierFactory deployed to: ", CombineTierFactoryAddress);
+
+  const ERC721BalanceTierFactoryAddress = await deploy(
+    erc721BalanceTierFactoryJson,
+    signer,
+    []
+  );
+  console.log(
+    "- ERC721BalanceTierFactory deployed to: ",
+    ERC721BalanceTierFactoryAddress
+  );
+
+  // Deploying Sale Factory
+  const SaleFactoryArgs = [RedeemableERC20FactoryAddress];
+  const SaleFactoryAddress = await deploy(saleFactoryJson, signer, [
+    SaleFactoryArgs,
+  ]);
+  console.log("- SaleFactory deployed to: ", SaleFactoryAddress);
+  exportArgs(saleFactoryJson, SaleFactoryArgs, deployId);
 }
 
 main()

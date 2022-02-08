@@ -10,7 +10,8 @@
   "dependencies": {
     "@beehiveinnovation/balancer-core": "^0.0.7",
     "@beehiveinnovation/configurable-rights-pool": "^0.0.1",
-    "@beehiveinnovation/rain-protocol": "git+https://github.com/beehive-innovation/rain-protocol.git#d90af97f1549e118a11dc7e0c83c898ce997fe55",
+    "@beehiveinnovation/rain-protocol": "git+https://github.com/beehive-innovation/rain-protocol.git#develop-sale",
+    "@vishalkale15107/rain-protocol": "git+https://github.com/vishalkale151071/rain-protocol.git#develop",
     "@nomiclabs/hardhat-ethers": "^2.0.4",
     "@reef-defi/evm-provider": "^1.0.4",
     "@reef-defi/hardhat-reef": "^1.0.0",

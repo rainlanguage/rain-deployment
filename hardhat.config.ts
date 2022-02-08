@@ -1,6 +1,7 @@
+/* eslint-disable camelcase */
 import * as dotenv from "dotenv";
 
-import { HardhatUserConfig, task } from "hardhat/config";
+import { task } from "hardhat/config";
 import "@nomiclabs/hardhat-ethers";
 import "@reef-defi/hardhat-reef";
 
@@ -19,21 +20,21 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 
-const config:any = {
-  solidity: { 
+const config: any = {
+  solidity: {
     compilers: [
       {
         version: "0.8.10",
         settings: {
           metadata: {
-            useLiteralContent: true
+            useLiteralContent: true,
           },
           optimizer: {
             enabled: true,
-            runs: 100000
-          }
-        }
-      }
+            runs: 100000,
+          },
+        },
+      },
     ],
   },
   networks: {
@@ -42,63 +43,106 @@ const config:any = {
       url: process.env.ROPSTEN_URL || "",
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
-        gasPrice: 10e9,
+      gasPrice: 10e9,
     },
     reef_mainnet: {
       url: "wss://rpc.reefscan.com/ws",
       seeds: {
-        "account1": process.env.MNEMONIC_REEF1 !== undefined ? process.env.MNEMONIC_REEF1 : "",
-        "account2": process.env.MNEMONIC_REEF2 !== undefined ? process.env.MNEMONIC_REEF2 : "",
-        "account3": process.env.MNEMONIC_REEF3 !== undefined ? process.env.MNEMONIC_REEF3 : "",
-        "account4": process.env.MNEMONIC_REEF4 !== undefined ? process.env.MNEMONIC_REEF4 : ""
-      }
+        account1:
+          process.env.MNEMONIC_REEF1 !== undefined
+            ? process.env.MNEMONIC_REEF1
+            : "",
+        account2:
+          process.env.MNEMONIC_REEF2 !== undefined
+            ? process.env.MNEMONIC_REEF2
+            : "",
+        account3:
+          process.env.MNEMONIC_REEF3 !== undefined
+            ? process.env.MNEMONIC_REEF3
+            : "",
+        account4:
+          process.env.MNEMONIC_REEF4 !== undefined
+            ? process.env.MNEMONIC_REEF4
+            : "",
+      },
     },
     reef_testnet: {
       url: "wss://rpc-testnet.reefscan.com/ws",
       seeds: {
-        "account1": process.env.MNEMONIC_REEF1 !== undefined ? process.env.MNEMONIC_REEF1 : "",
-        "account2": process.env.MNEMONIC_REEF2 !== undefined ? process.env.MNEMONIC_REEF2 : "",
-        "account3": process.env.MNEMONIC_REEF3 !== undefined ? process.env.MNEMONIC_REEF3 : "",
-        "account4": process.env.MNEMONIC_REEF4 !== undefined ? process.env.MNEMONIC_REEF4 : ""
-      }
+        account1:
+          process.env.MNEMONIC_REEF1 !== undefined
+            ? process.env.MNEMONIC_REEF1
+            : "",
+        account2:
+          process.env.MNEMONIC_REEF2 !== undefined
+            ? process.env.MNEMONIC_REEF2
+            : "",
+        account3:
+          process.env.MNEMONIC_REEF3 !== undefined
+            ? process.env.MNEMONIC_REEF3
+            : "",
+        account4:
+          process.env.MNEMONIC_REEF4 !== undefined
+            ? process.env.MNEMONIC_REEF4
+            : "",
+      },
     },
     mumbai: {
       url: "https://rpc-mumbai.maticvigil.com",
-      accounts: process.env.MNEMONIC !== undefined ? {mnemonic: process.env.MNEMONIC} : [process.env.MUMBAI_PRIVATE_KEY],
+      accounts:
+        process.env.MNEMONIC !== undefined
+          ? { mnemonic: process.env.MNEMONIC }
+          : [process.env.MUMBAI_PRIVATE_KEY],
       gasPrice: 10e9,
     },
     polygon: {
       url: "https://rpc-mainnet.maticvigil.com",
-      accounts: process.env.POLYGON_PRIVATE_KEY !== undefined ? [process.env.POLYGON_PRIVATE_KEY] : [],
-      gasPrice: 20e9
+      accounts:
+        process.env.POLYGON_PRIVATE_KEY !== undefined
+          ? [process.env.POLYGON_PRIVATE_KEY]
+          : [],
+      gasPrice: 20e9,
     },
     avalanche: {
-      url: 'https://api.avax.network/ext/bc/C/rpc',
+      url: "https://api.avax.network/ext/bc/C/rpc",
       gasPrice: 225000000000,
       chainId: 43114,
-      accounts: process.env.AVALANCHE_PRIVATE_KEY !== undefined ? [process.env.AVALANCHE_PRIVATE_KEY] : [],
+      accounts:
+        process.env.AVALANCHE_PRIVATE_KEY !== undefined
+          ? [process.env.AVALANCHE_PRIVATE_KEY]
+          : [],
     },
     fuji: {
-      url: 'https://api.avax-test.network/ext/bc/C/rpc',
+      url: "https://api.avax-test.network/ext/bc/C/rpc",
       gasPrice: 25000000000,
       chainId: 43113,
-      accounts: process.env.MNEMONIC !== undefined ? {mnemonic: process.env.MNEMONIC} : [process.env.AVALANCHE_PRIVATE_KEY],
+      accounts:
+        process.env.MNEMONIC !== undefined
+          ? { mnemonic: process.env.MNEMONIC }
+          : [process.env.AVALANCHE_PRIVATE_KEY],
     },
     rinkeby: {
       url: process.env.RINKEBY_URL || "",
-      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      accounts:
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
       gasPrice: 10e9,
     },
     fantom: {
       url: "https://rpc.ftm.tools/",
       chainId: 250,
-      accounts: process.env.MNEMONIC !== undefined ? {mnemonic: process.env.MNEMONIC} : [process.env.MUMBAI_PRIVATE_KEY],
+      accounts:
+        process.env.MNEMONIC !== undefined
+          ? { mnemonic: process.env.MNEMONIC }
+          : [process.env.MUMBAI_PRIVATE_KEY],
       gasPrice: 225000000000,
     },
     fantom_testnet: {
       url: "https://rpc.testnet.fantom.network",
       chainId: 4002,
-      accounts: process.env.MNEMONIC !== undefined ? {mnemonic: process.env.MNEMONIC} : [process.env.MUMBAI_PRIVATE_KEY],
+      accounts:
+        process.env.MNEMONIC !== undefined
+          ? { mnemonic: process.env.MNEMONIC }
+          : [process.env.MUMBAI_PRIVATE_KEY],
       gasPrice: 225000000000,
     },
     // arbitrum: {
@@ -107,9 +151,12 @@ const config:any = {
     arbitrum_testnet: {
       url: "https://rinkeby.arbitrum.io/rpc",
       chainId: 421611,
-      accounts: process.env.MNEMONIC !== undefined ? {mnemonic: process.env.MNEMONIC} : [],
-      gasPrice: 225000000000
-    }
+      accounts:
+        process.env.MNEMONIC !== undefined
+          ? { mnemonic: process.env.MNEMONIC }
+          : [],
+      gasPrice: 225000000000,
+    },
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
@@ -124,7 +171,8 @@ export default config;
 
 function createLocalHostConfig() {
   const url: string = "http://localhost:8545";
-  const mnemonic: string = "test test test test test test test test test test test junk";
+  const mnemonic: string =
+    "test test test test test test test test test test test junk";
   return {
     accounts: {
       count: 10,
@@ -132,6 +180,6 @@ function createLocalHostConfig() {
       mnemonic,
       path: "m/44'/60'/0'/0",
     },
-    url
+    url,
   };
-};
+}

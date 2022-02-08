@@ -81,6 +81,7 @@ pkgs.stdenv.mkDerivation {
   # keep it fresh
   yarn install
   get-commit
+  (cd node_modules/@vishalkale15107/rain-protocol; rm -rf yarn.lock; yarn install --ignore-scripts; yarn build)
  '';
 }
 

@@ -66,10 +66,11 @@ const checkContract = async (
   contractName: string,
   networkName: string
 ): Promise<string> => {
-  if(networkName === "localhost") {
+  // If deploy to localhost, it's deployed fast so, make it all again
+  if (networkName === "localhost") {
     return "";
   }
-  
+
   if (
     config.network[networkName] &&
     config.network[networkName][contractName]
