@@ -18,6 +18,7 @@ import BalancerSafeMath from "@beehiveinnovation/configurable-rights-pool/artifa
 import RedeemableERC20Factory from "@beehiveinnovation/rain-protocol/artifacts/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json";
 import SeedERC20Factory from "@beehiveinnovation/rain-protocol/artifacts/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json";
 import TrustFactory from "@beehiveinnovation/rain-protocol/artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json";
+import redeemableERC20ClaimEscrowJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/escrow/RedeemableERC20ClaimEscrow.sol/RedeemableERC20ClaimEscrow.json";
 
 //
 import verifyFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/verify/VerifyFactory.sol/VerifyFactory.json";
@@ -28,6 +29,9 @@ import combineTierFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/c
 import saleFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/sale/SaleFactory.sol/SaleFactory.json";
 // Should be changed later
 import erc721BalanceTierFactoryJson from "@vishalkale15107/rain-protocol/artifacts/contracts/tier/ERC721BalanceTierFactory.sol/ERC721BalanceTierFactory.json";
+
+// import gatedNFTFactory
+import gatedNFTFactoryJson from "@beehiveinnovation/rain-statusfi/artifacts/contracts/GatedNFTFactory.sol/GatedNFTFactory.json";
 
 async function main() {
   const deployId = await getDeployID();
@@ -140,6 +144,21 @@ async function main() {
   ]);
   console.log("- SaleFactory deployed to: ", SaleFactoryAddress);
   exportArgs(saleFactoryJson, SaleFactoryArgs, deployId);
+
+  // Deploying GatedNFTFactory
+  const GatedNFTFactoryAddress = await deploy(gatedNFTFactoryJson, signer, []);
+  console.log("- GatedNFT factory deployed to: ", GatedNFTFactoryAddress);
+
+  // Deploying RedeemableERC20ClaimEscrow
+  const redeemableERC20ClaimEscrowAddress = await deploy(
+    redeemableERC20ClaimEscrowJson,
+    signer,
+    []
+  );
+  console.log(
+    "- RedeemableERC20ClaimEscrow deployed to: ",
+    redeemableERC20ClaimEscrowAddress
+  );
 }
 
 main()

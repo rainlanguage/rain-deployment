@@ -55,7 +55,9 @@
             "ERC20TransferTierFactory": "0xa43eA34c1CF2a94C976ECFC7ee5E4F4F3EEd174A",
             "CombineTierFactory": "0xBC019fd03295aB1A2d6E121493c5A63b398364ed",
             "ERC721BalanceTierFactory": "0xC484FF99DE2d64c08305125ddacb92b72E4d069E",
-            "SaleFactory": "0xC92d7B2214F70F4C10eB5080Efe141A8Cac6D7f3"
+            "SaleFactory": "0xC92d7B2214F70F4C10eB5080Efe141A8Cac6D7f3",
+            "GatedNFTFactory": "0x6307D15F6aB4d4BCE001107769538e7487d32cc5",
+            "RedeemableERC20ClaimEscrow": "0x2811FeA327950DAF44328A1C21511b128dAC4e57"
         }
     }
 }
