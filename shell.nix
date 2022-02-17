@@ -1,7 +1,7 @@
 let
  pkgs = import <nixpkgs> {};
 
-   flush-all = pkgs.writeShellScriptBin "flush-all" ''
+  flush-all = pkgs.writeShellScriptBin "flush-all" ''
     # rm -rf node_modules
     rm -rf artifacts
     rm -rf cache
@@ -10,18 +10,22 @@ let
     yarn install
   '';
 
-   deploy-rain = pkgs.writeShellScriptBin "deploy-rain" ''
+  deploy-rain = pkgs.writeShellScriptBin "deploy-rain" ''
     npx hardhat run scripts/deploy-rain.ts --network ''$1
   '';
 
-   create-trust = pkgs.writeShellScriptBin "create-trust" ''
+  create-trust = pkgs.writeShellScriptBin "create-trust" ''
     export TrustFactory=''$1
     npx hardhat run scripts/create-trust.ts --network ''$2
   '';
 
-   deploy-verify = pkgs.writeShellScriptBin "deploy-verify" ''
+  deploy-verify = pkgs.writeShellScriptBin "deploy-verify" ''
     export AdminAddress=''$1
     npx hardhat run scripts/deploy-verify-tier.ts --network ''$2
+  '';
+
+  verification-reef = pkgs.writeShellScriptBin "verification-reef" ''
+    npx hardhat run scripts/verify-reef.ts --network ''$1
   '';
 
   cut-dist = pkgs.writeShellScriptBin "cut-dist" ''
@@ -62,6 +66,7 @@ pkgs.stdenv.mkDerivation {
   deploy-rain
   create-trust
   deploy-verify
+  verification-reef
   flush-all
   cut-dist
   solt-the-earth

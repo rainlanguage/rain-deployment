@@ -2256,10 +2256,10 @@
     blakejs "~1.1.0"
     ethers "~5.5.0"
 
-"@reef-defi/hardhat-reef@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@reef-defi/hardhat-reef/-/hardhat-reef-1.0.7.tgz#36945714b3fdce27ff183347691c9574f5b61083"
-  integrity sha512-x0HIwZLzyjV/i/XSRtZEivwN4Fh9ioz/Bb2cgt/xFKpIsnhOa2+YJ0Tggn8o8Yof9ElQgyTzNqJjJLuFlMrJsw==
+"@reef-defi/hardhat-reef@1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@reef-defi/hardhat-reef/-/hardhat-reef-1.0.8.tgz#0dc6dfa90aaa3e451fd4d428b0ea3bfe25643e8c"
+  integrity sha512-GzdG6MxT+2OY2sD1UTSJtvP/5Ot+V3EPVVseydt3d/EKtwjofGoOYCk0grrXGQ5CTZRMKbabKDHHa9cVCANa8Q==
   dependencies:
     "@reef-defi/evm-provider" "^1.0.3"
     "@types/validator" "^13.1.3"

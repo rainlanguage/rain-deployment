@@ -1,29 +1,54 @@
-const hre = require("hardhat");
-// import hre, { ethers } from "hardhat";
 
-const wait = async (ms: any) => new Promise((res) => setTimeout(res, ms));
+const hre = require("hardhat");
+
+const wait = async (ms: any) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function main() {
-  const signer = (await hre.reef.getSigners())[0];
-  const RedeemableERC20PoolFactory = await hre.reef.getContractFactory("RedeemableERC20PoolFactory", signer);
-
+  // RedeemableERC20PoolFactory args
   const CRPFactoryAddress = "0x4b591Edd0cB14c4f806442384a167f7D87e3152a";
   const BFactoryAddress = "0xe123e3Dc098D6E191C9B666253C90B71d85a2053";
-
-  // const RedeemableERC20PoolFactoryAddress = "0x980662D3377224e02693618a2264953Dc07faBf4";
-  // const ReedERC20PoolFactArgs = [CRPFactoryAddress, BFactoryAddress];
   const ReedERC20PoolFactArgs = {
-    CRPFactoryAddress, 
-    BFactoryAddress
+    crpFactory: CRPFactoryAddress, 
+    balancerFactory: BFactoryAddress
   };
 
-  const contract = await RedeemableERC20PoolFactory.deploy([CRPFactoryAddress, BFactoryAddress]);
-  await contract.deployed();
-  const RedeemableERC20PoolFactoryAddress = contract.address;
+  const signer = (await hre.reef.getSigners())[0];
+  
+  // Deploying contract without args
+  const SeedERC20FactoryFactory = await hre.reef.getContractFactory("SeedERC20Factory", signer);
+  const SeedERC20Factory = await SeedERC20FactoryFactory.deploy();
+  await SeedERC20Factory.deployed();
+  const SeedERC20FactoryAddress = SeedERC20Factory.address;
+  console.log("SeedERC20Factory address: ", SeedERC20FactoryAddress);
+  
+  // Contract with args
+  const RedeemableERC20PoolFactoryFactory = await hre.reef.getContractFactory("RedeemableERC20PoolFactory", signer);
+  const RedeemableERC20Pool = await RedeemableERC20PoolFactoryFactory.deploy([CRPFactoryAddress, BFactoryAddress]);
+  await RedeemableERC20Pool.deployed();
+  const RedeemableERC20PoolFactoryAddress = RedeemableERC20Pool.address;
+  console.log("RedeemableERC20Pool address: ",RedeemableERC20Pool.address);
+  
   await wait(10000);
-  console.log("Contract address: ",contract.address)
-  await hre.reef.verifyContract(RedeemableERC20PoolFactoryAddress, "RedeemableERC20PoolFactory", ReedERC20PoolFactArgs);
-  await hre.reef.verifyContract(RedeemableERC20PoolFactoryAddress, "RedeemableERC20PoolFactory", [ReedERC20PoolFactArgs]);
+  
+  console.log("\nVerying contract with arg:");
+  // Verifying contract without args
+  await hre.reef.verifyContract(SeedERC20FactoryAddress, "SeedERC20Factory", []);
+  
+  console.log("\nVerying contract without arg:");
+  // Veryfing contract with args
+  await hre.reef.verifyContract(SeedERC20FactoryAddress, "RedeemableERC20PoolFactory", [ReedERC20PoolFactArgs]);
+
+  await hre.reef.verifyContract(
+    RedeemableERC20PoolFactoryAddress, 
+    "RedeemableERC20PoolFactory",
+    [ReedERC20PoolFactArgs],
+    {
+      runs: 100000,
+      target: 'london',
+      optimization: true,
+      compilerVersion: "v0.8.10+commit.fc410830",
+    }
+  );
 }
 
 main()

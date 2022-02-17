@@ -4,7 +4,6 @@ coverage
 coverage.json
 solt
 typechain
-contracts
 dist
 
 #Hardhat files
