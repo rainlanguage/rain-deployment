@@ -8,8 +8,8 @@ async function main() {
   const CRPFactoryAddress = "0x4b591Edd0cB14c4f806442384a167f7D87e3152a";
   const BFactoryAddress = "0xe123e3Dc098D6E191C9B666253C90B71d85a2053";
   const ReedERC20PoolFactArgs = {
-    crpFactory: CRPFactoryAddress, 
-    balancerFactory: BFactoryAddress
+    CRPFactoryAddress,
+    BFactoryAddress,
   };
 
   const signer = (await hre.reef.getSigners())[0];
