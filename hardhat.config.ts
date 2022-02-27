@@ -4,6 +4,7 @@ import * as dotenv from "dotenv";
 import { task } from "hardhat/config";
 import "@nomiclabs/hardhat-ethers";
 import "@reef-defi/hardhat-reef";
+import "@nomiclabs/hardhat-waffle";
 
 dotenv.config();
 

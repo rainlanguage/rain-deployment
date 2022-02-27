@@ -59,5 +59,37 @@
             "GatedNFTFactory": "0x6307D15F6aB4d4BCE001107769538e7487d32cc5",
             "RedeemableERC20ClaimEscrow": "0x2811FeA327950DAF44328A1C21511b128dAC4e57"
         }
+    },
+    "a0507a8562fffa406ed5e3855587888fce9aebb0": {
+        "mumbai": {
+            "RedeemableERC20Factory": "0x370d3B829c92671DF1239a2F2839a46e88f81eB7",
+            "SeedERC20Factory": "0x09117cF416f61Efb6871ACCD1C2e738f87749bE3",
+            "TrustFactory": "0xCf20D25cb6bBE232dc8718ED45Abe9d0351b7399",
+            "VerifyFactory": "0xA7eD9ed7D38c98b85212fA04660769F2bFa0C0fD",
+            "VerifyTierFactory": "0x44071328AaEa7962D423d3728Ad1d6664848B847",
+            "ERC20BalanceTierFactory": "0xc03a41e9A7501fC72f1f7ED397f7fd633CfA8d4c",
+            "ERC20TransferTierFactory": "0xA86da4660881678D94F5C068E4230Bb35a69E99E",
+            "CombineTierFactory": "0x076ed868E70C5fd980b7a28447b38F4ae111fF0e",
+            "ERC721BalanceTierFactory": "0x12fE682659c8D9F0B279D33B09E52bFda0c3c6d0",
+            "SaleFactory": "0x87E16Fb71b93a55593AB59316dcdbb4e4EA1a53e",
+            "GatedNFTFactory": "0xEC33515B43cE8879095d84894BDEC963b19d6521",
+            "RedeemableERC20ClaimEscrow": "0x6A940115127941c985992F3eaADE8A53E205754f"
+        }
+    },
+    "6d9a3e2225a5fbfab8558dc94b6115a314a0e4f9": {
+        "mumbai": {
+            "RedeemableERC20Factory": "0x0015C7e38246cff75ae965B3F6f820abE84c04BC",
+            "SeedERC20Factory": "0xad6D1D8d0dabf0a2c576480F4Dd631c11F71A511",
+            "TrustFactory": "0x4726df1f0495B4E02A19Ca0AA1Df564c12F2424B",
+            "VerifyFactory": "0xe6c315fd2860650a28dF2a82830a8Ace46126B63",
+            "VerifyTierFactory": "0x83034077ea371a440c7f24e264d6317f2253e8C4",
+            "ERC20BalanceTierFactory": "0x03E18cB188d53DFD5a965F35B7a05B654596F1c0",
+            "ERC20TransferTierFactory": "0x22c7C1Ef5f828d8623366E08f2B5e6ebA1F2652E",
+            "CombineTierFactory": "0x5687288CF1e0464dB12a643D0a02844437C4d5Ec",
+            "ERC721BalanceTierFactory": "0x6103007bdB897eFaCfd47E105B3C4e3c490c467e",
+            "SaleFactory": "0x1560E6003460870bD172d47C449c5d01F30494fF",
+            "GatedNFTFactory": "0xfaF9415f9a126220D240E096dA3287feab14569D",
+            "RedeemableERC20ClaimEscrow": "0x68d6DA2b8299BEf22eEA1CaBc5278C659df71CFA"
+        }
     }
 }

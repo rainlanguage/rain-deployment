@@ -4,10 +4,12 @@
     "module": "commonjs",
     "strict": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
     "outDir": "dist",
     "declaration": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "strictNullChecks": false
   },
-  "include": ["./scripts", "./hardhat.config.ts"]
+  "include": ["./scripts", "./test", "./typechain"],
+  "files": ["./hardhat.config.ts"]
 }
