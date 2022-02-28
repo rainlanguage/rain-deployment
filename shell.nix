@@ -87,7 +87,7 @@ pkgs.stdenv.mkDerivation {
   export PATH=$( npm bin ):$PATH
   # keep it fresh
   yarn install
-  (cd node_modules/@vishalkale15107/rain-protocol && [ ! -d artifacts ] && rm -rf yarn.lock && yarn install --ignore-scripts && yarn build)
+  (cd node_modules/@vishalkale15107/rain-protocol && [ ! -d artifacts ] && yarn install --ignore-scripts && yarn build)
   (cd node_modules/@beehiveinnovation/rain-statusfi && [ ! -d artifacts ] && yarn install --ignore-scripts && yarn build)
   get-commit
  '';

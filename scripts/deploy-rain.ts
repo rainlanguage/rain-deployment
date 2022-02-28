@@ -27,6 +27,7 @@ import erc20BalanceTierFactoryJson from "@beehiveinnovation/rain-protocol/artifa
 import erc20TransferTierFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/tier/ERC20TransferTierFactory.sol/ERC20TransferTierFactory.json";
 import combineTierFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/tier/CombineTierFactory.sol/CombineTierFactory.json";
 import saleFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/sale/SaleFactory.sol/SaleFactory.json";
+import noticeBoardJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/noticeboard/NoticeBoard.sol/NoticeBoard.json";
 // Should be changed later
 import erc721BalanceTierFactoryJson from "@vishalkale15107/rain-protocol/artifacts/contracts/tier/ERC721BalanceTierFactory.sol/ERC721BalanceTierFactory.json";
 
@@ -138,12 +139,15 @@ async function main() {
   );
 
   // Deploying Sale Factory
-  const SaleFactoryArgs = [RedeemableERC20FactoryAddress];
+  const saleConstructorConfig = {
+    maximumCooldownDuration: 1000,
+    redeemableERC20Factory: RedeemableERC20FactoryAddress,
+  };
   const SaleFactoryAddress = await deploy(saleFactoryJson, signer, [
-    SaleFactoryArgs,
+    saleConstructorConfig,
   ]);
   console.log("- SaleFactory deployed to: ", SaleFactoryAddress);
-  exportArgs(saleFactoryJson, SaleFactoryArgs, deployId);
+  exportArgs(saleFactoryJson, Object.values(saleConstructorConfig), deployId);
 
   // Deploying GatedNFTFactory
   const GatedNFTFactoryAddress = await deploy(gatedNFTFactoryJson, signer, []);
@@ -159,6 +163,10 @@ async function main() {
     "- RedeemableERC20ClaimEscrow deployed to: ",
     redeemableERC20ClaimEscrowAddress
   );
+
+  // Notice Board
+  const noticeBoardAddress = await deploy(noticeBoardJson, signer, []);
+  console.log("- NoticeBoard deployed to: ", noticeBoardAddress);
 }
 
 main()

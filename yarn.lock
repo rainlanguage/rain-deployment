@@ -1106,9 +1106,9 @@
     "@openzeppelin/contracts" "^4.3.3"
     "@openzeppelin/contracts-upgradeable" "^4.4.1"
 
-"@beehiveinnovation/rain-protocol@git+https://github.com/beehive-innovation/rain-protocol.git#6d9a3e2225a5fbfab8558dc94b6115a314a0e4f9":
+"@beehiveinnovation/rain-protocol@git+https://github.com/beehive-innovation/rain-protocol.git#ba4fb2fe6b2abefae59f4158a626e10ba05a8386":
   version "0.0.16"
-  resolved "git+https://github.com/beehive-innovation/rain-protocol.git#6d9a3e2225a5fbfab8558dc94b6115a314a0e4f9"
+  resolved "git+https://github.com/beehive-innovation/rain-protocol.git#ba4fb2fe6b2abefae59f4158a626e10ba05a8386"
   dependencies:
     "@beehiveinnovation/balancer-core" "0.0.7"
     "@beehiveinnovation/configurable-rights-pool" "0.0.1"
@@ -3014,9 +3014,9 @@
     "@typescript-eslint/types" "4.8.1"
     eslint-visitor-keys "^2.0.0"
 
-"@vishalkale15107/rain-protocol@git+https://github.com/vishalkale151071/rain-protocol.git#8c536bc531908a67fb4f4f88a6066552bd4ad492":
+"@vishalkale15107/rain-protocol@git+https://github.com/vishalkale151071/rain-protocol.git#e89ad9bf516110c33963171d2e3605e09bbc6677":
   version "0.0.16"
-  resolved "git+https://github.com/vishalkale151071/rain-protocol.git#8c536bc531908a67fb4f4f88a6066552bd4ad492"
+  resolved "git+https://github.com/vishalkale151071/rain-protocol.git#e89ad9bf516110c33963171d2e3605e09bbc6677"
   dependencies:
     "@0xsequence/sstore2" "git+https://github.com/0xsequence/sstore2.git#b9233bcf1bbbbed37f9029e0355ac3026cd3563b"
     "@beehiveinnovation/balancer-core" "0.0.7"

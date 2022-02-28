@@ -97,7 +97,7 @@ const config: any = {
       gasPrice: 10e9,
     },
     polygon: {
-      url: "https://rpc-mainnet.maticvigil.com",
+      url: process.env.POLYGON_URL || "",
       accounts:
         process.env.POLYGON_PRIVATE_KEY !== undefined
           ? [process.env.POLYGON_PRIVATE_KEY]
