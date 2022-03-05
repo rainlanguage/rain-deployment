@@ -34,5 +34,94 @@
             "SeedERC20Factory": "0x5c2AE197F097b2666410cffDBe810eEB5dE97754",
             "TrustFactory": "0x56CdCBcc1aaB520964f9D24fa3BFAa97258fDdC1"
         }
+    },
+    "d90af97f1549e118a11dc7e0c83c898ce997fe55": {
+        "mumbai": {
+            "RedeemableERC20Factory": "0x34f498CDDe118FB754D9614eb6FC6deE9b87B3F6",
+            "SeedERC20Factory": "0xe1B58f230979d9929304aac2BcE8E365bdb04ab4",
+            "TrustFactory": "0x26beFc81A74Bb6e7e5eDB041844BE48e64b5A142",
+            "VerifyFactory": "0x463f5301D232e07F20B5a5cBCB5E058A03d9132A",
+            "VerifyTierFactory": "0x3a916B8c945b6aC0ad4ba08b91Ad28BB68C190B4"
+        }
+    },
+    "develop-sale": {
+        "mumbai": {
+            "RedeemableERC20Factory": "0xc925F1dB977c06D549e684B4942Ae8E8E71f96a9",
+            "SeedERC20Factory": "0x985a0FD12cF324949e72E4e90Bc37511Cf63310E",
+            "TrustFactory": "0x53bbC4BdA175e7DA1BaD7d4e99A9adfbf1665999",
+            "VerifyFactory": "0xaE41cc6EF8239B6C10ebae2764cF14490bc78cd0",
+            "VerifyTierFactory": "0xde3C00783953A7292396FbE490042F1Db9C5f3da",
+            "ERC20BalanceTierFactory": "0xAcdBCb99f934C1B6C7f603FF7E567C1cAf04bb9B",
+            "ERC20TransferTierFactory": "0xa43eA34c1CF2a94C976ECFC7ee5E4F4F3EEd174A",
+            "CombineTierFactory": "0xBC019fd03295aB1A2d6E121493c5A63b398364ed",
+            "ERC721BalanceTierFactory": "0xC484FF99DE2d64c08305125ddacb92b72E4d069E",
+            "SaleFactory": "0xC92d7B2214F70F4C10eB5080Efe141A8Cac6D7f3",
+            "GatedNFTFactory": "0x6307D15F6aB4d4BCE001107769538e7487d32cc5",
+            "RedeemableERC20ClaimEscrow": "0x2811FeA327950DAF44328A1C21511b128dAC4e57"
+        }
+    },
+    "a0507a8562fffa406ed5e3855587888fce9aebb0": {
+        "mumbai": {
+            "RedeemableERC20Factory": "0x370d3B829c92671DF1239a2F2839a46e88f81eB7",
+            "SeedERC20Factory": "0x09117cF416f61Efb6871ACCD1C2e738f87749bE3",
+            "TrustFactory": "0xCf20D25cb6bBE232dc8718ED45Abe9d0351b7399",
+            "VerifyFactory": "0xA7eD9ed7D38c98b85212fA04660769F2bFa0C0fD",
+            "VerifyTierFactory": "0x44071328AaEa7962D423d3728Ad1d6664848B847",
+            "ERC20BalanceTierFactory": "0xc03a41e9A7501fC72f1f7ED397f7fd633CfA8d4c",
+            "ERC20TransferTierFactory": "0xA86da4660881678D94F5C068E4230Bb35a69E99E",
+            "CombineTierFactory": "0x076ed868E70C5fd980b7a28447b38F4ae111fF0e",
+            "ERC721BalanceTierFactory": "0x12fE682659c8D9F0B279D33B09E52bFda0c3c6d0",
+            "SaleFactory": "0x87E16Fb71b93a55593AB59316dcdbb4e4EA1a53e",
+            "GatedNFTFactory": "0xEC33515B43cE8879095d84894BDEC963b19d6521",
+            "RedeemableERC20ClaimEscrow": "0x6A940115127941c985992F3eaADE8A53E205754f"
+        }
+    },
+    "6d9a3e2225a5fbfab8558dc94b6115a314a0e4f9": {
+        "mumbai": {
+            "RedeemableERC20Factory": "0x0015C7e38246cff75ae965B3F6f820abE84c04BC",
+            "SeedERC20Factory": "0xad6D1D8d0dabf0a2c576480F4Dd631c11F71A511",
+            "TrustFactory": "0x4726df1f0495B4E02A19Ca0AA1Df564c12F2424B",
+            "VerifyFactory": "0xe6c315fd2860650a28dF2a82830a8Ace46126B63",
+            "VerifyTierFactory": "0x83034077ea371a440c7f24e264d6317f2253e8C4",
+            "ERC20BalanceTierFactory": "0x03E18cB188d53DFD5a965F35B7a05B654596F1c0",
+            "ERC20TransferTierFactory": "0x22c7C1Ef5f828d8623366E08f2B5e6ebA1F2652E",
+            "CombineTierFactory": "0x5687288CF1e0464dB12a643D0a02844437C4d5Ec",
+            "ERC721BalanceTierFactory": "0x6103007bdB897eFaCfd47E105B3C4e3c490c467e",
+            "SaleFactory": "0x1560E6003460870bD172d47C449c5d01F30494fF",
+            "GatedNFTFactory": "0xfaF9415f9a126220D240E096dA3287feab14569D",
+            "RedeemableERC20ClaimEscrow": "0x68d6DA2b8299BEf22eEA1CaBc5278C659df71CFA"
+        }
+    },
+    "ba4fb2fe6b2abefae59f4158a626e10ba05a8386": {
+        "mumbai": {
+            "RedeemableERC20Factory": "0x2E6624F400494C6F62C2A8367AfCD2C2F5fe2896",
+            "SeedERC20Factory": "0x6DF6D69233c03c6424EA7a9557F6c3D88A0c474c",
+            "TrustFactory": "0x577c6055Ab6F567F23FeeC1367803251e33cF65E",
+            "VerifyFactory": "0x39e3c764e6185C6a3100D0dA1195D26519b42750",
+            "VerifyTierFactory": "0x007aB50f8c491AE54114139b9ada40aB3c6e4811",
+            "ERC20BalanceTierFactory": "0x31a5F2f477297C2F3AED28E03Fec8934cc4298a7",
+            "ERC20TransferTierFactory": "0x7Db11E64f1d743b84d07d0F12F8aED5a1ebB0Ef8",
+            "ERC721BalanceTierFactory": "0xF95c6106d8b0FE566805a856Dfb7F64083369caF",
+            "CombineTierFactory": "0x09f91AC0215AFa0533Bf3212FBe59086300c3165",
+            "SaleFactory": "0x7fbc27F1D14e0c59e2F4346B5166692659c4694D",
+            "GatedNFTFactory": "0xD9AD3A87E4c1F604091c1A0E147c88B3A9E1B4ad",
+            "RedeemableERC20ClaimEscrow": "0xBD9C8F56889F95aac8ddFbF3cf8a168151EfD2Aa",
+            "NoticeBoard": "0x43A7007B8B0cf76008a0B8CE69934f4a1d109F6f"
+        },
+        "polygon": {
+            "RedeemableERC20Factory": "0x73B1363ffd4A722C663FdD403A4E2f432715Ac73",
+            "SeedERC20Factory": "0x2923289858521F52284cb4339156Ef3B8e5711C3",
+            "TrustFactory": "0xf75A66C535FbE97BeEcd1a465E32C8AfD846765D",
+            "VerifyFactory": "0x2b730c060FFA83Ce5D2B29016591874f31405A23",
+            "VerifyTierFactory": "0x535C0ae92B66F75aFF5B0125298E43B1CBc3fa63",
+            "ERC20BalanceTierFactory": "0xC6A8DA983f47E9c444Dac0b1881253bf8848a117",
+            "ERC20TransferTierFactory": "0xCbCC5582A9dF57067105b350757430a37E2479aa",
+            "CombineTierFactory": "0x8a28BD4F8F210e6BE7Ee83f06b310Fe89A72c142",
+            "ERC721BalanceTierFactory": "0xa6703bAC5A591fa7f59B1aF76060D4c34c7DaAaB",
+            "SaleFactory": "0x125102a6Fa1f8E83Cc5329F03f179E165eF623d5",
+            "GatedNFTFactory": "0xCB265d72a2669F1fA587327Ddb809dc5A4a6E45a",
+            "RedeemableERC20ClaimEscrow": "0xbBEB09Fe86536d66C43f76BFdc30e8802Fb7e6C5",
+            "NoticeBoard": "0xd1db393d3dEdE96ECF48CFED9De5f5ebE2df7d6F"
+        }
     }
 }
