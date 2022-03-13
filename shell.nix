@@ -71,7 +71,8 @@ in
 pkgs.stdenv.mkDerivation {
  name = "shell";
  buildInputs = [
-  pkgs.nodejs-14_x
+  pkgs.yarn
+  pkgs.nodejs-16_x
   pkgs.jq
   deploy-rain
   create-trust
@@ -87,8 +88,8 @@ pkgs.stdenv.mkDerivation {
   export PATH=$( npm bin ):$PATH
   # keep it fresh
   yarn install
-  (cd node_modules/@vishalkale15107/rain-protocol && [ ! -d artifacts ] && yarn install --ignore-scripts && yarn build)
-  (cd node_modules/@beehiveinnovation/rain-statusfi && [ ! -d artifacts ] && yarn install --ignore-scripts && yarn build)
+  (cd node_modules/@vishalkale15107/rain-protocol && [ ! -d artifacts ] && npm install --ignore-scripts && npm run build)
+  (cd node_modules/@beehiveinnovation/rain-statusfi && [ ! -d artifacts ] && npm install --ignore-scripts && npm run build)
   get-commit
  '';
 }
