@@ -28,6 +28,7 @@ import erc20TransferTierFactoryJson from "@beehiveinnovation/rain-protocol/artif
 import combineTierFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/tier/CombineTierFactory.sol/CombineTierFactory.json";
 import saleFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/sale/SaleFactory.sol/SaleFactory.json";
 import noticeBoardJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/noticeboard/NoticeBoard.sol/NoticeBoard.json";
+import emissionsERC20FactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/claim/EmissionsERC20Factory.sol/EmissionsERC20Factory.json";
 // Should be changed later
 import erc721BalanceTierFactoryJson from "@vishalkale15107/rain-protocol/artifacts/contracts/tier/ERC721BalanceTierFactory.sol/ERC721BalanceTierFactory.json";
 
@@ -167,6 +168,17 @@ async function main() {
   // Notice Board
   const noticeBoardAddress = await deploy(noticeBoardJson, signer, []);
   console.log("- NoticeBoard deployed to: ", noticeBoardAddress);
+
+  // EmissionsERC20Factory
+  const emissionsERC20FactoryAddress = await deploy(
+    emissionsERC20FactoryJson,
+    signer,
+    []
+  );
+  console.log(
+    "- EmissionsERC20Factory deployed to: ",
+    emissionsERC20FactoryAddress
+  );
 }
 
 main()
