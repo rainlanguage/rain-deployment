@@ -106,7 +106,8 @@
             "SaleFactory": "0x7fbc27F1D14e0c59e2F4346B5166692659c4694D",
             "GatedNFTFactory": "0xD9AD3A87E4c1F604091c1A0E147c88B3A9E1B4ad",
             "RedeemableERC20ClaimEscrow": "0xBD9C8F56889F95aac8ddFbF3cf8a168151EfD2Aa",
-            "NoticeBoard": "0x43A7007B8B0cf76008a0B8CE69934f4a1d109F6f"
+            "NoticeBoard": "0x43A7007B8B0cf76008a0B8CE69934f4a1d109F6f",
+            "EmissionsERC20Factory": "0x10c0c0578a9dd9d3357b61AE9fA1638087ac8cd0"
         },
         "polygon": {
             "RedeemableERC20Factory": "0x73B1363ffd4A722C663FdD403A4E2f432715Ac73",
