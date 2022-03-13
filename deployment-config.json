@@ -1,6 +1,6 @@
 {
     "dist": "",
-    "show_tx": false,
+    "show_tx": true,
     "new_entity": false,
     "deploy_config": {
         "nonce": null,
