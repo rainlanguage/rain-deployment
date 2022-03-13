@@ -22,7 +22,7 @@
     "@types/node": "^16.10.2",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
-    "@vishalkale15107/rain-protocol": "git+https://github.com/vishalkale151071/rain-protocol.git#e89ad9bf516110c33963171d2e3605e09bbc6677",
+    "@vishalkale15107/rain-protocol": "git+https://github.com/vishalkale151071/rain-protocol.git#3d0ee716430d28716365f0f1c999fe14c30f0b4b",
     "chai": "^4.3.4",
     "dotenv": "^10.0.0",
     "eslint": "^7.32.0",
