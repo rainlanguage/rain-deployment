@@ -5,17 +5,17 @@ import { Result } from "ethers/lib/utils";
 
 import ConfigurableRightsPoolJson from "@beehiveinnovation/configurable-rights-pool/artifacts/ConfigurableRightsPool.json";
 import BPoolJson from "@beehiveinnovation/configurable-rights-pool/artifacts/BPool.json";
-import TrustJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/trust/Trust.sol/Trust.json";
+import TrustJson from "../artifacts/contracts/trust/Trust.sol/Trust.json";
 
 import type {
   Trust,
   TrustConfigStruct,
   TrustRedeemableERC20ConfigStruct,
   TrustSeedERC20ConfigStruct,
-} from "@beehiveinnovation/rain-protocol/typechain/Trust";
-import type { TrustFactory } from "@beehiveinnovation/rain-protocol/typechain/TrustFactory";
-import type { ConfigurableRightsPool } from "@beehiveinnovation/rain-protocol/typechain/ConfigurableRightsPool";
-import type { BPool } from "@beehiveinnovation/rain-protocol/typechain/BPool";
+} from "../typechain/Trust";
+import type { TrustFactory } from "../typechain/TrustFactory";
+import type { ConfigurableRightsPool } from "../typechain/ConfigurableRightsPool";
+import type { BPool } from "../typechain/BPool";
 import { Artifact } from "hardhat/types";
 import type { Contract, ContractTransaction } from "ethers";
 
@@ -96,42 +96,44 @@ const writeAddress = async (
   contractName: string,
   networkName: string
 ) => {
-  let pathTo, content;
-  if (BALANCER_NAMES.includes(contractName)) {
-    pathTo = path.resolve(__dirname, "../deployment-config.json");
-    content = fs.existsSync(pathTo) ? fetchFile(pathTo) : {};
-    if (!Object.prototype.hasOwnProperty.call(content.network, networkName)) {
-      content.network[networkName] = {};
+  if (networkName !== "localhost") {
+    let pathTo, content;
+    if (BALANCER_NAMES.includes(contractName)) {
+      pathTo = path.resolve(__dirname, "../deployment-config.json");
+      content = fs.existsSync(pathTo) ? fetchFile(pathTo) : {};
+      if (!Object.prototype.hasOwnProperty.call(content.network, networkName)) {
+        content.network[networkName] = {};
+      }
+      if (
+        !Object.prototype.hasOwnProperty.call(
+          content.network[networkName],
+          networkName
+        )
+      ) {
+        content.network[networkName][contractName] = {};
+      }
+      content.network[networkName][contractName] = address;
+    } else {
+      pathTo = path.join(__dirname, "Addresses.json");
+      content = fs.existsSync(pathTo) ? fetchFile(pathTo) : {};
+      if (!Object.prototype.hasOwnProperty.call(content, commit)) {
+        content[commit] = {};
+      }
+      if (!Object.prototype.hasOwnProperty.call(content[commit], networkName)) {
+        content[commit][networkName] = {};
+      }
+      if (
+        !Object.prototype.hasOwnProperty.call(
+          content[commit][networkName],
+          contractName
+        )
+      ) {
+        content[commit][networkName][contractName] = {};
+      }
+      content[commit][networkName][contractName] = address;
     }
-    if (
-      !Object.prototype.hasOwnProperty.call(
-        content.network[networkName],
-        networkName
-      )
-    ) {
-      content.network[networkName][contractName] = {};
-    }
-    content.network[networkName][contractName] = address;
-  } else {
-    pathTo = path.join(__dirname, "Addresses.json");
-    content = fs.existsSync(pathTo) ? fetchFile(pathTo) : {};
-    if (!Object.prototype.hasOwnProperty.call(content, commit)) {
-      content[commit] = {};
-    }
-    if (!Object.prototype.hasOwnProperty.call(content[commit], networkName)) {
-      content[commit][networkName] = {};
-    }
-    if (
-      !Object.prototype.hasOwnProperty.call(
-        content[commit][networkName],
-        contractName
-      )
-    ) {
-      content[commit][networkName][contractName] = {};
-    }
-    content[commit][networkName][contractName] = address;
+    writeFile(pathTo, JSON.stringify(content, null, 4));
   }
-  writeFile(pathTo, JSON.stringify(content, null, 4));
 };
 
 export const deploy = async (
@@ -154,8 +156,22 @@ export const deploy = async (
       (await checkNetwork()).name !== "reef" ? config.deploy_config : {};
     const contract = await factory.deploy(...argmts, overrides);
     if (config.show_tx) {
+      const replacer = (key: string, value: any) => {
+        return key === "data" ? undefined : value;
+      };
+      console.log(
+        "Transaction: \n",
+        JSON.stringify(contract.deployTransaction, replacer, 2)
+      );
       console.log("Nonce:", contract.deployTransaction.nonce);
       console.log("Tx hash:", contract.deployTransaction.hash);
+      console.log("GasLimit:", contract.deployTransaction.gasLimit);
+      console.log("GasPrice:", contract.deployTransaction.gasPrice);
+      console.log("MaxFeePerGas:", contract.deployTransaction.maxFeePerGas);
+      console.log(
+        "maxPriorityFeePerGas:",
+        contract.deployTransaction.maxPriorityFeePerGas
+      );
     }
     await contract.deployTransaction.wait();
     if (config.new_entity) {
@@ -182,21 +198,23 @@ export const exportArgs = (
   args: (string | number)[],
   deployId: string
 ) => {
-  let pathTo = path.join(__dirname, "verification", deployId);
-  checkPath(pathTo);
-  pathTo = path.join(pathTo, "arguments.json");
-  const content = fs.existsSync(pathTo) ? fetchFile(pathTo) : {};
-  const encodeABIArgs = args.reduce((prev, current) => {
-    return (
-      prev +
-      (typeof current === "number"
-        ? ethers.utils.hexZeroPad(ethers.utils.hexlify(current), 32)
-        : ethers.utils.hexZeroPad(current, 32)
-      ).replace("0x", "")
-    );
-  }, "");
-  content[artifact.contractName] = encodeABIArgs;
-  writeFile(pathTo, JSON.stringify(content, null, 4));
+  if (!deployId.includes("localhost")) {
+    let pathTo = path.join(__dirname, "verification", deployId);
+    checkPath(pathTo);
+    pathTo = path.join(pathTo, "arguments.json");
+    const content = fs.existsSync(pathTo) ? fetchFile(pathTo) : {};
+    const encodeABIArgs = args.reduce((prev, current) => {
+      return (
+        prev +
+        (typeof current === "number"
+          ? ethers.utils.hexZeroPad(ethers.utils.hexlify(current), 32)
+          : ethers.utils.hexZeroPad(current, 32)
+        ).replace("0x", "")
+      );
+    }, "");
+    content[artifact.contractName] = encodeABIArgs;
+    writeFile(pathTo, JSON.stringify(content, null, 4));
+  }
 };
 
 export const getDeployID = async () => {

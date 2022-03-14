@@ -70,7 +70,6 @@ pkgs.stdenv.mkDerivation {
   flush-all
   deploy-rain
   create-trust
-  deploy-verify
   solt-the-earth
   get-commit
   init
@@ -81,6 +80,7 @@ pkgs.stdenv.mkDerivation {
   export PATH=$( npm bin ):$PATH
   # keep it fresh
   yarn install
+  init
  '';
 }
 

@@ -15,25 +15,25 @@ import SmartPoolManager from "@beehiveinnovation/configurable-rights-pool/artifa
 import BalancerSafeMath from "@beehiveinnovation/configurable-rights-pool/artifacts/BalancerSafeMath.json";
 
 // Rain protocol
-import RedeemableERC20Factory from "@beehiveinnovation/rain-protocol/artifacts/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json";
-import SeedERC20Factory from "@beehiveinnovation/rain-protocol/artifacts/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json";
-import TrustFactory from "@beehiveinnovation/rain-protocol/artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json";
-import redeemableERC20ClaimEscrowJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/escrow/RedeemableERC20ClaimEscrow.sol/RedeemableERC20ClaimEscrow.json";
+import RedeemableERC20Factory from "../artifacts/contracts/redeemableERC20/RedeemableERC20Factory.sol/RedeemableERC20Factory.json";
+import SeedERC20Factory from "../artifacts/contracts/seed/SeedERC20Factory.sol/SeedERC20Factory.json";
+import TrustFactory from "../artifacts/contracts/trust/TrustFactory.sol/TrustFactory.json";
+import redeemableERC20ClaimEscrowJson from "../artifacts/contracts/escrow/RedeemableERC20ClaimEscrow.sol/RedeemableERC20ClaimEscrow.json";
 
 //
-import verifyFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/verify/VerifyFactory.sol/VerifyFactory.json";
-import verifyTierFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/tier/VerifyTierFactory.sol/VerifyTierFactory.json";
-import erc20BalanceTierFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/tier/ERC20BalanceTierFactory.sol/ERC20BalanceTierFactory.json";
-import erc20TransferTierFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/tier/ERC20TransferTierFactory.sol/ERC20TransferTierFactory.json";
-import combineTierFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/tier/CombineTierFactory.sol/CombineTierFactory.json";
-import saleFactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/sale/SaleFactory.sol/SaleFactory.json";
-import noticeBoardJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/noticeboard/NoticeBoard.sol/NoticeBoard.json";
-import emissionsERC20FactoryJson from "@beehiveinnovation/rain-protocol/artifacts/contracts/claim/EmissionsERC20Factory.sol/EmissionsERC20Factory.json";
+import verifyFactoryJson from "../artifacts/contracts/verify/VerifyFactory.sol/VerifyFactory.json";
+import verifyTierFactoryJson from "../artifacts/contracts/tier/VerifyTierFactory.sol/VerifyTierFactory.json";
+import erc20BalanceTierFactoryJson from "../artifacts/contracts/tier/ERC20BalanceTierFactory.sol/ERC20BalanceTierFactory.json";
+import erc20TransferTierFactoryJson from "../artifacts/contracts/tier/ERC20TransferTierFactory.sol/ERC20TransferTierFactory.json";
+import combineTierFactoryJson from "../artifacts/contracts/tier/CombineTierFactory.sol/CombineTierFactory.json";
+import saleFactoryJson from "../artifacts/contracts/sale/SaleFactory.sol/SaleFactory.json";
+import noticeBoardJson from "../artifacts/contracts/noticeboard/NoticeBoard.sol/NoticeBoard.json";
+import emissionsERC20FactoryJson from "../artifacts/contracts/claim/EmissionsERC20Factory.sol/EmissionsERC20Factory.json";
 // Should be changed later
-import erc721BalanceTierFactoryJson from "@vishalkale15107/rain-protocol/artifacts/contracts/tier/ERC721BalanceTierFactory.sol/ERC721BalanceTierFactory.json";
+import erc721BalanceTierFactoryJson from "../artifacts/contracts/tier/ERC721BalanceTierFactory.sol/ERC721BalanceTierFactory.json";
 
 // import gatedNFTFactory
-import gatedNFTFactoryJson from "@beehiveinnovation/rain-statusfi/artifacts/contracts/GatedNFTFactory.sol/GatedNFTFactory.json";
+import gatedNFTFactoryJson from "../artifacts/contracts/rain-statusfi/GatedNFTFactory.sol/GatedNFTFactory.json";
 
 async function main() {
   const deployId = await getDeployID();
@@ -168,6 +168,8 @@ async function main() {
   // Notice Board
   const noticeBoardAddress = await deploy(noticeBoardJson, signer, []);
   console.log("- NoticeBoard deployed to: ", noticeBoardAddress);
+
+  console.log(await signer.getTransactionCount());
 
   // EmissionsERC20Factory
   const emissionsERC20FactoryAddress = await deploy(
