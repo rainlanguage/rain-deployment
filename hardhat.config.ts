@@ -1,39 +1,62 @@
-/* eslint-disable camelcase */
 import * as dotenv from "dotenv";
 
-import { task } from "hardhat/config";
 import "@nomiclabs/hardhat-ethers";
-import "@reef-defi/hardhat-reef";
 import "@nomiclabs/hardhat-waffle";
+import "@reef-defi/hardhat-reef";
+import "@typechain/hardhat";
 
 dotenv.config();
 
-// This is a sample Hardhat task. To learn how to create your own go to
-// https://hardhat.org/guides/create-task.html
-task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
-  const accounts = await hre.ethers.getSigners();
-
-  for (const account of accounts) {
-    console.log(account.address);
-  }
-});
-
-// You need to export an object to set up your config
-// Go to https://hardhat.org/config/ to learn more
+function createLocalHostConfig() {
+  const url: string = "http://localhost:8545";
+  const mnemonic: string =
+    "test test test test test test test test test test test junk";
+  return {
+    accounts: {
+      count: 10,
+      initialIndex: 0,
+      mnemonic,
+      path: "m/44'/60'/0'/0",
+    },
+    url,
+  };
+}
 
 const config: any = {
+  typechain: {
+    outDir: "typechain",
+  },
   solidity: {
     compilers: [
       {
         version: "0.8.10",
         settings: {
-          metadata: {
-            useLiteralContent: true,
-          },
           optimizer: {
             enabled: true,
             runs: 100000,
           },
+          metadata: {
+            useLiteralContent: true,
+          },
+        },
+      },
+      {
+        version: "0.6.12",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 100000,
+          },
+        },
+      },
+      {
+        version: "0.5.12",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 100,
+          },
+          evmVersion: "byzantium",
         },
       },
     ],
@@ -46,8 +69,9 @@ const config: any = {
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
       gasPrice: 10e9,
     },
-    reef_mainnet: {
+    reefMainnet: {
       url: "wss://rpc.reefscan.com/ws",
+      scanUrl: "wss://reefscan.com",
       seeds: {
         account1:
           process.env.MNEMONIC_REEF1 !== undefined
@@ -67,8 +91,9 @@ const config: any = {
             : "",
       },
     },
-    reef_testnet: {
+    reefTestnet: {
       url: "wss://rpc-testnet.reefscan.com/ws",
+      scanUrl: "https://testnet.reefscan.com",
       seeds: {
         account1:
           process.env.MNEMONIC_REEF1 !== undefined
@@ -137,7 +162,7 @@ const config: any = {
           : [process.env.MUMBAI_PRIVATE_KEY],
       gasPrice: 225000000000,
     },
-    fantom_testnet: {
+    fantomTestnet: {
       url: "https://rpc.testnet.fantom.network",
       chainId: 4002,
       accounts:
@@ -149,7 +174,7 @@ const config: any = {
     // arbitrum: {
 
     // },
-    arbitrum_testnet: {
+    arbitrumTestnet: {
       url: "https://rinkeby.arbitrum.io/rpc",
       chainId: 421611,
       accounts:
@@ -166,21 +191,9 @@ const config: any = {
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,
   },
+  mocha: {
+    timeout: 300000,
+  },
 };
 
 export default config;
-
-function createLocalHostConfig() {
-  const url: string = "http://localhost:8545";
-  const mnemonic: string =
-    "test test test test test test test test test test test junk";
-  return {
-    accounts: {
-      count: 10,
-      initialIndex: 0,
-      mnemonic,
-      path: "m/44'/60'/0'/0",
-    },
-    url,
-  };
-}

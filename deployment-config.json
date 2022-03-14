@@ -22,14 +22,14 @@
             "RightsManager": "0x332393AD329ee750C2EAa60F23287CCF65C12c93",
             "CRPFactory": "0x052406398009CCF24e6D7EC5933743e63F6CBA15"
         },
-        "reef_mainnet": {
+        "reefMainnet": {
             "BFactory": "",
             "SmartPoolManager": "",
             "BalancerSafeMath": "",
             "RightsManager": "",
             "CRPFactory": ""
         },
-        "reef_testnet": {
+        "reefTestnet": {
             "BFactory": "0xe123e3Dc098D6E191C9B666253C90B71d85a2053",
             "SmartPoolManager": "0x5152A73E15E7ec18b242e940f98EeC569Dc7f977",
             "BalancerSafeMath": "0xF9F3ef5562b3346def5dd71f3189095a1A124c1E",
@@ -57,19 +57,12 @@
             "RightsManager": "",
             "CRPFactory": ""
         },
-        "fantom_testnet": {
+        "fantomTestnet": {
             "BFactory": "0x66EB2ba594f6a2160a5d2C6436C212F0E16e7684",
             "SmartPoolManager": "0x9FbA4876bBb2d139D2151DC04444099D3B3dC99d",
             "BalancerSafeMath": "0x23e2A8564a6B0A74fa4297A1a1CddD2A0250c047",
             "RightsManager": "0xc0D32D37D69cCeB4019913a74DDfb05DfCC9C183",
             "CRPFactory": "0x795D6340DFbC87660d48554827f05a4eb504453e"
-        },
-        "localhost": {
-            "BFactory": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-            "SmartPoolManager": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-            "BalancerSafeMath": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-            "RightsManager": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
-            "CRPFactory": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
         }
     }
 }
