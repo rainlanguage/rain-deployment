@@ -10,3 +10,6 @@ dist
 #Hardhat files
 cache
 /artifacts
+
+
+scripts/help.txt
