@@ -118,15 +118,13 @@ const config: any = {
       accounts:
         process.env.MNEMONIC !== undefined
           ? { mnemonic: process.env.MNEMONIC }
-          : [process.env.MUMBAI_PRIVATE_KEY],
+          : [process.env.PRIVATE_KEY],
       gasPrice: 10e9,
     },
     polygon: {
       url: process.env.POLYGON_URL || "",
       accounts:
-        process.env.POLYGON_PRIVATE_KEY !== undefined
-          ? [process.env.POLYGON_PRIVATE_KEY]
-          : [],
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
       gasPrice: 20e9,
     },
     avalanche: {
@@ -134,9 +132,7 @@ const config: any = {
       gasPrice: 225000000000,
       chainId: 43114,
       accounts:
-        process.env.AVALANCHE_PRIVATE_KEY !== undefined
-          ? [process.env.AVALANCHE_PRIVATE_KEY]
-          : [],
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
     fuji: {
       url: "https://api.avax-test.network/ext/bc/C/rpc",
@@ -145,7 +141,7 @@ const config: any = {
       accounts:
         process.env.MNEMONIC !== undefined
           ? { mnemonic: process.env.MNEMONIC }
-          : [process.env.AVALANCHE_PRIVATE_KEY],
+          : [process.env.PRIVATE_KEY],
     },
     rinkeby: {
       url: process.env.RINKEBY_URL || "",
@@ -159,7 +155,7 @@ const config: any = {
       accounts:
         process.env.MNEMONIC !== undefined
           ? { mnemonic: process.env.MNEMONIC }
-          : [process.env.MUMBAI_PRIVATE_KEY],
+          : [process.env.PRIVATE_KEY],
       gasPrice: 225000000000,
     },
     fantomTestnet: {
@@ -168,7 +164,7 @@ const config: any = {
       accounts:
         process.env.MNEMONIC !== undefined
           ? { mnemonic: process.env.MNEMONIC }
-          : [process.env.MUMBAI_PRIVATE_KEY],
+          : [process.env.PRIVATE_KEY],
       gasPrice: 225000000000,
     },
     // arbitrum: {
