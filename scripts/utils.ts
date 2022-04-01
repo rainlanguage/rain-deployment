@@ -1,3 +1,4 @@
+/* eslint-disable */
 import hre, { ethers } from "hardhat";
 import * as path from "path";
 import fs from "fs";
@@ -19,9 +20,10 @@ import type { BPool } from "../typechain/BPool";
 import { Artifact } from "hardhat/types";
 import type { Contract, ContractTransaction } from "ethers";
 
-const config = require("../deployment-config.json");
-const bookAddresses = require("./Addresses.json");
-const commit: any = process.env.COMMIT;
+import * as config from "../deployment-config.json";
+import * as bookAddresses from "./Addresses.json";
+const commit: string = process.env.COMMIT;
+
 const BALANCER_NAMES = [
   "BFactory",
   "SmartPoolManager",
@@ -184,11 +186,11 @@ export const deploy = async (
 };
 
 export const linkBytecode = (bytecode: any, links: any) => {
-  Object.keys(links).forEach((library_name) => {
-    const library_address = links[library_name];
-    const regex = new RegExp(`__${library_name}_+`, "g");
+  Object.keys(links).forEach((libraryName) => {
+    const libraryAddress = links[libraryName];
+    const regex = new RegExp(`__${libraryName}_+`, "g");
 
-    bytecode = bytecode.replace(regex, library_address.replace("0x", ""));
+    bytecode = bytecode.replace(regex, libraryAddress.replace("0x", ""));
   });
   return bytecode;
 };

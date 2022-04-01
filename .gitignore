@@ -11,5 +11,6 @@ dist
 cache
 /artifacts
 
-
-scripts/help.txt
+# Hardhat deploy (local)
+deployments/localhost
+deployments/reef

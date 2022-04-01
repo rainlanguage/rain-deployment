@@ -9,7 +9,9 @@ let
 
    flush-all = pkgs.writeShellScriptBin "flush-all" ''
     rm -rf node_modules
+    rm -rf contracts
     rm -rf artifacts
+    rm -rf solt
     rm -rf cache
     rm -rf typechain
     rm -rf bin
@@ -18,6 +20,10 @@ let
 
   deploy-rain = pkgs.writeShellScriptBin "deploy-rain" ''
     npx hardhat run scripts/deploy-rain.ts --network ''$1
+  '';
+
+  deploy-rain-reef = pkgs.writeShellScriptBin "deploy-rain-reef" ''
+    npx hardhat run scripts/deploy-rain-reef.ts --network ''$1
   '';
 
   create-trust = pkgs.writeShellScriptBin "create-trust" ''
@@ -35,9 +41,7 @@ let
 
   get-commit = pkgs.writeShellScriptBin "get-commit" ''
     rm -rf solt
-    (cd node_modules/@beehiveinnovation/rain-protocol; solt-the-earth)
-    (cd node_modules/@vishalkale15107/rain-protocol; solt-the-earth)
-    (cd node_modules/@beehiveinnovation/rain-statusfi; solt-the-earth)
+    solt-the-earth
     commit=`jq '.dependencies."@beehiveinnovation/rain-protocol"' package.json`
     if [[ $commit == *"#"* ]]; then
       commit=''${commit#*\#}; commit=''${commit::-1}
@@ -45,11 +49,6 @@ let
       commit=`echo $commit | sed 's/\^//' | sed 's/\~//'`;commit=''${commit:1:-1}
     fi
     sed -i '$s/.*/COMMIT='$commit'/' .env
-    cp -r "node_modules/@beehiveinnovation/rain-protocol/solt" "./"
-    cp -r "node_modules/@vishalkale15107/rain-protocol/solt/solc-input-erc721balancetierfactory.json" "solt"
-    cp -r "node_modules/@vishalkale15107/rain-protocol/solt/solc-input-erc721balancetier.json" "solt"
-    cp -r "node_modules/@beehiveinnovation/rain-statusfi/solt/solc-input-gatednftfactory.json" "solt"
-    cp -r "node_modules/@beehiveinnovation/rain-statusfi/solt/solc-input-gatednft.json" "solt"
   '';
 
   init = pkgs.writeShellScriptBin "init" ''
@@ -69,6 +68,7 @@ pkgs.stdenv.mkDerivation {
   pkgs.jq
   flush-all
   deploy-rain
+  deploy-rain-reef
   create-trust
   solt-the-earth
   get-commit

@@ -7,29 +7,16 @@ module.exports = {
   },
   plugins: ["@typescript-eslint"],
   extends: [
-    "standard",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended",
-    "plugin:node/recommended",
   ],
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    ecmaVersion: 12,
-  },
   rules: {
-    "node/no-unsupported-features/es-syntax": [
-      "error",
-      { ignores: ["modules"] },
-    ],
-    "node/no-missing-import": [
-      "error",
-      {
-        tryExtensions: [".ts", ".json", ".d.ts"],
-      },
-    ],
     camelcase: [
       "error",
       {
-        allow: ["library_name", "library_address"],
+        allow: ["reef_testnet", "reef_mainnet"],
       },
     ],
   },
