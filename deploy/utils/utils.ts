@@ -14,18 +14,6 @@ export const networkName = hre.network.name;
 const commit: string = process.env.COMMIT;
 const ZERO_BN = ethers.constants.Zero;
 
-const deployConfigPath = path.resolve(
-  __dirname,
-  "../../deployment-config.json"
-);
-const BALANCER_NAMES = [
-  "BFactory",
-  "SmartPoolManager",
-  "BalancerSafeMath",
-  "RightsManager",
-  "CRPFactory",
-];
-
 const deploymentsPath = path.resolve(__dirname, "../../deployments");
 if (!fs.existsSync(`${deploymentsPath}/${commit}`)) {
   fs.mkdirSync(`${deploymentsPath}/${commit}`, { recursive: true });
@@ -38,13 +26,6 @@ export interface BasicArtifact extends Partial<Artifact> {
   metadata?: string;
   devdoc?: any;
   userdoc?: any;
-}
-
-export interface CRPLibraries {
-  [key: string]: string;
-  SmartPoolManager: string;
-  BalancerSafeMath: string;
-  RightsManager: string;
 }
 
 export interface OutputContract extends CompilerOutputContract {
@@ -119,38 +100,25 @@ export enum EstimationLevel {
   AGGRESSIVE, // Will use a +10% of current market value
 }
 
-/**
- * Check the existence of a Balancer contract in current network. The balancer
- * contracts are: `BFactory`, `SmartPoolManager`, `BalancerSafeMath`, `RightsManager`
- * and `CRPFactory`.
- * @param contractName The balancer contract name
- * @returns The address of the existing contract if deployed or nothing in other case
- */
-function checkBalancerDeployed(contractName: string): string {
-  return deployConfig.networks?.[networkName]?.[contractName];
-}
-
 export async function deployContract(
   contractName: string,
   options: DeployOptions
-  // ): Promise<any> {
 ): Promise<DeployResult> {
   const { deployments } = hre;
   const { deploy } = deployments;
 
-  const deployedAddress = checkBalancerDeployed(contractName);
-  if (deployedAddress) {
-    const artifact = options.contract
-      ? options.contract
-      : await artifacts.readArtifact(contractName);
+  const estimation = deployConfig.estimationLevel.toLowerCase();
 
-    return {
-      address: deployedAddress,
-      abi: artifact.abi,
-    };
+  // By Default use the market
+  let estimationLevel = EstimationLevel.MARKET;
+  if (estimation === "low") {
+    estimationLevel = EstimationLevel.LOW;
+  }
+  if (estimation === "aggressive") {
+    estimationLevel = EstimationLevel.AGGRESSIVE;
   }
 
-  const feeCalculated = await estimateGasFee(EstimationLevel.MARKET);
+  const feeCalculated = await estimateGasFee(estimationLevel);
   if (!options.gasPrice) {
     options.gasPrice = feeCalculated.gasPrice;
   }
@@ -161,7 +129,6 @@ export async function deployContract(
     options.maxPriorityFeePerGas = feeCalculated.maxPriorityFeePerGas;
   }
 
-  // TODO: Sava to deploy config if does not exist the balancer contract
   const result = await deploy(contractName, options);
   return result;
 }
@@ -176,27 +143,6 @@ export const flattenBigNumbers = (obj: unknown): void => {
       obj[key] = obj[key].toString();
     }
   });
-};
-
-/**
- * Linking libraries to CRPFactory bytecode
- * @param artifact CRPFactory artifacts that contain the bytecode to link
- * @param links The libraries addresses to link
- * @returns The artifacts with the bytecode linked with libraries
- */
-export const linkBytecode = (
-  artifact: Artifact | BasicArtifact,
-  links: CRPLibraries
-): Artifact | BasicArtifact => {
-  Object.keys(links).forEach((libraryName) => {
-    const libraryAddress = links[libraryName];
-    const regex = new RegExp(`__${libraryName}_+`, "g");
-    artifact.bytecode = artifact.bytecode.replace(
-      regex,
-      libraryAddress.replace("0x", "")
-    );
-  });
-  return artifact;
 };
 
 /**

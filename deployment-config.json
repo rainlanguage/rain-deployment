@@ -1,7 +1,7 @@
 {
-  "dist": "",
   "show_tx": false,
   "new_entity": false,
+  "estimationLevel": "MARKET",
   "deploy_config": {
     "nonce": null,
     "gasPrice": null,

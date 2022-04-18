@@ -21,13 +21,6 @@ export interface BasicArtifact extends Partial<Artifact> {
   userdoc?: any;
 }
 
-export interface CRPLibraries {
-  [key: string]: string;
-  SmartPoolManager: string;
-  BalancerSafeMath: string;
-  RightsManager: string;
-}
-
 export interface OutputContract extends CompilerOutputContract {
   metadata?: string;
   userdoc?: any;
@@ -243,27 +236,6 @@ function flattenBigNumbers(obj: unknown): void {
     }
   });
 }
-
-/**
- * Linking libraries to CRPFactory bytecode
- * @param artifact CRPFactory artifacts that contain the bytecode to link
- * @param links The libraries addresses to link
- * @returns The artifacts with the bytecode linked with libraries
- */
-export const linkBytecode = (
-  artifact: Artifact | BasicArtifact,
-  links: CRPLibraries
-): Artifact | BasicArtifact => {
-  Object.keys(links).forEach((libraryName) => {
-    const libraryAddress = links[libraryName];
-    const regex = new RegExp(`__${libraryName}_+`, "g");
-    artifact.bytecode = artifact.bytecode.replace(
-      regex,
-      libraryAddress.replace("0x", "")
-    );
-  });
-  return artifact;
-};
 
 /**
  * Write a file
