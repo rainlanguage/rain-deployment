@@ -7,7 +7,7 @@
     "gasPrice": null,
     "gasLimit": null
   },
-  "network": {
+  "networks": {
     "polygon": {
       "BFactory": "0xAF57a2eDEB0cFC20306E2B59Ed973fc10262d0c5",
       "SmartPoolManager": "0x6705200B867DE5E41164c5DFeE68D0F2B53Babef",

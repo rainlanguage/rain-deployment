@@ -1,7 +1,12 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 
-import { estimateGasDeploy, linkBytecode } from "../utils/utils";
+import {
+  estimateGasDeploy,
+  linkBytecode,
+  deployContract as deploy,
+  save,
+} from "../utils/utils";
 
 // Balancer
 import bFactoryArtifact from "@beehiveinnovation/balancer-core/artifacts/BFactory.json";
@@ -11,16 +16,13 @@ import balancerSafeMathArtifact from "@beehiveinnovation/configurable-rights-poo
 import rightsManagerArtifact from "@beehiveinnovation/configurable-rights-pool/artifacts/RightsManager.json";
 import crpFactoryArtifact from "@beehiveinnovation/configurable-rights-pool/artifacts/CRPFactory.json";
 
-// TODO: Improve method to allow max gasPrice in chain based with `maxEthAmountInTx / gasLimit = gasPrice`
-
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   // TODO: Get contract already deployed in same commit that package.json
-  // TODO: Add type check to deployment. Wrap the function deploy and check the type to each funcion
-  const { deployments, getNamedAccounts } = hre;
-  const { deploy } = deployments;
+  // TODO: Add type check to deployment. Wrap the function deploy and check the type to each deploy funcion (?)
+  const { getNamedAccounts } = hre;
   const { deployer } = await getNamedAccounts();
 
-  const BFactory = await deploy("BFactory", {
+  await deploy("BFactory", {
     contract: bFactoryArtifact,
     from: deployer,
     gasLimit: await estimateGasDeploy(bFactoryArtifact),
@@ -54,7 +56,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     RightsManager: RightsManager.address,
   });
 
-  const CRPFactory = await deploy("CRPFactory", {
+  await deploy("CRPFactory", {
     contract: CRPFactoryLinked,
     from: deployer,
     gasLimit: await estimateGasDeploy(CRPFactoryLinked),
@@ -68,57 +70,37 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [],
   });
 
-  const SeedERC20Factory = await deploy("SeedERC20Factory", {
-    from: deployer,
-    gasLimit: await estimateGasDeploy("SeedERC20Factory"),
-    args: [],
-  });
-
-  const TrustFactoryArgs = {
-    crpFactory: CRPFactory.address,
-    balancerFactory: BFactory.address,
-    redeemableERC20Factory: RedeemableERC20Factory.address,
-    seedERC20Factory: SeedERC20Factory.address,
-    creatorFundsReleaseTimeout: 100,
-    maxRaiseDuration: 100,
-  };
-  const TrustFactory = await deploy("TrustFactory", {
-    from: deployer,
-    gasLimit: await estimateGasDeploy("TrustFactory", [TrustFactoryArgs]),
-    args: [TrustFactoryArgs],
-  });
-
-  const VerifyFactory = await deploy("VerifyFactory", {
+  await deploy("VerifyFactory", {
     from: deployer,
     gasLimit: await estimateGasDeploy("VerifyFactory"),
     args: [],
   });
 
-  const VerifyTierFactory = await deploy("VerifyTierFactory", {
+  await deploy("VerifyTierFactory", {
     from: deployer,
     gasLimit: await estimateGasDeploy("VerifyTierFactory"),
     args: [],
   });
 
-  const ERC20BalanceTierFactory = await deploy("ERC20BalanceTierFactory", {
+  await deploy("ERC20BalanceTierFactory", {
     from: deployer,
     gasLimit: await estimateGasDeploy("ERC20BalanceTierFactory"),
     args: [],
   });
 
-  const ERC20TransferTierFactory = await deploy("ERC20TransferTierFactory", {
+  await deploy("ERC20TransferTierFactory", {
     from: deployer,
     gasLimit: await estimateGasDeploy("ERC20TransferTierFactory"),
     args: [],
   });
 
-  const CombineTierFactory = await deploy("CombineTierFactory", {
+  await deploy("CombineTierFactory", {
     from: deployer,
     gasLimit: await estimateGasDeploy("CombineTierFactory"),
     args: [],
   });
 
-  const ERC721BalanceTierFactory = await deploy("ERC721BalanceTierFactory", {
+  await deploy("ERC721BalanceTierFactory", {
     from: deployer,
     gasLimit: await estimateGasDeploy("ERC721BalanceTierFactory"),
     args: [],
@@ -129,37 +111,37 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     maximumCooldownDuration: 1000,
     redeemableERC20Factory: RedeemableERC20Factory.address,
   };
-  const SaleFactory = await deploy("SaleFactory", {
+  await deploy("SaleFactory", {
     from: deployer,
     gasLimit: await estimateGasDeploy("SaleFactory", [SaleFactoryArgs]),
     args: [SaleFactoryArgs],
   });
 
-  const GatedNFTFactory = await deploy("GatedNFTFactory", {
+  await deploy("GatedNFTFactory", {
     from: deployer,
     gasLimit: await estimateGasDeploy("GatedNFTFactory"),
     args: [],
   });
 
-  const RedeemableERC20ClaimEscrow = await deploy(
-    "RedeemableERC20ClaimEscrow",
-    {
-      from: deployer,
-      gasLimit: await estimateGasDeploy("RedeemableERC20ClaimEscrow"),
-      args: [],
-    }
-  );
+  await deploy("RedeemableERC20ClaimEscrow", {
+    from: deployer,
+    gasLimit: await estimateGasDeploy("RedeemableERC20ClaimEscrow"),
+    args: [],
+  });
 
-  const NoticeBoard = await deploy("NoticeBoard", {
+  await deploy("NoticeBoard", {
     from: deployer,
     gasLimit: await estimateGasDeploy("NoticeBoard"),
     args: [],
   });
 
-  const EmissionsERC20Factory = await deploy("EmissionsERC20Factory", {
+  await deploy("EmissionsERC20Factory", {
     from: deployer,
     gasLimit: await estimateGasDeploy("EmissionsERC20Factory"),
     args: [],
   });
+
+  // Save all
+  await save();
 };
 export default func;

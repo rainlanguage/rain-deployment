@@ -7,7 +7,7 @@ let
     })
     { };
 
-   flush-all = pkgs.writeShellScriptBin "flush-all" ''
+  flush-all = pkgs.writeShellScriptBin "flush-all" ''
     rm -rf node_modules
     rm -rf contracts
     rm -rf artifacts
@@ -19,16 +19,19 @@ let
   '';
 
   deploy-rain = pkgs.writeShellScriptBin "deploy-rain" ''
-    npx hardhat run scripts/deploy-rain.ts --network ''$1
+    if [[ ''$1 == "" ]]; then
+      echo "should specify a network"
+    else 
+      if [[ ''$1 == *"reef"* ]]; then
+        hardhat run deploy/reef/deploy.ts --network ''$1
+      else 
+        hardhat deploy --network ''$1
+      fi
+    fi
   '';
 
-  deploy-rain-reef = pkgs.writeShellScriptBin "deploy-rain-reef" ''
-    npx hardhat run scripts/deploy-rain-reef.ts --network ''$1
-  '';
-
-  create-trust = pkgs.writeShellScriptBin "create-trust" ''
-    export TrustFactory=''$1
-    npx hardhat run scripts/create-trust.ts --network ''$2
+  hardhat-node = pkgs.writeShellScriptBin "hardhat-node" ''
+    hardhat node --network hardhat --no-deploy
   '';
 
   solt-the-earth = pkgs.writeShellScriptBin "solt-the-earth" ''
@@ -57,6 +60,7 @@ let
     mkdir -p contracts/tier && cp node_modules/@vishalkale15107/rain-protocol/contracts/tier/ERC721BalanceTier*.sol contracts/tier
     mkdir -p contracts/test && cp node_modules/@vishalkale15107/rain-protocol/contracts/test/ReserveNFT.sol contracts/test
     npx hardhat compile
+    get-commit
   '';
   
 in
@@ -68,10 +72,9 @@ pkgs.stdenv.mkDerivation {
   pkgs.jq
   flush-all
   deploy-rain
-  deploy-rain-reef
-  create-trust
   solt-the-earth
   get-commit
+  hardhat-node
   init
  ];
 
