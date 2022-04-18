@@ -5,26 +5,11 @@
     "create-trust": "func() {export TrustFactory=$1; npx hardhat run scripts/create-trust.ts --network \"$2\";}; func",
     "compile": "hardhat compile --force",
     "lint": "eslint */**.ts",
-    "postinstall": "cd node_modules/@beehiveinnovation/rain-protocol && yarn install --ignore-scripts && yarn build"
+    "hardhat-node": "hardhat node --network hardhat --no-deploy"
   },
-  "dependencies": {
-    "@beehiveinnovation/balancer-core": "^0.0.7",
-    "@beehiveinnovation/configurable-rights-pool": "^0.0.1",
-    "@beehiveinnovation/rain-protocol": "git+https://github.com/beehive-innovation/rain-protocol.git#ba4fb2fe6b2abefae59f4158a626e10ba05a8386",
-    "@beehiveinnovation/rain-statusfi": "git+https://github.com/beehive-innovation/rain-statusfi.git#288e082ae81ca796b0732619a9631db24beb7a7a",
-    "@nomiclabs/hardhat-ethers": "^2.0.4",
-    "@nomiclabs/hardhat-waffle": "^2.0.2",
-    "@reef-defi/evm-provider": "^1.0.4",
-    "@reef-defi/hardhat-reef": "^1.0.0",
-    "@typechain/ethers-v5": "^7.1.2",
-    "@types/chai": "^4.2.22",
-    "@types/mocha": "^9.0.0",
-    "@types/node": "^16.10.2",
+  "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
-    "@vishalkale15107/rain-protocol": "git+https://github.com/vishalkale151071/rain-protocol.git#e89ad9bf516110c33963171d2e3605e09bbc6677",
-    "chai": "^4.3.4",
-    "dotenv": "^10.0.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^16.0.3",
@@ -32,19 +17,33 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.4.1",
     "eslint-plugin-promise": "^5.1.0",
+    "fs-extra": "^10.0.1",
+    "prettier": "^2.4.1",
+    "prettier-plugin-solidity": "^1.0.0-beta.13"
+  },
+  "dependencies": {
+    "@beehiveinnovation/balancer-core": "^0.0.7",
+    "@beehiveinnovation/configurable-rights-pool": "^0.0.1",
+    "@beehiveinnovation/rain-protocol": "git+https://github.com/beehive-innovation/rain-protocol.git#2283124fe2d53d3fd878612ebc29950c33397ab0",
+    "@beehiveinnovation/rain-statusfi": "git+https://github.com/beehive-innovation/rain-statusfi.git#288e082ae81ca796b0732619a9631db24beb7a7a",
+    "@nomiclabs/hardhat-ethers": "^2.0.4",
+    "@nomiclabs/hardhat-waffle": "^2.0.2",
+    "@reef-defi/evm-provider": "^1.0.5",
+    "@reef-defi/hardhat-reef": "^1.0.10",
+    "@typechain/ethers-v5": "^8.0.5",
+    "@typechain/hardhat": "^3.1.0",
+    "@types/chai": "^4.2.22",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.10.2",
+    "@vishalkale15107/rain-protocol": "git+https://github.com/vishalkale151071/rain-protocol.git#3d0ee716430d28716365f0f1c999fe14c30f0b4b",
+    "chai": "^4.3.4",
+    "dotenv": "^10.0.0",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.5.3",
-    "hardhat": "^2.6.5",
-    "prettier": "^2.4.1",
-    "prettier-plugin-solidity": "^1.0.0-beta.13",
-    "solhint": "^3.3.6",
+    "hardhat": "^2.8.3",
+    "hardhat-deploy": "^0.11.0",
     "ts-node": "^10.2.1",
-    "typechain": "^5.1.2",
-    "typescript": "^4.4.3"
-  },
-  "resolutions": {
-    "@polkadot/util": "8.3.3",
-    "@polkadot/util-crypto": "8.3.3",
-    "@polkadot/wasm-crypto": "4.5.1"
+    "typechain": "^6.1.0",
+    "typescript": "^4.5.2"
   }
 }

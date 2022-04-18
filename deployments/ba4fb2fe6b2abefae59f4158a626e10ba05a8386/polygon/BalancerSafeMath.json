@@ -1,0 +1,38 @@
+{
+  "address": "0xF5A46454f64180e68F84df28F3798d2eB9089DA0",
+  "abi": [],
+  "transactionHash": "0x29a0963cff8df99ce460ea2a66fc56ab9e9adbd9bc39294c93459d7c457f215c",
+  "receipt": {
+    "to": null,
+    "from": "0xa921cf2cdf267c7a3659c0f0db2ff0dec070375f",
+    "contractAddress": "0xF5A46454f64180e68F84df28F3798d2eB9089DA0",
+    "transactionIndex": 0,
+    "gasUsed": "71933",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xe480aff31be8dc3e130a61b59b2fca97e36f28f75713fc0958d4c4fdd8594081",
+    "transactionHash": "0x29a0963cff8df99ce460ea2a66fc56ab9e9adbd9bc39294c93459d7c457f215c",
+    "logs": [],
+    "blockNumber": 18486276,
+    "cumulativeGasUsed": "71933",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"author\":\"Balancer Labs\",\"details\":\"badd and bsub are basically identical to OpenZeppelin SafeMath; mul/div have extra checks\",\"kind\":\"dev\",\"methods\":{},\"title\":\"SafeMath - wrap Solidity operators to prevent underflow/overflow\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/libraries/BalancerSafeMath.sol\":\"BalancerSafeMath\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/libraries/BalancerConstants.sol\":{\"keccak256\":\"0x31640e493c106fe6fb2e210544b9b40fe3b42158eacfda038f6fa662d92ad472\",\"license\":\"GPL-3.0-or-later\",\"urls\":[\"bzz-raw://e99373f18ac7a3c3f0ddeafe7710f5fca01890060bb088e24b4de8531f56c0d0\",\"dweb:/ipfs/QmVottyEKVyjkShdUrkST8HP3LMtjrH8jXS1MCy51CFHjq\"]},\"project:/libraries/BalancerSafeMath.sol\":{\"keccak256\":\"0xe8525e4ade460fb2f220853beedb56580f2ba0525f92313c079a72cf3b70fd03\",\"license\":\"GPL-3.0-or-later\",\"urls\":[\"bzz-raw://e820c99d9fd353c992c7031a598480657b44037398f4af08665416f858da9f50\",\"dweb:/ipfs/QmZpcjqhZMounxkHdWsHV2DeNBTxzPkQYz5ER3aGAct798\"]}},\"version\":1}",
+  "bytecode": "0x60566023600b82828239805160001a607314601657fe5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea26469706673582212207f8e88285e998342c458ad79d06e936493ad07bcc3946d0f444b53f7e7371ccd64736f6c634300060c0033",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea26469706673582212207f8e88285e998342c458ad79d06e936493ad07bcc3946d0f444b53f7e7371ccd64736f6c634300060c0033",
+  "devdoc": {
+    "author": "Balancer Labs",
+    "details": "badd and bsub are basically identical to OpenZeppelin SafeMath; mul/div have extra checks",
+    "kind": "dev",
+    "methods": {},
+    "title": "SafeMath - wrap Solidity operators to prevent underflow/overflow",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

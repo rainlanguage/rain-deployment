@@ -106,7 +106,8 @@
             "SaleFactory": "0x7fbc27F1D14e0c59e2F4346B5166692659c4694D",
             "GatedNFTFactory": "0xD9AD3A87E4c1F604091c1A0E147c88B3A9E1B4ad",
             "RedeemableERC20ClaimEscrow": "0xBD9C8F56889F95aac8ddFbF3cf8a168151EfD2Aa",
-            "NoticeBoard": "0x43A7007B8B0cf76008a0B8CE69934f4a1d109F6f"
+            "NoticeBoard": "0x43A7007B8B0cf76008a0B8CE69934f4a1d109F6f",
+            "EmissionsERC20Factory": "0x10c0c0578a9dd9d3357b61AE9fA1638087ac8cd0"
         },
         "polygon": {
             "RedeemableERC20Factory": "0x73B1363ffd4A722C663FdD403A4E2f432715Ac73",
@@ -121,7 +122,8 @@
             "SaleFactory": "0x125102a6Fa1f8E83Cc5329F03f179E165eF623d5",
             "GatedNFTFactory": "0xCB265d72a2669F1fA587327Ddb809dc5A4a6E45a",
             "RedeemableERC20ClaimEscrow": "0xbBEB09Fe86536d66C43f76BFdc30e8802Fb7e6C5",
-            "NoticeBoard": "0xd1db393d3dEdE96ECF48CFED9De5f5ebE2df7d6F"
+            "NoticeBoard": "0xd1db393d3dEdE96ECF48CFED9De5f5ebE2df7d6F",
+            "EmissionsERC20Factory": "0xeA4faDB2edcC7e362C7dbCdC1A83e44E1009661A"
         }
     }
 }

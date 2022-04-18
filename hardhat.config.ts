@@ -1,117 +1,201 @@
-/* eslint-disable camelcase */
 import * as dotenv from "dotenv";
 
-import { task } from "hardhat/config";
 import "@nomiclabs/hardhat-ethers";
-import "@reef-defi/hardhat-reef";
 import "@nomiclabs/hardhat-waffle";
+import "@reef-defi/hardhat-reef";
+import "@typechain/hardhat";
+import "hardhat-deploy";
 
 dotenv.config();
 
-// This is a sample Hardhat task. To learn how to create your own go to
-// https://hardhat.org/guides/create-task.html
-task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
-  const accounts = await hre.ethers.getSigners();
+const defaultUrls = {
+  reef: "ws://127.0.0.1:9944",
+  reef_mainnet: "wss://rpc.reefscan.com/ws",
+  reef_testnet: "wss://rpc-testnet.reefscan.com/ws",
+  polygon: "https://rpc-mainnet.maticvigil.com/",
+  mumbai: "https://rpc-mumbai.maticvigil.com",
+};
 
-  for (const account of accounts) {
-    console.log(account.address);
+/**
+ * Provide the correct mnemonic seed. The function can handle HD wallet
+ * address or assign the correct test wallet account in Reef localnode.
+ * @param subkey The subkey use to generate a specific HD wallet address.
+ * In order to get an address from a mnemonic + subkey, it should be use
+ * the same subkey present in your wallet. If a test name account is
+ * provided, will be use to get the HD test wallet. The names availables
+ * are: `["alice", "bob", "charlie", "dave", "eve",* "ferdie"]`
+ * @returns The correct mnemonic to be used as signer
+ */
+function seedReef(subkey?: string): string {
+  /**
+   * This `testSubkeys` are intended for use with the local Reef node. Also these subkeys
+   * generate developer accounts that are pre-funded with REEF.
+   * Check documentation for more info:
+   * - https://docs.reef.io/docs/developers/accounts/#developer-accounts
+   * - https://github.com/reef-defi/hardhat-reef#usage
+   */
+  const testSubkeys = ["alice", "bob", "charlie", "dave", "eve", "ferdie"];
+  if (testSubkeys.includes(subkey)) {
+    subkey = subkey.charAt(0).toUpperCase() + subkey.slice(1);
+    return `bottom drive obey lake curtain smoke basket hold race lonely fit walk//${subkey}`;
   }
-});
 
-// You need to export an object to set up your config
-// Go to https://hardhat.org/config/ to learn more
+  const seedMnemonic = process.env["MNEMONIC_REEF"];
+  if (seedMnemonic && seedMnemonic !== "") {
+    if (subkey) {
+      subkey = `//${subkey}`;
+      return seedMnemonic.includes("//")
+        ? seedMnemonic.replace(new RegExp("//.+"), subkey)
+        : seedMnemonic + subkey;
+    }
+    return seedMnemonic;
+  }
+  // Throw error
+  return "";
+}
 
-const config: any = {
+function accounts(networkName?: string): { mnemonic: string } {
+  return { mnemonic: getMnemonic(networkName) };
+}
+
+function getMnemonic(networkName?: string): string {
+  if (networkName === "localhost") {
+    return "test test test test test test test test test test test junk";
+  }
+
+  if (networkName) {
+    const mnemonic = process.env["MNEMONIC_" + networkName.toUpperCase()];
+    if (mnemonic && mnemonic !== "") {
+      return mnemonic;
+    }
+  }
+
+  const mnemonic = process.env.MNEMONIC;
+  return mnemonic;
+}
+
+// TODO Support to new chains
+function getUrl(networkName: string): string {
+  // Use localhost node
+  if (networkName === "localhost") {
+    return "http://localhost:8545";
+  }
+
+  const uri = process.env[networkName.toUpperCase() + "_URL"];
+  if (uri && uri !== "") {
+    return uri;
+  }
+
+  // Check a "default URl"
+  const defaultUrl = defaultUrls[`${networkName.toLowerCase()}`];
+  if (defaultUrl) {
+    return defaultUrl;
+  }
+  // This will throw an error. URL is not set correctly
+  return "";
+}
+
+const config = {
+  typechain: {
+    outDir: "typechain",
+  },
   solidity: {
     compilers: [
       {
         version: "0.8.10",
         settings: {
+          optimizer: {
+            enabled: true,
+            runs: 100000,
+          },
           metadata: {
             useLiteralContent: true,
           },
+        },
+      },
+      {
+        version: "0.6.12",
+        settings: {
           optimizer: {
             enabled: true,
             runs: 100000,
           },
         },
       },
+      {
+        version: "0.5.12",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 100,
+          },
+          evmVersion: "byzantium",
+        },
+      },
     ],
   },
+  paths: {
+    deploy: ["deploy/normal"],
+  },
+  namedAccounts: {
+    deployer: 0,
+  },
   networks: {
-    localhost: createLocalHostConfig(),
+    localhost: {
+      url: getUrl("localhost"),
+      accounts: accounts("localhost"),
+    },
     ropsten: {
-      url: process.env.ROPSTEN_URL || "",
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      url: getUrl("ropsten"),
+      accounts: accounts(),
       gasPrice: 10e9,
     },
-    reef_mainnet: {
-      url: "wss://rpc.reefscan.com/ws",
-      seeds: {
-        account1:
-          process.env.MNEMONIC_REEF1 !== undefined
-            ? process.env.MNEMONIC_REEF1
-            : "",
-        account2:
-          process.env.MNEMONIC_REEF2 !== undefined
-            ? process.env.MNEMONIC_REEF2
-            : "",
-        account3:
-          process.env.MNEMONIC_REEF3 !== undefined
-            ? process.env.MNEMONIC_REEF3
-            : "",
-        account4:
-          process.env.MNEMONIC_REEF4 !== undefined
-            ? process.env.MNEMONIC_REEF4
-            : "",
-      },
-    },
-    reef_testnet: {
-      url: "wss://rpc-testnet.reefscan.com/ws",
-      seeds: {
-        account1:
-          process.env.MNEMONIC_REEF1 !== undefined
-            ? process.env.MNEMONIC_REEF1
-            : "",
-        account2:
-          process.env.MNEMONIC_REEF2 !== undefined
-            ? process.env.MNEMONIC_REEF2
-            : "",
-        account3:
-          process.env.MNEMONIC_REEF3 !== undefined
-            ? process.env.MNEMONIC_REEF3
-            : "",
-        account4:
-          process.env.MNEMONIC_REEF4 !== undefined
-            ? process.env.MNEMONIC_REEF4
-            : "",
-      },
+    rinkeby: {
+      url: getUrl("rinkeby"),
+      accounts: accounts(),
+      gasPrice: 10e9,
     },
     mumbai: {
-      url: "https://rpc-mumbai.maticvigil.com",
-      accounts:
-        process.env.MNEMONIC !== undefined
-          ? { mnemonic: process.env.MNEMONIC }
-          : [process.env.MUMBAI_PRIVATE_KEY],
+      url: getUrl("mumbai"),
+      accounts: accounts(),
       gasPrice: 10e9,
     },
     polygon: {
-      url: process.env.POLYGON_URL || "",
-      accounts:
-        process.env.POLYGON_PRIVATE_KEY !== undefined
-          ? [process.env.POLYGON_PRIVATE_KEY]
-          : [],
+      url: getUrl("polygon"),
+      accounts: accounts(),
       gasPrice: 20e9,
+    },
+    reef: {
+      // This is a reef local node
+      deploy: ["deploy/reef"],
+      url: getUrl("reef"),
+      scanUrl: "http://localhost:3000",
+      seeds: {
+        deployer: seedReef("alice"),
+      },
+    },
+    reef_mainnet: {
+      deploy: ["deploy/reef"],
+      url: getUrl("reef_mainnet"),
+      scanUrl: "wss://reefscan.com",
+      seeds: {
+        deployer: seedReef(),
+      },
+    },
+    reef_testnet: {
+      deploy: ["deploy/reef"],
+      url: getUrl("reef_testnet"),
+      scanUrl: "https://testnet.reefscan.com",
+      seeds: {
+        deployer: seedReef(),
+      },
     },
     avalanche: {
       url: "https://api.avax.network/ext/bc/C/rpc",
       gasPrice: 225000000000,
       chainId: 43114,
       accounts:
-        process.env.AVALANCHE_PRIVATE_KEY !== undefined
-          ? [process.env.AVALANCHE_PRIVATE_KEY]
-          : [],
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
     fuji: {
       url: "https://api.avax-test.network/ext/bc/C/rpc",
@@ -120,13 +204,7 @@ const config: any = {
       accounts:
         process.env.MNEMONIC !== undefined
           ? { mnemonic: process.env.MNEMONIC }
-          : [process.env.AVALANCHE_PRIVATE_KEY],
-    },
-    rinkeby: {
-      url: process.env.RINKEBY_URL || "",
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
-      gasPrice: 10e9,
+          : [process.env.PRIVATE_KEY],
     },
     fantom: {
       url: "https://rpc.ftm.tools/",
@@ -134,22 +212,19 @@ const config: any = {
       accounts:
         process.env.MNEMONIC !== undefined
           ? { mnemonic: process.env.MNEMONIC }
-          : [process.env.MUMBAI_PRIVATE_KEY],
+          : [process.env.PRIVATE_KEY],
       gasPrice: 225000000000,
     },
-    fantom_testnet: {
+    fantomTestnet: {
       url: "https://rpc.testnet.fantom.network",
       chainId: 4002,
       accounts:
         process.env.MNEMONIC !== undefined
           ? { mnemonic: process.env.MNEMONIC }
-          : [process.env.MUMBAI_PRIVATE_KEY],
+          : [process.env.PRIVATE_KEY],
       gasPrice: 225000000000,
     },
-    // arbitrum: {
-
-    // },
-    arbitrum_testnet: {
+    arbitrumTestnet: {
       url: "https://rinkeby.arbitrum.io/rpc",
       chainId: 421611,
       accounts:
@@ -166,21 +241,9 @@ const config: any = {
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,
   },
+  mocha: {
+    timeout: 300000,
+  },
 };
 
 export default config;
-
-function createLocalHostConfig() {
-  const url: string = "http://localhost:8545";
-  const mnemonic: string =
-    "test test test test test test test test test test test junk";
-  return {
-    accounts: {
-      count: 10,
-      initialIndex: 0,
-      mnemonic,
-      path: "m/44'/60'/0'/0",
-    },
-    url,
-  };
-}

@@ -10,3 +10,7 @@ dist
 #Hardhat files
 cache
 /artifacts
+
+# Hardhat deploy (local)
+deployments/localhost
+deployments/reef
