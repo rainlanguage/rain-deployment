@@ -1,42 +1,69 @@
-**Tools used in this repo**
+# Rain Protocol - Deployment
 
-- Yarn: `v1.22.10`
-- Solt: `0.5.2`
+Easy way to deploy and track all the Rain Protocol deployments
 
-Before start to deploy and run scrips, fill your own enviroment file - the repository provide a template which we STRICLY recommend use. To start, run the nix-shell which will check if you have all the dependencies installed: 
-```shell
+## Development setup
+
+### Nix Shell
+
+Install the nix shell if you haven't already.
+
+```
+curl -L https://nixos.org/nix/install | sh
+```
+
+Drop into a nix-shell.
+
+```
+cd rain-deployment
 nix-shell
 ```
-# Get contracts from commit
-The repository use a sub-module that contain all the contracts and they update. To manage and deploy a specific commit of rain-protocol, you should provide the commit using the following script inside nix-shell"
-```shell
-cut-dist <COMMIT>
+
+This will install all the dependencies and files needed. We encourage to work and run scripts under nix-shell, and you can easy run nix command
+from outside the shell with `nix-shell --run <YOUR-COMMAND>`
+
+## Contract deployment
+
+### Enviroment information
+
+Before start to deploy and run scrips, fill your own enviroment file - the repository provide a template which we STRICLY recommend use (.env.example). You can easy change if you want to use a private key or your mnemonic in `hardhat.config.ts` for each network.
+
+### Deployment configuration
+
+The deployment process support EIP-1559 transactions and legacies (No EIP-1559).
+
+- The EIP-1559 transactions are those transactions that use `maxPriorityFeePerGas` and `maxFeePerGas` when send the TX.
+- The NON-EIP-1559 transactions are those transactions that just use the `gasPrice` when send the TX.
+
+In the `deployment-config.json` file, you can specify the estimation of the gas cost that will be use in the deployment. This is calculate with the last 10 blocks in the chain, where you can define:
+
+- **LOW**: Use -10% of the current market value calculated. Take in mind that this will make the deployment process longer if the network is busy, event the transaction can stuck as pending.
+- **MARKET**: Use the current market value calculated. This is the normal way to use the deployment process, but also if the network is busy and will take time to be mined.
+- **AGGRESSIVE**: Use +10% current market value calculated. This a great way to faster deployment if the network is busy and price are inestable. Take in mind that this is more expensive.
+
+For example, to use the average price in market for deployment you should define in the `deployment-config.json:
+
 ```
-This is the first command that should be run to generate the dist files. This will copy the exact copy from rain-protocol to the deployment project. Also will be deleted all old files related with the contracts and will install all the dependencies again. This commit is update inside you `.env` file to make easy track and check the actual commit.
+{
+  "estimationLevel": "MARKET"
+}
+```
 
-# Contract deployment
-The repository provide two types of scripts which deploy several contracts. 
-The main script is responsible for the deployment of the main contracts or factories contracts to create Trusts.
-The other script deploy the verify factory and verify tiers.
+If nothing is specified or it is out of the range, will use the Market estimation.
 
-# Contract factories deployment
-To deploy to a network, make sure that you provide the account info on your enviroment file as correspond. Next, just run the following script inside `nix-shell`. Notice that you do not need to use the `--network` hardhat flag:
+### Deployment
+
+To deploy to a network, make sure that you provide the account info on your enviroment file as correspond. Also check if your network is already added to the `hardhat.config.ts`. If you dont know how to add a new network, please check the [hardhat documentation](https://hardhat.org/config/#configuration).
+
+Next, just run the following command inside `nix-shell`. Notice that you do not need to use the `--network` hardhat flag:
+
 ```shell
 deploy-rain <NETWORK>
 ```
- - If the Balancer Contracts are already deployed to the `NETWORK` and stored on the `deployment-config.json` file, those contract will NOT be deployed and will be used again. This avoid waste the time.
- - If the Rain Contract are already deployed to the `NETWORK`, stored on the `Addresses.json` file AND have the same commit stored, those contract will NOT be deployed. This avoid waste time, and redeploy existing commits, take that on count.
-
-# Contract verify tiers deployment
-To deploy to a network, make sure that you provide the account info on your enviroment file as correspond. Next, just run the following script inside `nix-shell`. Notice that you need to provide an `ADMIN_ADDRESS` first and again you do not need to use any flag, just pass the arguments:
+Once the process if finished, you will see an output in your console showing the folder where the deployment info was save:
 ```shell
-deploy-verify <ADMIN_ADDRESS> <NETWORK>
+Save it to "deployments/<CONTRACT-COMMITS>/<NETWORK-DEPLOYED>"
 ```
- - If the Rain Contract are already deployed to the `NETWORK`, stored on the `Addresses.json` file AND have the same commit stored, those contract will NOT be deployed. This avoid waste time, and redeploy existing commits, take that on count. In this case, just will create a new `Verify` contract from a `VerifyFactory` that already exist on the `NETWORK` that have the same commit that the project.
 
-# Create a trust
-You can create a trust with a basic config. Only is necesary provide a `TRUST_FACTORY_ADDRESS` and the `NETWORK` which correspond that factory. To create the trust, run the following script inside `nix-shell`:
-```shell
-create-trust <TRUST_FACTORY_ADDRESS> <NETWORK>
-```
-NOTE: You cannot change the config of the trust from the CLI. If you want to customize the trust, you should modified the `create-trust.ts` file. Generally, this script is just for test on testnets, so rarely you want to modify the file.
+This process take advantage of `hardhat-deploy` to save all the relevant information. Also, the proccess save the deployments by commits. Take the current commit in the `package.json` and use it to save the information.
+

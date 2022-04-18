@@ -353,7 +353,7 @@ const copyDeployFolder = (): void => {
       console.log(err);
     }
   });
-  console.log("Save it to: ", destDir);
+  console.log(`Save it to:  "${destDir}"`);
 
   fs.rmSync(srcDir, { recursive: true, force: true });
 };
