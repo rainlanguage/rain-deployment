@@ -11,6 +11,10 @@ dist
 cache
 /artifacts
 
-# Hardhat deploy (local)
+# Hardhat deploy (localhost)
 deployments/localhost
+deployments/**/localhost
+
+# Hardhat deploy (local reef)
 deployments/reef
+deployments/**/reef

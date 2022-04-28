@@ -16,7 +16,12 @@ module.exports = {
     camelcase: [
       "error",
       {
-        allow: ["reef_testnet", "reef_mainnet"],
+        allow: [
+          "reef_testnet",
+          "reef_mainnet",
+          "CombineTierFactory__factory",
+          "CombineTier__factory",
+        ],
       },
     ],
   },

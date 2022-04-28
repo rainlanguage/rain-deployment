@@ -1,9 +1,11 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
+import { ethers } from "hardhat";
 
 import {
   estimateGasDeploy,
   deployContract as deploy,
+  createAlwayTier,
   save,
 } from "../utils/utils";
 
@@ -44,7 +46,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [],
   });
 
-  await deploy("CombineTierFactory", {
+  const resultCombineTier = await deploy("CombineTierFactory", {
     from: deployer,
     gasLimit: await estimateGasDeploy("CombineTierFactory"),
     args: [],
@@ -90,6 +92,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     gasLimit: await estimateGasDeploy("EmissionsERC20Factory"),
     args: [],
   });
+
+  // Deploy AlwayTier
+  await createAlwayTier(resultCombineTier, deployer);
 
   // Save all
   await save();
