@@ -237,6 +237,7 @@ export async function createAlwayTier(
   );
 
   const tx = await factory.createChildTyped(alwaysArg, txOverrides);
+  console.log(tx.hash);
   const receipt = await tx.wait();
 
   const eventObj = receipt.events.find(
@@ -417,12 +418,16 @@ export const estimateGasFee = async (
   );
 
   let multiplierLevel: number;
-  if (estimationLevel == EstimationLevel.LOW) {
-    multiplierLevel = 90;
-  } else if (estimationLevel == EstimationLevel.MARKET) {
-    multiplierLevel = 100;
+  if (estimationLevel <= EstimationLevel.AGGRESSIVE) {
+    if (estimationLevel == EstimationLevel.LOW) {
+      multiplierLevel = 90;
+    } else if (estimationLevel == EstimationLevel.MARKET) {
+      multiplierLevel = 100;
+    } else {
+      multiplierLevel = 110;
+    }
   } else {
-    multiplierLevel = 110;
+    multiplierLevel = estimationLevel;
   }
 
   // TODO: Maybe add a field, so someone can set a MAX value on that attribute that the user is willing to spend ???

@@ -1,6 +1,8 @@
 {
-  "CombineTierFactory": "0x89a1d3680e108c553a58a14efdbbac92d6d3cdd4",
-  "CombineTierFactoryBlock": "0x18d8dbb",
+  "AlwaysTier": "0xCA1666Fecc36b016578796F658A0889Bce796582",
+  "AlwaysTierBlock": 26124320,
+  "CombineTierFactory": "0xf163E422eaa4e7b38b392a0Ab663d92c17cEC364",
+  "CombineTierFactoryBlock": 26124319,
   "ERC20BalanceTierFactory": "0xe662E03b0039d5B82DA705B0c15BE581900EE6bE",
   "ERC20BalanceTierFactoryBlock": 26032445,
   "ERC20TransferTierFactory": "0x56c338900BC7BC43CaE1De519B63D075075Fbd5F",
