@@ -1095,10 +1095,12 @@
     "@openzeppelin/contracts" "^4.3.3"
     "@openzeppelin/contracts-upgradeable" "^4.4.1"
 
-"@beehiveinnovation/rain-protocol@git+https://github.com/beehive-innovation/rain-protocol.git#2283124fe2d53d3fd878612ebc29950c33397ab0":
+"@beehiveinnovation/rain-protocol@git+https://github.com/beehive-innovation/rain-protocol.git#2dd7102e9addf0662bc0aef2a6aacb8b82edf089":
   version "0.0.16"
-  resolved "git+https://github.com/beehive-innovation/rain-protocol.git#2283124fe2d53d3fd878612ebc29950c33397ab0"
+  resolved "git+https://github.com/beehive-innovation/rain-protocol.git#2dd7102e9addf0662bc0aef2a6aacb8b82edf089"
   dependencies:
+    "@beehiveinnovation/balancer-core" "0.0.7"
+    "@beehiveinnovation/configurable-rights-pool" "0.0.1"
     "@openzeppelin/contracts" "^4.3.3"
     "@openzeppelin/contracts-upgradeable" "^4.4.1"
 

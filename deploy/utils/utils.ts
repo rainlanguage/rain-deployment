@@ -4,11 +4,20 @@ import fs, { promises as fsPromises } from "fs";
 import fse from "fs-extra";
 import hre, { artifacts, ethers } from "hardhat";
 
-import type { BigNumber } from "ethers";
+import type { BigNumber, BytesLike, Overrides } from "ethers";
+import { utils } from "ethers";
+
 import type { Artifact, CompilerOutputContract } from "hardhat/types";
 import { FeeData } from "@ethersproject/abstract-provider";
 
 import deployConfig from "../../deployment-config.json";
+
+import {
+  StateConfigStruct,
+  NewChildEvent,
+} from "../../typechain/CombineTierFactory";
+import { CombineTierFactory__factory } from "../../typechain/factories/CombineTierFactory__factory";
+import { CombineTier__factory } from "../../typechain/factories/CombineTier__factory";
 
 export const networkName = hre.network.name;
 const commit: string = process.env.COMMIT;
@@ -18,6 +27,62 @@ const deploymentsPath = path.resolve(__dirname, "../../deployments");
 if (!fs.existsSync(`${deploymentsPath}/${commit}`)) {
   fs.mkdirSync(`${deploymentsPath}/${commit}`, { recursive: true });
 }
+export enum AllStandardOps {
+  SKIP,
+  VAL,
+  DUP,
+  ZIPMAP,
+  DEBUG,
+  BLOCK_NUMBER,
+  BLOCK_TIMESTAMP,
+  SENDER,
+  THIS_ADDRESS,
+  SCALE18_MUL,
+  SCALE18_DIV,
+  SCALE18,
+  SCALEN,
+  SCALE_BY,
+  SCALE18_ONE,
+  SCALE18_DECIMALS,
+  ADD,
+  SATURATING_ADD,
+  SUB,
+  SATURATING_SUB,
+  MUL,
+  SATURATING_MUL,
+  DIV,
+  MOD,
+  EXP,
+  MIN,
+  MAX,
+  ISZERO,
+  EAGER_IF,
+  EQUAL_TO,
+  LESS_THAN,
+  GREATER_THAN,
+  EVERY,
+  ANY,
+  REPORT,
+  NEVER,
+  ALWAYS,
+  SATURATING_DIFF,
+  UPDATE_BLOCKS_FOR_TIER_RANGE,
+  SELECT_LTE,
+  IERC20_BALANCE_OF,
+  IERC20_TOTAL_SUPPLY,
+  IERC721_BALANCE_OF,
+  IERC721_OWNER_OF,
+  IERC1155_BALANCE_OF,
+  IERC1155_BALANCE_OF_BATCH,
+  length,
+}
+
+export const CombineTierOpcodes = {
+  ...AllStandardOps,
+  ACCOUNT: 0 + AllStandardOps.length,
+};
+
+export const sourceAlways = utils.concat([op(CombineTierOpcodes.ALWAYS)]);
 
 export interface BasicArtifact extends Partial<Artifact> {
   contractName: string;
@@ -131,6 +196,79 @@ export async function deployContract(
 
   const result = await deploy(contractName, options);
   return result;
+}
+
+export async function createAlwayTier(
+  parent: DeployResult,
+  deployer: string,
+  txOverrides: Overrides = {}
+): Promise<void> {
+  const signer = await ethers.getSigner(deployer);
+
+  const estimation = deployConfig.estimationLevel.toLowerCase();
+
+  // By Default use the market
+  let estimationLevel = EstimationLevel.MARKET;
+  if (estimation === "low") {
+    estimationLevel = EstimationLevel.LOW;
+  }
+  if (estimation === "aggressive") {
+    estimationLevel = EstimationLevel.AGGRESSIVE;
+  }
+
+  const feeCalculated = await estimateGasFee(estimationLevel);
+
+  if (feeCalculated.maxFeePerGas) {
+    txOverrides.maxFeePerGas = feeCalculated.maxFeePerGas;
+    txOverrides.maxPriorityFeePerGas = feeCalculated.maxPriorityFeePerGas;
+  } else {
+    txOverrides.gasPrice = feeCalculated.gasPrice;
+  }
+
+  const alwaysArg: StateConfigStruct = {
+    sources: [sourceAlways],
+    constants: [],
+    stackLength: 8,
+    argumentsLength: 0,
+  };
+
+  const factory = new CombineTierFactory__factory(signer).attach(
+    parent.address
+  );
+
+  const tx = await factory.createChildTyped(alwaysArg, txOverrides);
+  console.log(tx.hash);
+  const receipt = await tx.wait();
+
+  const eventObj = receipt.events.find(
+    (x) =>
+      x.topics[0] === factory.filters.NewChild().topics[0] &&
+      x.address === factory.address
+  );
+
+  const { child } = factory.interface.decodeEventLog(
+    factory.interface.events["NewChild(address,address)"],
+    eventObj.data,
+    eventObj.topics
+  ) as NewChildEvent["args"];
+
+  const result = {
+    address: child,
+    abi: CombineTier__factory.abi,
+    transactionHash: receipt.transactionHash,
+    receipt: receipt,
+    args: alwaysArg,
+    numDeployments: 1,
+    bytecode: CombineTier__factory.bytecode,
+  };
+
+  const path = `${deploymentsPath}/${hre.network.name}`;
+  if (!fs.existsSync(path)) {
+    fs.mkdirSync(path, { recursive: true });
+  }
+
+  const pathFile = `${path}/${"AlwaysTier"}.json`;
+  writeFile(pathFile, JSON.stringify(result, null, 2));
 }
 
 /**
@@ -280,12 +418,16 @@ export const estimateGasFee = async (
   );
 
   let multiplierLevel: number;
-  if (estimationLevel == EstimationLevel.LOW) {
-    multiplierLevel = 90;
-  } else if (estimationLevel == EstimationLevel.MARKET) {
-    multiplierLevel = 100;
+  if (estimationLevel <= EstimationLevel.AGGRESSIVE) {
+    if (estimationLevel == EstimationLevel.LOW) {
+      multiplierLevel = 90;
+    } else if (estimationLevel == EstimationLevel.MARKET) {
+      multiplierLevel = 100;
+    } else {
+      multiplierLevel = 110;
+    }
   } else {
-    multiplierLevel = 110;
+    multiplierLevel = estimationLevel;
   }
 
   // TODO: Maybe add a field, so someone can set a MAX value on that attribute that the user is willing to spend ???
@@ -337,10 +479,8 @@ export const fetchFile = (_path: string): DeployResult => {
  * Avoid to save/generate to localhost network
  */
 export const save = async (): Promise<void> => {
-  if (networkName !== "localhost") {
-    await saveListAddresses();
-    copyDeployFolder();
-  }
+  await saveListAddresses();
+  copyDeployFolder();
 };
 
 const copyDeployFolder = (): void => {
@@ -382,7 +522,7 @@ const saveListAddresses = async (): Promise<void> => {
     result[`${name}`] = deployFile.address;
     result[`${name}Block`] = deployFile.receipt.blockNumber;
   }
-  writeFile(pathTo, JSON.stringify(result, null, 4));
+  writeFile(pathTo, JSON.stringify(result, null, 2));
 };
 
 /**
@@ -403,3 +543,29 @@ const assignValue = (obj: any, keyPath: string[], value: any) => {
   }
   obj[keyPath[lastKeyIndex]] = value;
 };
+
+/**
+ * Converts an opcode and operand to bytes, and returns their concatenation.
+ * @param code - the opcode
+ * @param erand - the operand, currently limited to 1 byte (defaults to 0)
+ */
+export function op(
+  code: number,
+  erand: number | BytesLike | utils.Hexable = 0
+): Uint8Array {
+  return utils.concat([bytify(code), bytify(erand)]);
+}
+
+/**
+ * Converts a value to raw bytes representation. Assumes `value` is less than or equal to 1 byte, unless a desired `bytesLength` is specified.
+ *
+ * @param value - value to convert to raw bytes format
+ * @param bytesLength - (defaults to 1) number of bytes to left pad if `value` doesn't completely fill the desired amount of memory. Will throw `InvalidArgument` error if value already exceeds bytes length.
+ * @returns {Uint8Array} - raw bytes representation
+ */
+export function bytify(
+  value: number | BytesLike | utils.Hexable,
+  bytesLength = 1
+): BytesLike {
+  return utils.zeroPad(utils.hexlify(value), bytesLength);
+}
