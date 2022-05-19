@@ -237,7 +237,6 @@ export async function createAlwayTier(
   );
 
   const tx = await factory.createChildTyped(alwaysArg, txOverrides);
-  console.log(tx.hash);
   const receipt = await tx.wait();
 
   const eventObj = receipt.events.find(
@@ -493,7 +492,7 @@ const copyDeployFolder = (): void => {
       console.log(err);
     }
   });
-  console.log(`Save it to:  "${destDir}"`);
+  console.log(`Save it to:  ${destDir}`);
 
   fs.rmSync(srcDir, { recursive: true, force: true });
 };

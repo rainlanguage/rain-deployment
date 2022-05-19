@@ -145,13 +145,8 @@ const config = {
       url: getUrl("localhost"),
       accounts: accounts("localhost"),
     },
-    ropsten: {
-      url: getUrl("ropsten"),
-      accounts: accounts(),
-      gasPrice: 10e9,
-    },
-    rinkeby: {
-      url: getUrl("rinkeby"),
+    goerli: {
+      url: getUrl("goerli"),
       accounts: accounts(),
       gasPrice: 10e9,
     },

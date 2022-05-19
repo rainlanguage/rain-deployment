@@ -1,0 +1,136 @@
+{
+  "address": "0x790Bfb7C3E07805F9880ece979ee2f3E19f524C2",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "subject",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "indexed": false,
+          "internalType": "struct Notice",
+          "name": "notice",
+          "type": "tuple"
+        }
+      ],
+      "name": "NewNotice",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "subject",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "internalType": "struct Notice[]",
+          "name": "notices_",
+          "type": "tuple[]"
+        }
+      ],
+      "name": "createNotices",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x931228e542139f3208ccc65daf40e13180bd0c498792edd7127c41095694b118",
+  "receipt": {
+    "to": null,
+    "from": "0xbF334f8BD1420a1CbFE15407f73919424934B1B3",
+    "contractAddress": "0x790Bfb7C3E07805F9880ece979ee2f3E19f524C2",
+    "transactionIndex": 10,
+    "gasUsed": "232172",
+    "logsBloom": "0x00000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000008800000000000000000000000000000000000000000000000000000000800000000000000000000100000000000000000000000200000000000000000000000000000000000080000000010000000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000004000000000000000000001000000000000000000000000000000100000020000000000000000000000000000000000000002000000000000000000000000100000",
+    "blockHash": "0xb8113d83bde3b275983cb8e8aa9b6ced231a716e475f42e621526cc845731c59",
+    "transactionHash": "0x931228e542139f3208ccc65daf40e13180bd0c498792edd7127c41095694b118",
+    "logs": [
+      {
+        "transactionIndex": 10,
+        "blockNumber": 28479225,
+        "transactionHash": "0x931228e542139f3208ccc65daf40e13180bd0c498792edd7127c41095694b118",
+        "address": "0x0000000000000000000000000000000000001010",
+        "topics": [
+          "0x4dfe1bbbcf077ddc3e01291eea2d5c70c2b422b415d95645b9adcfd678cb1d63",
+          "0x0000000000000000000000000000000000000000000000000000000000001010",
+          "0x000000000000000000000000bf334f8bd1420a1cbfe15407f73919424934b1b3",
+          "0x000000000000000000000000959c65b72147faf3450d8b50a0de57e72ffc5e0d"
+        ],
+        "data": "0x000000000000000000000000000000000000000000000000005b6c9ed632c6b40000000000000000000000000000000000000000000000008299f33aba458120000000000000000000000000000000000000000000000230fb7422e0eb514ae0000000000000000000000000000000000000000000000000823e869be412ba6c000000000000000000000000000000000000000000000230fbcf8f7fc1841194",
+        "logIndex": 95,
+        "blockHash": "0xb8113d83bde3b275983cb8e8aa9b6ced231a716e475f42e621526cc845731c59"
+      }
+    ],
+    "blockNumber": 28479225,
+    "cumulativeGasUsed": "3187942",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "4e67831620929df00196d164bddb714f",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.10+commit.fc410830\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"subject\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"indexed\":false,\"internalType\":\"struct Notice\",\"name\":\"notice\",\"type\":\"tuple\"}],\"name\":\"NewNotice\",\"type\":\"event\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"subject\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"internalType\":\"struct Notice[]\",\"name\":\"notices_\",\"type\":\"tuple[]\"}],\"name\":\"createNotices\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"events\":{\"NewNotice(address,(address,bytes))\":{\"params\":{\"notice\":\"The notice data.\",\"sender\":\"The anon `msg.sender` that emitted the `Notice`.\"}}},\"kind\":\"dev\",\"methods\":{\"createNotices((address,bytes)[])\":{\"params\":{\"notices_\":\"All the notices to emit.\"}}},\"version\":1},\"userdoc\":{\"events\":{\"NewNotice(address,(address,bytes))\":{\"notice\":\"Anyone can emit a `Notice`. This is open ended content related to the subject. Some examples: - Raise descriptions/promises - Reviews/comments from token holders - Simple onchain voting/signalling GUIs/tooling/indexers reading this data are expected to know how to interpret it in context because the `NoticeBoard` contract does not.\"}},\"kind\":\"user\",\"methods\":{\"createNotices((address,bytes)[])\":{\"notice\":\"Anyone can create notices about some subject. The notice is opaque bytes. The indexer/GUI is expected to understand the context to decode/interpret it. The indexer/GUI is strongly recommended to filter out untrusted content.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/noticeboard/NoticeBoard.sol\":\"NoticeBoard\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":100000},\"remappings\":[]},\"sources\":{\"contracts/noticeboard/NoticeBoard.sol\":{\"content\":\"// SPDX-License-Identifier: CAL\\npragma solidity =0.8.10;\\n\\n/// @param subject Every notice is assumed to be about some contract.\\n/// If it isn't then emitting `0` bytes for the address is valid.\\n/// @param data Opaque bytes to be interpreted by the indexer/GUI.\\nstruct Notice {\\n    address subject;\\n    bytes data;\\n}\\n\\ncontract NoticeBoard {\\n    /// Anyone can emit a `Notice`.\\n    /// This is open ended content related to the subject.\\n    /// Some examples:\\n    /// - Raise descriptions/promises\\n    /// - Reviews/comments from token holders\\n    /// - Simple onchain voting/signalling\\n    /// GUIs/tooling/indexers reading this data are expected to know how to\\n    /// interpret it in context because the `NoticeBoard` contract does not.\\n    /// @param sender The anon `msg.sender` that emitted the `Notice`.\\n    /// @param notice The notice data.\\n    event NewNotice(address sender, Notice notice);\\n\\n    /// Anyone can create notices about some subject.\\n    /// The notice is opaque bytes. The indexer/GUI is expected to understand\\n    /// the context to decode/interpret it. The indexer/GUI is strongly\\n    /// recommended to filter out untrusted content.\\n    /// @param notices_ All the notices to emit.\\n    function createNotices(Notice[] calldata notices_) external {\\n        for (uint256 i_ = 0; i_ < notices_.length; i_++) {\\n            emit NewNotice(msg.sender, notices_[i_]);\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0xf528bccad3461267c4ed51ef2681a0a1572057825f6ea2917c12c443f2e6e663\",\"license\":\"CAL\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610340806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c806376d6500014610030575b600080fd5b61004361003e3660046100c3565b610045565b005b60005b818110156100be577faa4518b627c102261dfb05cfe2e978716392d85d3ba1a5fbeb7a0da1ca9d0c3f3384848481811061008457610084610138565b90506020028101906100969190610167565b6040516100a49291906101ee565b60405180910390a1806100b6816102aa565b915050610048565b505050565b600080602083850312156100d657600080fd5b823567ffffffffffffffff808211156100ee57600080fd5b818501915085601f83011261010257600080fd5b81358181111561011157600080fd5b8660208260051b850101111561012657600080fd5b60209290920196919550909350505050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b600082357fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc183360301811261019b57600080fd5b9190910192915050565b8183528181602085013750600060208284010152600060207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0601f840116840101905092915050565b600073ffffffffffffffffffffffffffffffffffffffff8085168352604060208401528335818116915081811461022457600080fd5b5060408301526020830135368490037fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe101811261026057600080fd5b8301803567ffffffffffffffff81111561027957600080fd5b80360385131561028857600080fd5b604060608501526102a06080850182602085016101a5565b9695505050505050565b60007fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff821415610303577f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b506001019056fea26469706673582212206c5b7ca6e17320f19aba7d8057d9d9d29ecce801ad8c8949c8029809b5df685d64736f6c634300080a0033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061002b5760003560e01c806376d6500014610030575b600080fd5b61004361003e3660046100c3565b610045565b005b60005b818110156100be577faa4518b627c102261dfb05cfe2e978716392d85d3ba1a5fbeb7a0da1ca9d0c3f3384848481811061008457610084610138565b90506020028101906100969190610167565b6040516100a49291906101ee565b60405180910390a1806100b6816102aa565b915050610048565b505050565b600080602083850312156100d657600080fd5b823567ffffffffffffffff808211156100ee57600080fd5b818501915085601f83011261010257600080fd5b81358181111561011157600080fd5b8660208260051b850101111561012657600080fd5b60209290920196919550909350505050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b600082357fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc183360301811261019b57600080fd5b9190910192915050565b8183528181602085013750600060208284010152600060207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0601f840116840101905092915050565b600073ffffffffffffffffffffffffffffffffffffffff8085168352604060208401528335818116915081811461022457600080fd5b5060408301526020830135368490037fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe101811261026057600080fd5b8301803567ffffffffffffffff81111561027957600080fd5b80360385131561028857600080fd5b604060608501526102a06080850182602085016101a5565b9695505050505050565b60007fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff821415610303577f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b506001019056fea26469706673582212206c5b7ca6e17320f19aba7d8057d9d9d29ecce801ad8c8949c8029809b5df685d64736f6c634300080a0033",
+  "devdoc": {
+    "events": {
+      "NewNotice(address,(address,bytes))": {
+        "params": {
+          "notice": "The notice data.",
+          "sender": "The anon `msg.sender` that emitted the `Notice`."
+        }
+      }
+    },
+    "kind": "dev",
+    "methods": {
+      "createNotices((address,bytes)[])": {
+        "params": {
+          "notices_": "All the notices to emit."
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "events": {
+      "NewNotice(address,(address,bytes))": {
+        "notice": "Anyone can emit a `Notice`. This is open ended content related to the subject. Some examples: - Raise descriptions/promises - Reviews/comments from token holders - Simple onchain voting/signalling GUIs/tooling/indexers reading this data are expected to know how to interpret it in context because the `NoticeBoard` contract does not."
+      }
+    },
+    "kind": "user",
+    "methods": {
+      "createNotices((address,bytes)[])": {
+        "notice": "Anyone can create notices about some subject. The notice is opaque bytes. The indexer/GUI is expected to understand the context to decode/interpret it. The indexer/GUI is strongly recommended to filter out untrusted content."
+      }
+    },
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}
