@@ -145,6 +145,10 @@ const config = {
       url: getUrl("localhost"),
       accounts: accounts("localhost"),
     },
+    ethereum: {
+      url: getUrl("ethereum"),
+      accounts: accounts(),
+    },
     goerli: {
       url: getUrl("goerli"),
       accounts: accounts(),

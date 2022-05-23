@@ -9,7 +9,7 @@ import {
 } from "../utils/utils";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  // TODO: Get contract already deployed in same commit that package.json
+  // TODO: Get contract already deploysed in same commit that package.json
   // TODO: Add type check to deployment. Wrap the function deploy and check the type to each deploy funcion (?)
   const { getNamedAccounts } = hre;
   const { deployer } = await getNamedAccounts();
