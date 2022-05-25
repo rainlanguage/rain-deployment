@@ -14,36 +14,36 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts } = hre;
   const { deployer } = await getNamedAccounts();
 
-  // Rain protocol
-  const RedeemableERC20Factory = await deploy("RedeemableERC20Factory", {
-    from: deployer,
-    gasLimit: await estimateGasDeploy("RedeemableERC20Factory"),
-    args: [],
-  });
+  // // Rain protocol
+  // const RedeemableERC20Factory = await deploy("RedeemableERC20Factory", {
+  //   from: deployer,
+  //   gasLimit: await estimateGasDeploy("RedeemableERC20Factory"),
+  //   args: [],
+  // });
 
-  await deploy("VerifyFactory", {
-    from: deployer,
-    gasLimit: await estimateGasDeploy("VerifyFactory"),
-    args: [],
-  });
+  // await deploy("VerifyFactory", {
+  //   from: deployer,
+  //   gasLimit: await estimateGasDeploy("VerifyFactory"),
+  //   args: [],
+  // });
 
-  await deploy("VerifyTierFactory", {
-    from: deployer,
-    gasLimit: await estimateGasDeploy("VerifyTierFactory"),
-    args: [],
-  });
+  // await deploy("VerifyTierFactory", {
+  //   from: deployer,
+  //   gasLimit: await estimateGasDeploy("VerifyTierFactory"),
+  //   args: [],
+  // });
 
-  await deploy("ERC20BalanceTierFactory", {
-    from: deployer,
-    gasLimit: await estimateGasDeploy("ERC20BalanceTierFactory"),
-    args: [],
-  });
+  // await deploy("ERC20BalanceTierFactory", {
+  //   from: deployer,
+  //   gasLimit: await estimateGasDeploy("ERC20BalanceTierFactory"),
+  //   args: [],
+  // });
 
-  await deploy("ERC20TransferTierFactory", {
-    from: deployer,
-    gasLimit: await estimateGasDeploy("ERC20TransferTierFactory"),
-    args: [],
-  });
+  // await deploy("ERC20TransferTierFactory", {
+  //   from: deployer,
+  //   gasLimit: await estimateGasDeploy("ERC20TransferTierFactory"),
+  //   args: [],
+  // });
 
   const resultCombineTier = await deploy("CombineTierFactory", {
     from: deployer,
@@ -51,28 +51,28 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [],
   });
 
-  await deploy("ERC721BalanceTierFactory", {
-    from: deployer,
-    gasLimit: await estimateGasDeploy("ERC721BalanceTierFactory"),
-    args: [],
-  });
+  // await deploy("ERC721BalanceTierFactory", {
+  //   from: deployer,
+  //   gasLimit: await estimateGasDeploy("ERC721BalanceTierFactory"),
+  //   args: [],
+  // });
 
-  const SaleFactoryArgs = {
-    maximumSaleTimeout: 10000,
-    maximumCooldownDuration: 1000,
-    redeemableERC20Factory: RedeemableERC20Factory.address,
-  };
-  await deploy("SaleFactory", {
-    from: deployer,
-    gasLimit: await estimateGasDeploy("SaleFactory", [SaleFactoryArgs]),
-    args: [SaleFactoryArgs],
-  });
+  // const SaleFactoryArgs = {
+  //   maximumSaleTimeout: 10000,
+  //   maximumCooldownDuration: 1000,
+  //   redeemableERC20Factory: RedeemableERC20Factory.address,
+  // };
+  // await deploy("SaleFactory", {
+  //   from: deployer,
+  //   gasLimit: await estimateGasDeploy("SaleFactory", [SaleFactoryArgs]),
+  //   args: [SaleFactoryArgs],
+  // });
 
-  await deploy("GatedNFTFactory", {
-    from: deployer,
-    gasLimit: await estimateGasDeploy("GatedNFTFactory"),
-    args: [],
-  });
+  // await deploy("GatedNFTFactory", {
+  //   from: deployer,
+  //   gasLimit: await estimateGasDeploy("GatedNFTFactory"),
+  //   args: [],
+  // });
 
   await deploy("RedeemableERC20ClaimEscrow", {
     from: deployer,

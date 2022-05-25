@@ -164,6 +164,16 @@ const config = {
       accounts: accounts(),
       gasPrice: 20e9,
     },
+    bsc_testnet: {
+      url: getUrl("bsc_testnet"),
+      accounts: accounts(),
+      gasPrice: 20e9,
+    },
+    bsc_mainnet: {
+      url: getUrl("bsc_mainnet"),
+      accounts: accounts(),
+      gasPrice: 20e9,
+    },
     reef: {
       // This is a reef local node
       deploy: ["deploy/reef"],

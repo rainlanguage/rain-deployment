@@ -21,6 +21,8 @@ module.exports = {
           "reef_mainnet",
           "CombineTierFactory__factory",
           "CombineTier__factory",
+          "bsc_testnet",
+          "bsc_mainnet",
         ],
       },
     ],
