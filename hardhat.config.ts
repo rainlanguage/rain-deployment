@@ -207,9 +207,8 @@ const config = {
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
     fuji: {
-      url: "https://api.avax-test.network/ext/bc/C/rpc",
-      gasPrice: 25000000000,
-      chainId: 43113,
+      url: "https://speedy-nodes-nyc.moralis.io/0383f6e7a96b3f2718876f80/avalanche/testnet",
+      gasPrice: 225000000000,
       accounts:
         process.env.MNEMONIC !== undefined
           ? { mnemonic: process.env.MNEMONIC }

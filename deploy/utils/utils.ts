@@ -341,17 +341,18 @@ export const estimateGasFee = async (
   txsTofetch = txsTofetch < 1 ? 1 : txsTofetch > 20 ? 20 : txsTofetch;
   ``;
   for (let i = 1; i <= txsTofetch; i++) {
-    console.log(i);
     const txArray = (await ethers.provider.getBlockWithTransactions(-i))
       ?.transactions;
 
-    if (!txArray && i > 1) {
-      txsTofetch = i;
-      break;
-    } else {
-      throw new Error(
-        "Fail trying to fetch recent transactions in node. Check the RPC URL"
-      );
+    if (!txArray) {
+      if (i > 1) {
+        txsTofetch = i;
+        break;
+      } else {
+        throw new Error(
+          "Fail trying to fetch recent transactions in node. Check the RPC URL"
+        );
+      }
     }
 
     let counter = 0;
