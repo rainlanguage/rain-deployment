@@ -15,6 +15,16 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployer } = await getNamedAccounts();
 
   // Rain protocol
+  // Deploying AllStandardOpsStateBuilder
+  const AllStandardOpsStateBuilder = await deploy(
+    "AllStandardOpsStateBuilder",
+    {
+      from: deployer,
+      gasLimit: await estimateGasDeploy("AllStandardOpsStateBuilder"),
+      args: [],
+    }
+  );
+
   const RedeemableERC20Factory = await deploy("RedeemableERC20Factory", {
     from: deployer,
     gasLimit: await estimateGasDeploy("RedeemableERC20Factory"),
@@ -45,10 +55,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [],
   });
 
-  const resultCombineTier = await deploy("CombineTierFactory", {
+  const CombineTier = await deploy("CombineTierFactory", {
     from: deployer,
-    gasLimit: await estimateGasDeploy("CombineTierFactory"),
-    args: [],
+    gasLimit: await estimateGasDeploy("CombineTierFactory", [
+      AllStandardOpsStateBuilder.address,
+    ]),
+    args: [AllStandardOpsStateBuilder.address],
   });
 
   await deploy("ERC721BalanceTierFactory", {
@@ -61,6 +73,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     maximumSaleTimeout: 10000,
     maximumCooldownDuration: 1000,
     redeemableERC20Factory: RedeemableERC20Factory.address,
+    vmStateBuilder: AllStandardOpsStateBuilder.address,
   };
   await deploy("SaleFactory", {
     from: deployer,
@@ -88,12 +101,36 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   await deploy("EmissionsERC20Factory", {
     from: deployer,
-    gasLimit: await estimateGasDeploy("EmissionsERC20Factory"),
-    args: [],
+    gasLimit: await estimateGasDeploy("EmissionsERC20Factory", [
+      AllStandardOpsStateBuilder.address,
+    ]),
+    args: [AllStandardOpsStateBuilder.address],
   });
 
   // Deploy AlwayTier
-  await createAlwayTier(resultCombineTier, deployer);
+  await createAlwayTier(CombineTier, deployer);
+
+  // Deploy OrderBook
+  const OrderBookStateBuilder = await deploy("OrderBookStateBuilder", {
+    from: deployer,
+    gasLimit: await estimateGasDeploy("OrderBookStateBuilder"),
+    args: [],
+  });
+
+  await deploy("OrderBook", {
+    from: deployer,
+    gasLimit: await estimateGasDeploy("OrderBook", [
+      OrderBookStateBuilder.address,
+    ]),
+    args: [OrderBookStateBuilder.address],
+  });
+
+  // Deployt StakeFactory
+  await deploy("StakeFactory", {
+    from: deployer,
+    gasLimit: await estimateGasDeploy("StakeFactory"),
+    args: [],
+  });
 
   // Save all
   await save();

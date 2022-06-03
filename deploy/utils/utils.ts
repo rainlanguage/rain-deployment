@@ -28,9 +28,10 @@ if (!fs.existsSync(`${deploymentsPath}/${commit}`)) {
   fs.mkdirSync(`${deploymentsPath}/${commit}`, { recursive: true });
 }
 export enum AllStandardOps {
-  SKIP,
-  VAL,
-  DUP,
+  CONSTANT,
+  STACK,
+  CONTEXT,
+  STORAGE,
   ZIPMAP,
   DEBUG,
   BLOCK_NUMBER,
@@ -42,8 +43,6 @@ export enum AllStandardOps {
   SCALE18,
   SCALEN,
   SCALE_BY,
-  SCALE18_ONE,
-  SCALE18_DECIMALS,
   ADD,
   SATURATING_ADD,
   SUB,
@@ -63,8 +62,6 @@ export enum AllStandardOps {
   EVERY,
   ANY,
   REPORT,
-  NEVER,
-  ALWAYS,
   SATURATING_DIFF,
   UPDATE_BLOCKS_FOR_TIER_RANGE,
   SELECT_LTE,
@@ -82,7 +79,7 @@ export const CombineTierOpcodes = {
   ACCOUNT: 0 + AllStandardOps.length,
 };
 
-export const sourceAlways = utils.concat([op(CombineTierOpcodes.ALWAYS)]);
+export const vAlways = utils.concat([op(AllStandardOps.CONSTANT, 0)]);
 
 export interface BasicArtifact extends Partial<Artifact> {
   contractName: string;
@@ -226,10 +223,8 @@ export async function createAlwayTier(
   }
 
   const alwaysArg: StateConfigStruct = {
-    sources: [sourceAlways],
-    constants: [],
-    stackLength: 8,
-    argumentsLength: 0,
+    sources: [vAlways],
+    constants: [0],
   };
 
   const factory = new CombineTierFactory__factory(signer).attach(

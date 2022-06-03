@@ -14,6 +14,7 @@ const defaultUrls = {
   reef_testnet: "wss://rpc-testnet.reefscan.com/ws",
   polygon: "https://rpc-mainnet.maticvigil.com/",
   mumbai: "https://rpc-mumbai.maticvigil.com",
+  testnet_aurora: "https://testnet.aurora.dev",
 };
 
 /**
@@ -210,6 +211,11 @@ const config = {
       url: getUrl("fuji"),
       accounts: accounts(),
       gasPrice: 225000000000,
+    },
+    testnet_aurora: {
+      url: getUrl("testnet_aurora"),
+      accounts: accounts(),
+      chainId: 1313161555,
     },
     fantom: {
       url: "https://rpc.ftm.tools/",

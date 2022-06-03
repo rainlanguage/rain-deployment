@@ -2,6 +2,19 @@
 # yarn lockfile v1
 
 
+"@0xsequence/create3@https://github.com/0xsequence/create3.git":
+  version "3.0.0"
+  resolved "https://github.com/0xsequence/create3.git#acc4703a21ec1d71dc2a99db088c4b1f467530fd"
+  dependencies:
+    csv-writer "^1.6.0"
+
+"@0xsequence/sstore2@github:0xsequence/sstore2":
+  version "1.1.0"
+  resolved "https://codeload.github.com/0xsequence/sstore2/tar.gz/0a28fe61b6e81de9a05b462a24b9f4ba8c70d5b7"
+  dependencies:
+    "@0xsequence/create3" "https://github.com/0xsequence/create3.git"
+    csv-writer "^1.6.0"
+
 "@ampproject/remapping@^2.1.0":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@ampproject/remapping/-/remapping-2.1.2.tgz#4edca94973ded9630d20101cd8559cedb8d8bd34"
@@ -1095,12 +1108,10 @@
     "@openzeppelin/contracts" "^4.3.3"
     "@openzeppelin/contracts-upgradeable" "^4.4.1"
 
-"@beehiveinnovation/rain-protocol@git+https://github.com/beehive-innovation/rain-protocol.git#e590ce7ef673224afba04c43384a278a9500500d":
+"@beehiveinnovation/rain-protocol@git+https://github.com/beehive-innovation/rain-protocol.git#af9a3f638d8084d96cbf6898c035920544647879":
   version "0.0.16"
-  resolved "git+https://github.com/beehive-innovation/rain-protocol.git#e590ce7ef673224afba04c43384a278a9500500d"
+  resolved "git+https://github.com/beehive-innovation/rain-protocol.git#af9a3f638d8084d96cbf6898c035920544647879"
   dependencies:
-    "@beehiveinnovation/balancer-core" "0.0.7"
-    "@beehiveinnovation/configurable-rights-pool" "0.0.1"
     "@openzeppelin/contracts" "^4.3.3"
     "@openzeppelin/contracts-upgradeable" "^4.4.1"
 
@@ -5601,6 +5612,11 @@ cssstyle@^2.3.0:
   integrity sha512-AZL67abkUzIuvcHqk7c09cezpGNcxUxU4Ioi/05xHk4DQeTkWmGYftIE6ctU6AEt+Gn4n1lDStOtj7FKycP71A==
   dependencies:
     cssom "~0.3.6"
+
+csv-writer@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/csv-writer/-/csv-writer-1.6.0.tgz#d0cea44b6b4d7d3baa2ecc6f3f7209233514bcf9"
+  integrity sha512-NOx7YDFWEsM/fTRAJjRpPp8t+MKRVvniAg9wQlUKx20MFrPs73WLJhFf5iteqrxNYnsy924K3Iroh3yNHeYd2g==
 
 cuint@^0.2.2:
   version "0.2.2"
