@@ -3,7 +3,6 @@ import * as path from "path";
 import fs, { promises as fsPromises } from "fs";
 import fse from "fs-extra";
 import hre, { artifacts, ethers } from "hardhat";
-
 import type { BigNumber, BytesLike, Overrides } from "ethers";
 import { utils } from "ethers";
 
@@ -12,10 +11,7 @@ import { FeeData } from "@ethersproject/abstract-provider";
 
 import deployConfig from "../../deployment-config.json";
 
-import {
-  StateConfigStruct,
-  NewChildEvent,
-} from "../../typechain/CombineTierFactory";
+import { NewChildEvent } from "../../typechain/CombineTierFactory";
 import { CombineTierFactory__factory } from "../../typechain/factories/CombineTierFactory__factory";
 import { CombineTier__factory } from "../../typechain/factories/CombineTier__factory";
 
@@ -34,52 +30,48 @@ export enum AllStandardOps {
   STORAGE,
   ZIPMAP,
   DEBUG,
-  BLOCK_NUMBER,
-  BLOCK_TIMESTAMP,
-  SENDER,
-  THIS_ADDRESS,
-  SCALE18_MUL,
-  SCALE18_DIV,
-  SCALE18,
-  SCALEN,
-  SCALE_BY,
-  ADD,
-  SATURATING_ADD,
-  SUB,
-  SATURATING_SUB,
-  MUL,
-  SATURATING_MUL,
-  DIV,
-  MOD,
-  EXP,
-  MIN,
-  MAX,
-  ISZERO,
-  EAGER_IF,
-  EQUAL_TO,
-  LESS_THAN,
-  GREATER_THAN,
-  EVERY,
-  ANY,
-  REPORT,
-  SATURATING_DIFF,
-  UPDATE_BLOCKS_FOR_TIER_RANGE,
-  SELECT_LTE,
-  IERC20_BALANCE_OF,
-  IERC20_TOTAL_SUPPLY,
+  ERC20_BALANCE_OF,
+  ERC20_TOTAL_SUPPLY,
+  ERC20_SNAPSHOT_BALANCE_OF_AT,
+  ERC20_SNAPSHOT_TOTAL_SUPPLY_AT,
   IERC721_BALANCE_OF,
   IERC721_OWNER_OF,
   IERC1155_BALANCE_OF,
   IERC1155_BALANCE_OF_BATCH,
+  BLOCK_NUMBER,
+  SENDER,
+  THIS_ADDRESS,
+  BLOCK_TIMESTAMP,
+  SCALE18,
+  SCALE18_DIV,
+  SCALE18_MUL,
+  SCALE_BY,
+  SCALEN,
+  ANY,
+  EAGER_IF,
+  EQUAL_TO,
+  EVERY,
+  GREATER_THAN,
+  ISZERO,
+  LESS_THAN,
+  SATURATING_ADD,
+  SATURATING_MUL,
+  SATURATING_SUB,
+  ADD,
+  DIV,
+  EXP,
+  MAX,
+  MIN,
+  MOD,
+  MUL,
+  SUB,
+  ITIERV2_REPORT,
+  ITIERV2_REPORT_TIME_FOR_TIER,
+  SATURATING_DIFF,
+  SELECT_LTE,
+  UPDATE_TIMES_FOR_TIER_RANGE,
   length,
 }
-
-export const CombineTierOpcodes = {
-  ...AllStandardOps,
-  ACCOUNT: 0 + AllStandardOps.length,
-};
-
-export const vAlways = utils.concat([op(AllStandardOps.CONSTANT, 0)]);
 
 export interface BasicArtifact extends Partial<Artifact> {
   contractName: string;
@@ -222,9 +214,21 @@ export async function createAlwayTier(
     txOverrides.gasPrice = feeCalculated.gasPrice;
   }
 
-  const alwaysArg: StateConfigStruct = {
-    sources: [vAlways],
-    constants: [0],
+  const ctxAccount = op(AllStandardOps.CONTEXT, 0);
+
+  // prettier-ignore
+  const sourceReportTimeForTierDefault = utils.concat([
+      op(AllStandardOps.THIS_ADDRESS),
+      ctxAccount,
+    op(AllStandardOps.ITIERV2_REPORT),
+  ]);
+
+  const alwaysArg = {
+    combinedTiersLength: 0,
+    sourceConfig: {
+      sources: [op(AllStandardOps.CONSTANT, 0), sourceReportTimeForTierDefault],
+      constants: [0],
+    },
   };
 
   const factory = new CombineTierFactory__factory(signer).attach(
