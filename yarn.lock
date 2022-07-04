@@ -1094,9 +1094,9 @@
     truffle-plugin-verify "^0.4.0"
     yarn "^1.22.5"
 
-"@beehiveinnovation/rain-protocol@git+https://github.com/beehive-innovation/rain-protocol.git#5a35b097475d37fd5f44446922a32025708c1f8c":
+"@beehiveinnovation/rain-protocol@git+https://github.com/beehive-innovation/rain-protocol.git#f184482cca57c72db22ba97649d5f84a1b7ad291":
   version "0.0.16"
-  resolved "git+https://github.com/beehive-innovation/rain-protocol.git#5a35b097475d37fd5f44446922a32025708c1f8c"
+  resolved "git+https://github.com/beehive-innovation/rain-protocol.git#f184482cca57c72db22ba97649d5f84a1b7ad291"
   dependencies:
     "@openzeppelin/contracts" "^4.3.3"
     "@openzeppelin/contracts-upgradeable" "^4.4.1"
