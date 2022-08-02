@@ -10,7 +10,6 @@ import {
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   // TODO: Get contract already deploysed in same commit that package.json
-  // TODO: Add type check to deployment. Wrap the function deploy and check the type to each deploy funcion (?)
   const { getNamedAccounts } = hre;
   const { deployer } = await getNamedAccounts();
 
@@ -43,30 +42,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [],
   });
 
-  await deploy("ERC20BalanceTierFactory", {
-    from: deployer,
-    gasLimit: await estimateGasDeploy("ERC20BalanceTierFactory"),
-    args: [],
-  });
-
-  await deploy("ERC20TransferTierFactory", {
-    from: deployer,
-    gasLimit: await estimateGasDeploy("ERC20TransferTierFactory"),
-    args: [],
-  });
-
   const CombineTier = await deploy("CombineTierFactory", {
     from: deployer,
     gasLimit: await estimateGasDeploy("CombineTierFactory", [
       AllStandardOpsStateBuilder.address,
     ]),
     args: [AllStandardOpsStateBuilder.address],
-  });
-
-  await deploy("ERC721BalanceTierFactory", {
-    from: deployer,
-    gasLimit: await estimateGasDeploy("ERC721BalanceTierFactory"),
-    args: [],
   });
 
   const SaleFactoryArgs = {
@@ -79,12 +60,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     from: deployer,
     gasLimit: await estimateGasDeploy("SaleFactory", [SaleFactoryArgs]),
     args: [SaleFactoryArgs],
-  });
-
-  await deploy("GatedNFTFactory", {
-    from: deployer,
-    gasLimit: await estimateGasDeploy("GatedNFTFactory"),
-    args: [],
   });
 
   await deploy("RedeemableERC20ClaimEscrow", {

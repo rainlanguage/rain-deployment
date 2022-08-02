@@ -22,11 +22,9 @@
     "prettier-plugin-solidity": "^1.0.0-beta.13"
   },
   "dependencies": {
-    "@0xsequence/sstore2": "github:0xsequence/sstore2",
     "@beehiveinnovation/balancer-core": "^0.0.7",
     "@beehiveinnovation/configurable-rights-pool": "^0.0.1",
-    "@beehiveinnovation/rain-protocol": "git+https://github.com/beehive-innovation/rain-protocol.git#af9a3f638d8084d96cbf6898c035920544647879",
-    "@beehiveinnovation/rain-statusfi": "git+https://github.com/beehive-innovation/rain-statusfi.git#288e082ae81ca796b0732619a9631db24beb7a7a",
+    "@beehiveinnovation/rain-protocol": "git+https://github.com/beehive-innovation/rain-protocol.git#f184482cca57c72db22ba97649d5f84a1b7ad291",
     "@nomiclabs/hardhat-ethers": "^2.0.4",
     "@nomiclabs/hardhat-waffle": "^2.0.2",
     "@reef-defi/evm-provider": "^1.0.5",
@@ -36,7 +34,6 @@
     "@types/chai": "^4.2.22",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.10.2",
-    "@vishalkale15107/rain-protocol": "git+https://github.com/vishalkale151071/rain-protocol.git#3d0ee716430d28716365f0f1c999fe14c30f0b4b",
     "chai": "^4.3.4",
     "dotenv": "^10.0.0",
     "ethereum-waffle": "^3.4.0",
