@@ -4,3 +4,4 @@ export * from "./erc20-abi";
 export * from "./readWriteTier";
 export * from "./stake";
 export * from "./verify";
+export * from "./sentinel";

@@ -2,7 +2,7 @@ import { ethers } from "hardhat";
 import {
   RainterpreterExpressionDeployer,
   Rainterpreter,
-} from "../../../../../typechain";
+} from "../../../../../../typechain";
 
 export const rainterpreterExpressionDeployer = async (
   interpreter: Rainterpreter

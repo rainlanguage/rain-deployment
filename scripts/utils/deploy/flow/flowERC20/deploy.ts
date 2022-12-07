@@ -1,11 +1,15 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Overrides } from "ethers";
 import { artifacts, ethers } from "hardhat";
-import { FlowERC20Factory } from "../../../../typechain";
+import {
+  FlowERC20Factory,
+  Rainterpreter,
+  RainterpreterExpressionDeployer,
+} from "../../../../../typechain";
 import {
   FlowERC20,
   FlowERC20ConfigStruct,
-} from "../../../../typechain/contracts/flow/erc20/FlowERC20";
+} from "../../../../../typechain/contracts/flow/erc20/FlowERC20";
 import { getEventArgs } from "../../../events";
 import { FlowERC20Config } from "../../../types/flow";
 import { rainterpreterExpressionDeployer } from "../../interpreter/shared/rainterpreterExpressionDeployer/deploy";
@@ -16,7 +20,11 @@ export const flowERC20Deploy = async (
   flowERC20Factory: FlowERC20Factory,
   flowERC20Config: FlowERC20Config,
   ...args: Overrides[]
-) => {
+): Promise<{
+  flow: FlowERC20;
+  interpreter: Rainterpreter;
+  expressionDeployer: RainterpreterExpressionDeployer;
+}> => {
   const interpreter = await rainterpreterDeploy();
   const expressionDeployer = await rainterpreterExpressionDeployer(interpreter);
 

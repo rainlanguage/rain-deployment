@@ -13,10 +13,7 @@ import {
 
 import type { OrderBook } from "../typechain";
 
-import {
-  OrderConfigStruct,
-  AddOrderEvent,
-} from "../typechain/contracts/orderbook/OrderBook";
+import { OrderConfigStruct } from "../typechain/contracts/orderbook/OrderBook";
 
 // ****NOTE: This addressess will be used
 const _tokenA = "0xe80081b6Ad08D9dFF568c2a8e34C672f84002b40";

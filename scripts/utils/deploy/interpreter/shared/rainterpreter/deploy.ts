@@ -1,4 +1,4 @@
-import { Rainterpreter } from "../../../../../typechain";
+import { Rainterpreter } from "../../../../../../typechain";
 import { basicDeploy } from "../../../basicDeploy";
 
 export const rainterpreterDeploy = async () =>
