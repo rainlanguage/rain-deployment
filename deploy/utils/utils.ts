@@ -11,9 +11,9 @@ import { FeeData } from "@ethersproject/abstract-provider";
 
 import deployConfig from "../../deployment-config.json";
 
-import { NewChildEvent } from "../../typechain/CombineTierFactory";
-import { CombineTierFactory__factory } from "../../typechain/factories/CombineTierFactory__factory";
-import { CombineTier__factory } from "../../typechain/factories/CombineTier__factory";
+import { NewChildEvent } from "../../typechain/contracts/factory/Factory";
+import { CombineTierFactory__factory } from "../../typechain";
+import { CombineTier__factory } from "../../typechain";
 
 export const networkName = hre.network.name;
 const commit: string = process.env.COMMIT;

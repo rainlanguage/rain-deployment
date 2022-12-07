@@ -13,97 +13,38 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts } = hre;
   const { deployer } = await getNamedAccounts();
 
-  // Rain protocol
-  // Deploying AllStandardOpsStateBuilder
-  const AllStandardOpsStateBuilder = await deploy(
-    "AllStandardOpsStateBuilder",
-    {
-      from: deployer,
-      gasLimit: await estimateGasDeploy("AllStandardOpsStateBuilder"),
-      args: [],
-    }
-  );
-
-  const RedeemableERC20Factory = await deploy("RedeemableERC20Factory", {
+  const interpreter = await deploy("Rainterpreter", {
     from: deployer,
-    gasLimit: await estimateGasDeploy("RedeemableERC20Factory"),
+    gasLimit: await estimateGasDeploy("Rainterpreter"),
     args: [],
   });
 
-  await deploy("VerifyFactory", {
+  await deploy("RainterpreterExpressionDeployer", {
     from: deployer,
-    gasLimit: await estimateGasDeploy("VerifyFactory"),
-    args: [],
-  });
-
-  await deploy("VerifyTierFactory", {
-    from: deployer,
-    gasLimit: await estimateGasDeploy("VerifyTierFactory"),
-    args: [],
-  });
-
-  const CombineTier = await deploy("CombineTierFactory", {
-    from: deployer,
-    gasLimit: await estimateGasDeploy("CombineTierFactory", [
-      AllStandardOpsStateBuilder.address,
+    gasLimit: await estimateGasDeploy("RainterpreterExpressionDeployer", [
+      interpreter.address,
     ]),
-    args: [AllStandardOpsStateBuilder.address],
+    args: [interpreter.address],
   });
-
-  const SaleFactoryArgs = {
-    maximumSaleTimeout: 10000,
-    maximumCooldownDuration: 1000,
-    redeemableERC20Factory: RedeemableERC20Factory.address,
-    vmStateBuilder: AllStandardOpsStateBuilder.address,
-  };
-  await deploy("SaleFactory", {
-    from: deployer,
-    gasLimit: await estimateGasDeploy("SaleFactory", [SaleFactoryArgs]),
-    args: [SaleFactoryArgs],
-  });
-
-  await deploy("RedeemableERC20ClaimEscrow", {
-    from: deployer,
-    gasLimit: await estimateGasDeploy("RedeemableERC20ClaimEscrow"),
-    args: [],
-  });
-
-  await deploy("NoticeBoard", {
-    from: deployer,
-    gasLimit: await estimateGasDeploy("NoticeBoard"),
-    args: [],
-  });
-
-  await deploy("EmissionsERC20Factory", {
-    from: deployer,
-    gasLimit: await estimateGasDeploy("EmissionsERC20Factory", [
-      AllStandardOpsStateBuilder.address,
-    ]),
-    args: [AllStandardOpsStateBuilder.address],
-  });
-
-  // Deploy AlwayTier
-  await createAlwayTier(CombineTier, deployer);
 
   // Deploy OrderBook
-  const OrderBookStateBuilder = await deploy("OrderBookStateBuilder", {
+  await deploy("OrderBook", {
     from: deployer,
-    gasLimit: await estimateGasDeploy("OrderBookStateBuilder"),
+    gasLimit: await estimateGasDeploy("OrderBook"),
     args: [],
   });
 
-  await deploy("OrderBook", {
+  // Deploy FlowERC20Factory
+  await deploy("FlowERC20Factory", {
     from: deployer,
-    gasLimit: await estimateGasDeploy("OrderBook", [
-      OrderBookStateBuilder.address,
-    ]),
-    args: [OrderBookStateBuilder.address],
+    gasLimit: await estimateGasDeploy("FlowERC20Factory"),
+    args: [],
   });
 
-  // Deployt StakeFactory
-  await deploy("StakeFactory", {
+  // Deploy CombineTierFactory
+  await deploy("CombineTierFactory", {
     from: deployer,
-    gasLimit: await estimateGasDeploy("StakeFactory"),
+    gasLimit: await estimateGasDeploy("CombineTierFactory"),
     args: [],
   });
 

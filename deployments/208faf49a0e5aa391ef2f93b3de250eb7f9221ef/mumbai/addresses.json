@@ -1,0 +1,12 @@
+{
+  "CombineTierFactory": "0x39EB3ea95409a94aDcEbFC37aeBc4bc36FA1Ffb0",
+  "CombineTierFactoryBlock": 29527508,
+  "FlowERC20Factory": "0x83Ca48DFCb890D3fEC476233F16c58284adf6483",
+  "FlowERC20FactoryBlock": 29527505,
+  "OrderBook": "0x4C765C1Bf6581574afBaF8878beC448b03185677",
+  "OrderBookBlock": 29527502,
+  "Rainterpreter": "0xF4d1dbA59eABac89a9C37eB5F5bbC5F5b7Ab6B8c",
+  "RainterpreterBlock": 29527497,
+  "RainterpreterExpressionDeployer": "0x1819ed2de3ABa77c93C3B263aA95fbE67ef34088",
+  "RainterpreterExpressionDeployerBlock": 29527499
+}
