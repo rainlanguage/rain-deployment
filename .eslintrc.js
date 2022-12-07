@@ -14,7 +14,7 @@ module.exports = {
   ],
   rules: {
     camelcase: [
-      "error",
+      "warning",
       {
         allow: [
           "reef_testnet",
