@@ -8,6 +8,9 @@ import "hardhat-deploy";
 
 dotenv.config();
 
+/**
+ * Use defaullt URL from here if does not found any match on env file
+ */
 const defaultUrls = {
   reef: "ws://127.0.0.1:9944",
   reef_mainnet: "wss://rpc.reefscan.com/ws",
@@ -15,6 +18,10 @@ const defaultUrls = {
   polygon: "https://rpc-mainnet.maticvigil.com/",
   mumbai: "https://rpc-mumbai.maticvigil.com",
   testnet_aurora: "https://testnet.aurora.dev",
+  celo_mainnet: "https://forno.celo.org",
+  celo_alfajores: "https://alfajores-forno.celo-testnet.org",
+  fantom_mainnet: "https://rpc.ftm.tools",
+  fantom_testnet: "https://rpc.testnet.fantom.network",
 };
 
 /**
@@ -193,11 +200,10 @@ const config = {
       },
     },
     avalanche: {
-      url: "https://api.avax.network/ext/bc/C/rpc",
+      url: getUrl("avalanche"),
       gasPrice: 225000000000,
       chainId: 43114,
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      accounts: accounts(),
     },
     fuji: {
       url: getUrl("fuji"),
@@ -216,24 +222,48 @@ const config = {
         process.env.MNEMONIC !== undefined
           ? { mnemonic: process.env.MNEMONIC }
           : [process.env.PRIVATE_KEY],
+    },
+    fantom_mainnet: {
+      url: getUrl("fantom_mainnet"),
+      accounts: accounts(),
       gasPrice: 225000000000,
     },
-    fantomTestnet: {
-      url: "https://rpc.testnet.fantom.network",
+    fantom_testnet: {
+      url: getUrl("fantom_testnet"),
       chainId: 4002,
-      accounts:
-        process.env.MNEMONIC !== undefined
-          ? { mnemonic: process.env.MNEMONIC }
-          : [process.env.PRIVATE_KEY],
+      accounts: accounts(),
       gasPrice: 225000000000,
     },
-    arbitrumTestnet: {
-      url: "https://rinkeby.arbitrum.io/rpc",
-      chainId: 421611,
-      accounts:
-        process.env.MNEMONIC !== undefined
-          ? { mnemonic: process.env.MNEMONIC }
-          : [],
+    arbitrum_mainnet: {
+      url: getUrl("arbitrum_mainnet"),
+      accounts: accounts(),
+      gasPrice: 225000000000,
+    },
+    arbitrum_rinkeby: {
+      url: getUrl("arbitrum_rinkeby"),
+      accounts: accounts(),
+      gasPrice: 225000000000,
+    },
+    celo_mainnet: {
+      url: getUrl("celo_mainnet"),
+      accounts: accounts(),
+      gasPrice: 225000000000,
+    },
+    celo_alfajores: {
+      url: getUrl("celo_alfajores"),
+      accounts: accounts(),
+      gasPrice: 225000000000,
+    },
+    aurora_mainnet: {
+      url: "https://mainnet.aurora.dev",
+      // url: getUrl("aurora_mainnet"),
+      accounts: accounts(),
+      gasPrice: 225000000000,
+    },
+    aurora_testnet: {
+      url: "https://testnet.aurora.dev",
+      // url: getUrl("aurora_testnet"),
+      accounts: accounts(),
       gasPrice: 225000000000,
     },
   },

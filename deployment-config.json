@@ -1,3 +1,5 @@
 {
-  "estimationLevel": "MARKET"
+  "estimationLevel": "FIXED",
+  "gasPrice": "0.1",
+  "comment-Gasprice": "Require and only work with estimationLevel be FIXED: This value should be provided as gwei. For eg, if you use 1 (gwei), this will converted to 1000000000 wei internally"
 }
