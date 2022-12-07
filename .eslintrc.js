@@ -23,6 +23,8 @@ module.exports = {
           "CombineTier__factory",
           "bsc_testnet",
           "bsc_mainnet",
+          "testnet_aurora",
+          "mainnet_aurora",
           "fantom_testnet",
           "fantom_mainnet",
           "arbitrum_rinkeby",

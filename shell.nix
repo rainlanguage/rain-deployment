@@ -56,9 +56,6 @@ let
 
   init = pkgs.writeShellScriptBin "init" ''
     mkdir -p contracts && cp -r node_modules/@beehiveinnovation/rain-protocol/contracts .
-    mkdir -p contracts/rain-statusfi && cp node_modules/@beehiveinnovation/rain-statusfi/contracts/*.sol contracts/rain-statusfi
-    mkdir -p contracts/tier && cp node_modules/@vishalkale15107/rain-protocol/contracts/tier/ERC721BalanceTier*.sol contracts/tier
-    mkdir -p contracts/test && cp node_modules/@vishalkale15107/rain-protocol/contracts/test/ReserveNFT.sol contracts/test
     npx hardhat compile
     get-commit
   '';

@@ -17,6 +17,7 @@ const defaultUrls = {
   reef_testnet: "wss://rpc-testnet.reefscan.com/ws",
   polygon: "https://rpc-mainnet.maticvigil.com/",
   mumbai: "https://rpc-mumbai.maticvigil.com",
+  testnet_aurora: "https://testnet.aurora.dev",
   celo_mainnet: "https://forno.celo.org",
   celo_alfajores: "https://alfajores-forno.celo-testnet.org",
   fantom_mainnet: "https://rpc.ftm.tools",
@@ -109,34 +110,26 @@ const config = {
   solidity: {
     compilers: [
       {
-        version: "0.8.10",
+        version: "0.8.17",
         settings: {
           optimizer: {
             enabled: true,
-            runs: 100000,
+            runs: 1000000000,
+            details: {
+              peephole: true,
+              inliner: true,
+              jumpdestRemover: true,
+              orderLiterals: true,
+              deduplicate: true,
+              cse: true,
+              constantOptimizer: true,
+            },
           },
+          evmVersion: "london",
+          // viaIR: true,
           metadata: {
             useLiteralContent: true,
           },
-        },
-      },
-      {
-        version: "0.6.12",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 100000,
-          },
-        },
-      },
-      {
-        version: "0.5.12",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 100,
-          },
-          evmVersion: "byzantium",
         },
       },
     ],
@@ -216,6 +209,19 @@ const config = {
       url: getUrl("fuji"),
       accounts: accounts(),
       gasPrice: 225000000000,
+    },
+    testnet_aurora: {
+      url: getUrl("testnet_aurora"),
+      accounts: accounts(),
+      chainId: 1313161555,
+    },
+    fantom: {
+      url: "https://rpc.ftm.tools/",
+      chainId: 250,
+      accounts:
+        process.env.MNEMONIC !== undefined
+          ? { mnemonic: process.env.MNEMONIC }
+          : [process.env.PRIVATE_KEY],
     },
     fantom_mainnet: {
       url: getUrl("fantom_mainnet"),
