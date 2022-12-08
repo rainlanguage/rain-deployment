@@ -34,10 +34,31 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [],
   });
 
+  // Deploy FlowFactory
+  await deploy("FlowFactory", {
+    from: deployer,
+    gasLimit: await estimateGasDeploy("FlowFactory"),
+    args: [],
+  });
+
   // Deploy FlowERC20Factory
   await deploy("FlowERC20Factory", {
     from: deployer,
     gasLimit: await estimateGasDeploy("FlowERC20Factory"),
+    args: [],
+  });
+
+  // Deploy FlowERC721Factory
+  await deploy("FlowERC721Factory", {
+    from: deployer,
+    gasLimit: await estimateGasDeploy("FlowERC721Factory"),
+    args: [],
+  });
+
+  // Deploy FlowERC1155Factory
+  await deploy("FlowERC1155Factory", {
+    from: deployer,
+    gasLimit: await estimateGasDeploy("FlowERC1155Factory"),
     args: [],
   });
 
