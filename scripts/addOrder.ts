@@ -18,8 +18,9 @@ import { OrderConfigStruct } from "../typechain/contracts/orderbook/OrderBook";
 // ****NOTE: This addressess will be used
 const _tokenA = "0xe80081b6Ad08D9dFF568c2a8e34C672f84002b40";
 const _tokenB = "0x7e30616a7c0996f685e24e44b7afdc2c75461527";
-const _interpreter = "0xF4d1dbA59eABac89a9C37eB5F5bbC5F5b7Ab6B8c";
-const _expressionDeployer = "0x1819ed2de3ABa77c93C3B263aA95fbE67ef34088";
+const _orderBook = "0x609F0B36d2C45827F6CBAA0a651Ec86766A57787";
+const _interpreter = "0x3c0F6e4fB39Dffe64e4F2b1AeA3d5C28534f72DA";
+const _expressionDeployer = "0x627B698a53551BC59041EE4d10E4D62FCf14E97D";
 
 const main = async function () {
   const signers = await ethers.getSigners();
@@ -27,7 +28,7 @@ const main = async function () {
 
   const orderBook = (await ethers.getContractAt(
     "OrderBook",
-    "0x4C765C1Bf6581574afBaF8878beC448b03185677"
+    _orderBook
   )) as OrderBook;
 
   const aliceInputVault = ethers.BigNumber.from(randomUint256());

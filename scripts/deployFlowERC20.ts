@@ -23,9 +23,9 @@ import type {
 } from "../typechain/contracts/flow/erc20/FlowERC20";
 
 // ****NOTE: This addressess will be used
-const _flowERC20Factory = "0x83Ca48DFCb890D3fEC476233F16c58284adf6483";
-const _interpreter = "0xF4d1dbA59eABac89a9C37eB5F5bbC5F5b7Ab6B8c";
-const _expressionDeployer = "0x1819ed2de3ABa77c93C3B263aA95fbE67ef34088";
+const _flowERC20Factory = "0x3C9A9f2b30ae4bCBAb558731280241De0f0c7Ca5";
+const _interpreter = "0x3c0F6e4fB39Dffe64e4F2b1AeA3d5C28534f72DA";
+const _expressionDeployer = "0x627B698a53551BC59041EE4d10E4D62FCf14E97D";
 
 const ME = () => op(Opcode.CALLER);
 const YOU = () => op(Opcode.CONTEXT, 0x0000);
