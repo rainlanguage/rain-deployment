@@ -77,6 +77,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [],
   });
 
+  // Deploy Lobby
+  const maxTimeout = 15000000; // Aprox 6months
+  await deploy("Lobby", {
+    from: deployer,
+    gasLimit: await estimateGasDeploy("Lobby", [maxTimeout]),
+    args: [maxTimeout],
+  });
+
   // Save all
   await save();
 };
