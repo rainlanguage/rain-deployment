@@ -1,0 +1,20 @@
+{
+  "CombineTierFactory": "0xc1977f8B6fC9e8311b5DAdDc216E1dD9816184fE",
+  "CombineTierFactoryBlock": 30017866,
+  "FlowERC1155Factory": "0xc99A084c87D9758B8b0D712e2f956Df48e354c60",
+  "FlowERC1155FactoryBlock": 30017862,
+  "FlowERC20Factory": "0xd2451036a72255Fa99a167641C876FA8e7A6955c",
+  "FlowERC20FactoryBlock": 30017854,
+  "FlowERC721Factory": "0x27800FAbad64a615fB2D4389157b0691FF2ca34B",
+  "FlowERC721FactoryBlock": 30017857,
+  "FlowFactory": "0x01d11c2316167c055c9ced86b887d9a0f41f3db4",
+  "FlowFactoryBlock": "0x1ca0931",
+  "OrderBook": "0xe4548d100004EC5FA16ced81D414e09D2d1Ca682",
+  "OrderBookBlock": 30017729,
+  "Rainterpreter": "0x638Ea1921861668D5a6Fd0272624329878292f71",
+  "RainterpreterBlock": 30017720,
+  "RainterpreterExpressionDeployer": "0xF53c6fA89149c0F8AC6720F545128a4E6F8f3C7F",
+  "RainterpreterExpressionDeployerBlock": 30017724,
+  "StakeFactory": "0x97663528755b268DdD4060eBABB26BD9b176353E",
+  "StakeFactoryBlock": 30017871
+}
