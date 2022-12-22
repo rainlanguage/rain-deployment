@@ -7,11 +7,12 @@ import {
 import { MemoryType, Opcode, memoryOperand, op } from "./utils";
 import { concat } from "ethers/lib/utils";
 
-// Localhost addresses (no valid)
-const _lobby = "0x59b670e9fA9D0A427751Af201D676719a970857b";
-const _interpreter = "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0";
-const _expressionDeployer = "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82";
-const _token = "0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1";
+// TODO: Improve multichain scripts
+// Mumbai addresses (be careful)
+const _lobby = "0x2C3eF82d2Fb716DD11b510d74e4455E2D56CC7e6";
+const _interpreter = "0x638Ea1921861668D5a6Fd0272624329878292f71";
+const _expressionDeployer = "0xF53c6fA89149c0F8AC6720F545128a4E6F8f3C7F";
+const _token = "0x59b670e9fA9D0A427751Af201D676719a970857b";
 
 const main = async function () {
   const signers = await ethers.getSigners();
