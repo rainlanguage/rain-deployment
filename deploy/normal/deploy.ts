@@ -7,10 +7,7 @@ import {
   save,
 } from "../utils/utils";
 
-// TODO: Get implementationa ddresss if exist on deployment
-
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  // TODO: Get contract already deploysed in same commit that package.json
   const { getNamedAccounts } = hre;
   const { deployer } = await getNamedAccounts();
 

@@ -1,7 +1,6 @@
 import { deploy, getAccount, estimateGasDeploy } from "../utils/reefUtils";
 
 const main = async function () {
-  // TODO: Add type check to deployment. Wrap the function deploy and check the type to each funcion
   const deployer = await getAccount("deployer");
 
   // Rain protocol contracts

@@ -3,74 +3,20 @@ import * as path from "path";
 import fs, { promises as fsPromises } from "fs";
 import fse from "fs-extra";
 import hre, { artifacts, ethers } from "hardhat";
-import type { BigNumber, BytesLike, Overrides } from "ethers";
-import { utils } from "ethers";
-
-import type { Artifact, CompilerOutputContract } from "hardhat/types";
-import { FeeData } from "@ethersproject/abstract-provider";
-
 import deployConfig from "../../deployment-config.json";
 
-import { NewChildEvent } from "../../typechain/contracts/factory/Factory";
-import { CombineTierFactory__factory } from "../../typechain";
-import { CombineTier__factory } from "../../typechain";
+import type { FeeData } from "@ethersproject/abstract-provider";
+import type { BigNumber } from "ethers";
+import type { Artifact, CompilerOutputContract } from "hardhat/types";
+import type { Factory } from "../../typechain/contracts/factory/Factory";
 
 export const networkName = hre.network.name;
-const commit: string = process.env.COMMIT;
+export const commit: string = process.env.COMMIT;
 const ZERO_BN = ethers.constants.Zero;
 
-const deploymentsPath = path.resolve(__dirname, "../../deployments");
+export const deploymentsPath = path.resolve(__dirname, "../../deployments");
 if (!fs.existsSync(`${deploymentsPath}/${commit}`)) {
   fs.mkdirSync(`${deploymentsPath}/${commit}`, { recursive: true });
-}
-export enum AllStandardOps {
-  CONSTANT,
-  STACK,
-  CONTEXT,
-  STORAGE,
-  ZIPMAP,
-  DEBUG,
-  ERC20_BALANCE_OF,
-  ERC20_TOTAL_SUPPLY,
-  ERC20_SNAPSHOT_BALANCE_OF_AT,
-  ERC20_SNAPSHOT_TOTAL_SUPPLY_AT,
-  IERC721_BALANCE_OF,
-  IERC721_OWNER_OF,
-  IERC1155_BALANCE_OF,
-  IERC1155_BALANCE_OF_BATCH,
-  BLOCK_NUMBER,
-  SENDER,
-  THIS_ADDRESS,
-  BLOCK_TIMESTAMP,
-  SCALE18,
-  SCALE18_DIV,
-  SCALE18_MUL,
-  SCALE_BY,
-  SCALEN,
-  ANY,
-  EAGER_IF,
-  EQUAL_TO,
-  EVERY,
-  GREATER_THAN,
-  ISZERO,
-  LESS_THAN,
-  SATURATING_ADD,
-  SATURATING_MUL,
-  SATURATING_SUB,
-  ADD,
-  DIV,
-  EXP,
-  MAX,
-  MIN,
-  MOD,
-  MUL,
-  SUB,
-  ITIERV2_REPORT,
-  ITIERV2_REPORT_TIME_FOR_TIER,
-  SATURATING_DIFF,
-  SELECT_LTE,
-  UPDATE_TIMES_FOR_TIER_RANGE,
-  length,
 }
 
 export interface BasicArtifact extends Partial<Artifact> {
@@ -117,6 +63,16 @@ export interface DeployResult {
   userdoc?: any;
   devdoc?: any;
 }
+
+export type NetworksApiInfo = {
+  [key: string]: ApiInfo;
+};
+
+export type ApiInfo = { apiUrl: string; apiKey: string };
+
+export type Addresses = {
+  [key: string]: string | number;
+};
 
 export type Receipt = {
   from: string;
@@ -185,88 +141,6 @@ export async function deployContract(
 
   const result = await deploy(contractName, options);
   return result;
-}
-
-export async function createAlwayTier(
-  parent: DeployResult,
-  deployer: string,
-  txOverrides: Overrides = {}
-): Promise<void> {
-  const signer = await ethers.getSigner(deployer);
-
-  const estimation = deployConfig.estimationLevel.toLowerCase();
-
-  // By Default use the market
-  let estimationLevel = EstimationLevel.MARKET;
-  if (estimation === "low") {
-    estimationLevel = EstimationLevel.LOW;
-  }
-  if (estimation === "aggressive") {
-    estimationLevel = EstimationLevel.AGGRESSIVE;
-  }
-
-  const feeCalculated = await estimateGasFee(estimationLevel);
-
-  if (feeCalculated.maxFeePerGas) {
-    txOverrides.maxFeePerGas = feeCalculated.maxFeePerGas;
-    txOverrides.maxPriorityFeePerGas = feeCalculated.maxPriorityFeePerGas;
-  } else {
-    txOverrides.gasPrice = feeCalculated.gasPrice;
-  }
-
-  const ctxAccount = op(AllStandardOps.CONTEXT, 0);
-
-  // prettier-ignore
-  const sourceReportTimeForTierDefault = utils.concat([
-      op(AllStandardOps.THIS_ADDRESS),
-      ctxAccount,
-    op(AllStandardOps.ITIERV2_REPORT),
-  ]);
-
-  const alwaysArg = {
-    combinedTiersLength: 0,
-    sourceConfig: {
-      sources: [op(AllStandardOps.CONSTANT, 0), sourceReportTimeForTierDefault],
-      constants: [0],
-    },
-  };
-
-  const factory = new CombineTierFactory__factory(signer).attach(
-    parent.address
-  );
-
-  const tx = await factory.createChildTyped(alwaysArg, txOverrides);
-  const receipt = await tx.wait();
-
-  const eventObj = receipt.events.find(
-    (x) =>
-      x.topics[0] === factory.filters.NewChild().topics[0] &&
-      x.address === factory.address
-  );
-
-  const { child } = factory.interface.decodeEventLog(
-    factory.interface.events["NewChild(address,address)"],
-    eventObj.data,
-    eventObj.topics
-  ) as NewChildEvent["args"];
-
-  const result = {
-    address: child,
-    abi: CombineTier__factory.abi,
-    transactionHash: receipt.transactionHash,
-    receipt: receipt,
-    args: alwaysArg,
-    numDeployments: 1,
-    bytecode: CombineTier__factory.bytecode,
-  };
-
-  const path = `${deploymentsPath}/${hre.network.name}`;
-  if (!fs.existsSync(path)) {
-    fs.mkdirSync(path, { recursive: true });
-  }
-
-  const pathFile = `${path}/${"AlwaysTier"}.json`;
-  writeFile(pathFile, JSON.stringify(result, null, 2));
 }
 
 /**
@@ -400,6 +274,7 @@ export const estimateGasFee = async (
       vals.maxFeePerGas = vals.maxFeePerGas.div(counter);
     }
 
+    // @ts-expect-error: The vals type is not found
     values.push(vals);
   }
 
@@ -451,6 +326,7 @@ export const estimateGasFee = async (
     }
   });
 
+  //@ts-expect-error: The result only hold values required to the tx
   return result;
 };
 
@@ -475,11 +351,21 @@ export const writeFile = (
  * @param _path Path of the DeployResult file
  * @returns The DeployResult
  */
-export const fetchFile = (_path: string): DeployResult => {
+export const fetchFile = (_path: string): DeployResult | Addresses => {
   try {
     return JSON.parse(fs.readFileSync(_path).toString());
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const getListDir = async (folderPath: string): Promise<string[]> => {
+  try {
+    const listFiles = await fsPromises.readdir(folderPath);
+    const regex = new RegExp(/.*\.json$|.*\.JSON$/);
+    return listFiles.filter((ele) => regex.test(ele));
+  } catch (err) {
+    console.error("Error occured while reading directory!", err);
   }
 };
 
@@ -488,8 +374,72 @@ export const fetchFile = (_path: string): DeployResult => {
  * Avoid to save/generate to localhost network
  */
 export const save = async (): Promise<void> => {
+  // TODO: Get contract already deployed in same commit that current but moved to the "finished" folder.
+
+  await generateChildrenInfo();
   await saveListAddresses();
   copyDeployFolder();
+};
+
+export const delay = (ms: number): unknown =>
+  new Promise((res) => setTimeout(res, ms));
+
+const generateChildrenInfo = async () => {
+  const folderPath = deploymentsPath + `/${networkName}`;
+  const files = await getListDir(folderPath);
+
+  for (let i = 0; i < files.length; i++) {
+    const file = fetchFile(folderPath + "/" + files[i]) as DeployResult;
+    const regexReplace = new RegExp(/.json$|.JSON$/);
+    const contractName = `${files[i].replace(regexReplace, "")}`;
+    const isFactory = file.abi?.find(
+      (element) => element.name === "NewChild" && element.type === "event"
+    )
+      ? true
+      : false;
+
+    if (isFactory) {
+      const contractFactory = (await ethers.getContractAt(
+        contractName,
+        file.address
+      )) as Factory;
+
+      const eventTopic = contractFactory.filters.Implementation()
+        .topics[0] as string;
+
+      const implementationData = file.receipt.logs.find((element) =>
+        element.topics.includes(eventTopic)
+      ).data;
+
+      const implementationAddress = contractFactory.interface.decodeEventLog(
+        "Implementation",
+        implementationData
+      ).implementation;
+
+      const childName = contractName.replace("Factory", "");
+
+      const childArtifact = await artifacts.readArtifact(childName);
+
+      const childResult: DeployResult = {
+        address: implementationAddress,
+        abi: childArtifact.abi,
+        transactionHash: file.transactionHash,
+        receipt: file.receipt,
+        args: file.args,
+        numDeployments: 1,
+        bytecode: childArtifact.bytecode,
+        deployedBytecode: childArtifact.deployedBytecode,
+      };
+
+      await getExtendedInfo(childResult, childArtifact);
+
+      // save as JSON
+      writeFile(
+        folderPath + "/" + childName + ".json",
+        JSON.stringify(childResult, null, 2)
+      );
+    }
+  }
 };
 
 const copyDeployFolder = (): void => {
@@ -508,25 +458,15 @@ const copyDeployFolder = (): void => {
 };
 
 const saveListAddresses = async (): Promise<void> => {
-  const getListDir = async (folderPath: string): Promise<string[]> => {
-    try {
-      const listFiles = await fsPromises.readdir(folderPath);
-      const regex = new RegExp(/.*\.json$|.*\.JSON$/);
-      return listFiles.filter((ele) => regex.test(ele));
-    } catch (err) {
-      console.error("Error occured while reading directory!", err);
-    }
-  };
-
   const folderPath = deploymentsPath + `/${networkName}`;
   const regexReplace = new RegExp(/.json$|.JSON$/);
   const files = await getListDir(folderPath);
   const pathTo = `${folderPath}/addresses.json`;
-  const result = fs.existsSync(pathTo) ? fetchFile(pathTo) : {};
+  const result = (fs.existsSync(pathTo) ? fetchFile(pathTo) : {}) as Addresses;
 
   for (let i = 0; i < files.length; i++) {
     const pathFile = path.resolve(folderPath, files[i]);
-    const deployFile = fetchFile(pathFile);
+    const deployFile = fetchFile(pathFile) as DeployResult;
     const name = `${files[i].replace(regexReplace, "")}`;
     result[`${name}`] = deployFile.address;
     result[`${name}Block`] = deployFile.receipt.blockNumber;
@@ -554,27 +494,28 @@ const assignValue = (obj: any, keyPath: string[], value: any) => {
 };
 
 /**
- * Converts an opcode and operand to bytes, and returns their concatenation.
- * @param code - the opcode
- * @param erand - the operand, currently limited to 1 byte (defaults to 0)
+ * Get the full extended info of a contract using the hardhat enviroment
+ * to save the major information posible about the deployment.
+ * @param result The deploy result of the contract
+ * @param artifact The artifact of the contrac that was the deployed
  */
-export function op(
-  code: number,
-  erand: number | BytesLike | utils.Hexable = 0
-): Uint8Array {
-  return utils.concat([bytify(code), bytify(erand)]);
-}
+const getExtendedInfo = async (
+  result: DeployResult,
+  artifact: BasicArtifact
+) => {
+  const contractId = `:${artifact.contractName}`;
+  const all = await artifacts.getAllFullyQualifiedNames();
+  const qualifiedName = all.find((e) => {
+    return e.substring(e.indexOf(":")) === contractId;
+  });
 
-/**
- * Converts a value to raw bytes representation. Assumes `value` is less than or equal to 1 byte, unless a desired `bytesLength` is specified.
- *
- * @param value - value to convert to raw bytes format
- * @param bytesLength - (defaults to 1) number of bytes to left pad if `value` doesn't completely fill the desired amount of memory. Will throw `InvalidArgument` error if value already exceeds bytes length.
- * @returns {Uint8Array} - raw bytes representation
- */
-export function bytify(
-  value: number | BytesLike | utils.Hexable,
-  bytesLength = 1
-): BytesLike {
-  return utils.zeroPad(utils.hexlify(value), bytesLength);
-}
+  const buildInfo = await artifacts.getBuildInfo(qualifiedName);
+  const contractPath = qualifiedName.replace(contractId, "");
+
+  const hhOutput: OutputContract =
+    buildInfo.output.contracts[contractPath][artifact.contractName];
+
+  result.metadata = artifact.metadata ? artifact.metadata : hhOutput.metadata;
+  result.devdoc = artifact.devdoc ? artifact.devdoc : hhOutput.devdoc;
+  result.userdoc = artifact.userdoc ? artifact.userdoc : hhOutput.userdoc;
+};

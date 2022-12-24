@@ -82,7 +82,6 @@ function getMnemonic(networkName?: string): string {
   return mnemonic;
 }
 
-// TODO Support to new chains
 function getUrl(networkName: string): string {
   // Use localhost node
   if (networkName === "localhost") {
@@ -271,8 +270,21 @@ const config = {
     enabled: process.env.REPORT_GAS !== undefined,
     currency: "USD",
   },
-  etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+  verificationApi: {
+    // The name should matched with the network name in network config.
+    // To found the api info about every Ethereum testnet see: https://docs.etherscan.io/getting-started/endpoint-urls
+    mainnet: {
+      apiUrl: "https://api.etherscan.io/api",
+      apiKey: process.env.ETHERSCAN_API_KEY,
+    },
+    polygon: {
+      apiUrl: "https://api.polygonscan.com/api",
+      apiKey: process.env.POLYGON_MUMBAI_API_KEY,
+    },
+    mumbai: {
+      apiUrl: "https://api-testnet.polygonscan.com/api",
+      apiKey: process.env.POLYGON_MUMBAI_API_KEY,
+    },
   },
   mocha: {
     timeout: 300000,
