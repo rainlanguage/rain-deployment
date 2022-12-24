@@ -30,6 +30,14 @@ let
     fi
   '';
 
+  verify-contracts = pkgs.writeShellScriptBin "verify-contracts" ''
+    if [[ ''$1 == "" ]]; then
+      echo "should specify a network"
+    else
+        hardhat run scripts/verifyContracts.ts --network ''$1
+    fi
+  '';
+
   hardhat-node = pkgs.writeShellScriptBin "hardhat-node" ''
     hardhat node --network hardhat --no-deploy
   '';
@@ -69,6 +77,7 @@ pkgs.stdenv.mkDerivation {
   pkgs.jq
   flush-all
   deploy-rain
+  verify-contracts
   solt-the-earth
   get-commit
   hardhat-node
