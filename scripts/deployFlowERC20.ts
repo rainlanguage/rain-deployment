@@ -27,7 +27,6 @@ const _flowERC20Factory = "0x3C9A9f2b30ae4bCBAb558731280241De0f0c7Ca5";
 const _interpreter = "0x3c0F6e4fB39Dffe64e4F2b1AeA3d5C28534f72DA";
 const _expressionDeployer = "0x627B698a53551BC59041EE4d10E4D62FCf14E97D";
 
-const ME = () => op(Opcode.CALLER);
 const YOU = () => op(Opcode.CONTEXT, 0x0000);
 
 const flowERC20Deploy = async (
@@ -76,7 +75,6 @@ const flowERC20Deploy = async (
 const main = async function () {
   const signers = await ethers.getSigners();
   const you = signers[0];
-  const deployer = signers[1];
 
   const flowERC20Factory = (await ethers.getContractAt(
     "FlowERC20Factory",

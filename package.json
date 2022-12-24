@@ -25,7 +25,7 @@
     "@types/node": "^14.14.22"
   },
   "dependencies": {
-    "@beehiveinnovation/rain-protocol": "git+https://github.com/beehive-innovation/rain-protocol.git#f34fff1b1605a1c2dc73aa24c04235c6a49cc35a",
+    "@beehiveinnovation/rain-protocol": "git+https://github.com/beehive-innovation/rain-protocol.git#3530dd6bde8554c341ef0de2ea649d763485db13",
     "@nomiclabs/hardhat-ethers": "^2.1.1",
     "@nomiclabs/hardhat-waffle": "^2.0.2",
     "@reef-defi/evm-provider": "^1.0.5",
