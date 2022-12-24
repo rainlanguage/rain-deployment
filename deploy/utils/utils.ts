@@ -197,7 +197,7 @@ export const estimateGasDeploy = async (
  * If the network support EIP-1559, will ignore the gasPrice
  * @param estimationLevel The estimation level to send the transaction. Could be Low(1), Market(2) or Aggressive(3)
  * @param txsTofetch The amount of transactions to fetch to estimate, by default is 10. A higher number will provide
- * a best estimation, but also will take more time to calculate. Min is 1 and max is 20 for safety
+ * a best estimation, but also will take more time to calculate. Min is 1 and max is 10 for safety
  * @returns And object with all the information in wei. If the network support EIP-1559, gasPrice will be empty/undefined
  */
 export const estimateGasFee = async (
@@ -211,7 +211,7 @@ export const estimateGasFee = async (
    */
   const networkType = (await ethers.provider.getFeeData()).maxFeePerGas ? 2 : 0;
   const values: FeeData[] = [];
-  txsTofetch = txsTofetch < 1 ? 1 : txsTofetch > 20 ? 20 : txsTofetch;
+  txsTofetch = txsTofetch < 1 ? 1 : txsTofetch > 10 ? 10 : txsTofetch;
   ``;
   for (let i = 1; i <= txsTofetch; i++) {
     const txArray = (await ethers.provider.getBlockWithTransactions(-i))
