@@ -32,5 +32,7 @@
   "Stake": "0xa4d7aB21168DdC415682dc49eB87b3D702316a06",
   "StakeBlock": 30094714,
   "StakeFactory": "0x8984d59640ee9590fd04bDf9Dd08C965a3AaA9cD",
-  "StakeFactoryBlock": 30094714
+  "StakeFactoryBlock": 30094714,
+  "ReserveToken": "0x30c0331340CffE54c402d27Aa854894F618ceC9B",
+  "ReserveTokenBlock": 30180542
 }

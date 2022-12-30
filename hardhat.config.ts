@@ -277,6 +277,10 @@ const config = {
       apiUrl: "https://api.etherscan.io/api",
       apiKey: process.env.ETHERSCAN_API_KEY,
     },
+    goerli: {
+      apiUrl: "https://api-goerli.etherscan.io/api",
+      apiKey: process.env.ETHERSCAN_API_KEY,
+    },
     polygon: {
       apiUrl: "https://api.polygonscan.com/api",
       apiKey: process.env.POLYGON_MUMBAI_API_KEY,
