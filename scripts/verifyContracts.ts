@@ -80,7 +80,6 @@ const buildBody = async (contractName_: string, folderpath_: string) => {
 
 const getEntries = (folderPath_: string): string[] => {
   // Reading the addesses.json file that contain all the addresses deployed by this commit/network in the path.
-  console.log(`1`);
   const addresses = fetchFile(folderPath_ + "/addresses.json") as Addresses;
 
   if (!addresses) {
