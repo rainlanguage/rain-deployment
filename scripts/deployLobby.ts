@@ -11,10 +11,10 @@ import { Overrides } from "ethers";
 
 // TODO: Improve multichain scripts
 // Mumbai addresses (be careful)
-const _lobbyFactory = "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c";
-const _interpreter = "0x610178dA211FEF7D417bC0e6FeD39F05609AD788";
-const _expressionDeployer = "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e";
-const _token = "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d";
+const _lobbyFactory = "0xCB876f819f88403dfb9D0Fc31AD8c42854677f0a";
+const _interpreter = "0x5CFbf7d001A1095115657c6C08e87a9039C3343b";
+const _expressionDeployer = "0xA9a5943fe662a463148B1e966739c4C03B35cEb0";
+const _token = "0x30c0331340CffE54c402d27Aa854894F618ceC9B";
 
 const lobbyDeploy = async (
   lobbyConfig: LobbyConfigStruct,
@@ -62,7 +62,7 @@ const main = async function () {
   );
   const truthy_value = op(
     Opcode.READ_MEMORY,
-    memoryOperand(MemoryType.Constant, 0)
+    memoryOperand(MemoryType.Constant, 1)
   );
   const leave_min = op(
     Opcode.READ_MEMORY,
@@ -92,7 +92,7 @@ const main = async function () {
   // 2 + 1 + 1
   const stateConfig: StateConfigStruct = {
     sources: [joinSource, leaveSource, claimSource],
-    constants: [0],
+    constants: [0, 1],
   };
 
   const config: LobbyConfigStruct = {

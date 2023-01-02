@@ -1075,9 +1075,9 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@beehiveinnovation/rain-protocol@git+https://github.com/beehive-innovation/rain-protocol.git#3530dd6bde8554c341ef0de2ea649d763485db13":
+"@beehiveinnovation/rain-protocol@git+https://github.com/beehive-innovation/rain-protocol.git#3355128adf85b52033e7c3c4b16d60684154404a":
   version "0.0.16"
-  resolved "git+https://github.com/beehive-innovation/rain-protocol.git#3530dd6bde8554c341ef0de2ea649d763485db13"
+  resolved "git+https://github.com/beehive-innovation/rain-protocol.git#3355128adf85b52033e7c3c4b16d60684154404a"
   dependencies:
     "@chainlink/contracts" "=0.5.1"
     "@openzeppelin/contracts-upgradeable" "=4.8.0"
