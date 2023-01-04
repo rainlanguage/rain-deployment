@@ -4,7 +4,14 @@ import {
   LobbyConfigStruct,
   StateConfigStruct,
 } from "../typechain/contracts/lobby/Lobby";
-import { MemoryType, Opcode, getEventArgs, memoryOperand, op } from "./utils";
+import {
+  MemoryType,
+  Opcode,
+  getEventArgs,
+  memoryOperand,
+  op,
+  zeroAddress,
+} from "./utils";
 import { concat } from "ethers/lib/utils";
 import { LobbyFactory } from "../typechain";
 import { Overrides } from "ethers";
@@ -49,8 +56,6 @@ const lobbyDeploy = async (
 };
 
 const main = async function () {
-  const signers = await ethers.getSigners();
-  const deployer = signers[0];
   const lobbyFactory = (await ethers.getContractAt(
     "LobbyFactory",
     _lobbyFactory
@@ -96,8 +101,8 @@ const main = async function () {
   };
 
   const config: LobbyConfigStruct = {
-    refMustAgree: true,
-    ref: deployer.address,
+    refMustAgree: false,
+    ref: zeroAddress,
     expressionDeployer: _expressionDeployer,
     interpreter: _interpreter,
     token: _token,
