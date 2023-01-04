@@ -81,8 +81,8 @@ const main = async function () {
 
   // prettier-ignore
   const joinSource = concat([
+    truthy_value,
     join_deposit, 
-    truthy_value
   ]);
 
   // prettier-ignore
