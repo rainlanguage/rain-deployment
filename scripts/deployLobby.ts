@@ -11,6 +11,8 @@ import {
   memoryOperand,
   op,
   zeroAddress,
+  ONE,
+  sixZeros,
 } from "./utils";
 import { concat } from "ethers/lib/utils";
 import { LobbyFactory } from "../typechain";
@@ -61,44 +63,37 @@ const main = async function () {
     _lobbyFactory
   )) as LobbyFactory;
 
-  const join_deposit = op(
-    Opcode.READ_MEMORY,
-    memoryOperand(MemoryType.Constant, 0)
-  );
-  const truthy_value = op(
-    Opcode.READ_MEMORY,
-    memoryOperand(MemoryType.Constant, 1)
-  );
-  const leave_min = op(
-    Opcode.READ_MEMORY,
-    memoryOperand(MemoryType.Constant, 0)
-  );
+  const ONE_ = ethers.BigNumber.from(1+sixZeros)
 
-  const claim_min = op(
-    Opcode.READ_MEMORY,
-    memoryOperand(MemoryType.Constant, 0)
-  );
+  const constants = [0,1,ONE_];
 
-  // prettier-ignore
-  const joinSource = concat([
-    truthy_value,
-    join_deposit, 
+   // prettier-ignore
+   const joinSource = concat([
+    op(Opcode.CONTEXT, 0x0300) ,
+    op(Opcode.READ_MEMORY,memoryOperand(MemoryType.Constant, 2))
   ]);
 
   // prettier-ignore
   const leaveSource = concat([
-    leave_min
-  ]);
+    op(Opcode.READ_MEMORY, memoryOperand(MemoryType.Constant, 2))
+  ]); 
+
   // prettier-ignore
   const claimSource = concat([
-    claim_min
+      op(Opcode.CONTEXT, 0x0100)
   ]);
 
-  // 2 + 1 + 1
-  const stateConfig: StateConfigStruct = {
-    sources: [joinSource, leaveSource, claimSource],
-    constants: [0, 1],
-  };
+  // prettier-ignore
+  const invalidSource = concat([
+    op(Opcode.CONTEXT, 0x0300) 
+  ]);
+
+const lobbyStateConfig : StateConfigStruct = {
+  sources: [joinSource, leaveSource, claimSource, invalidSource],
+  constants: constants,
+};
+
+
 
   const config: LobbyConfigStruct = {
     refMustAgree: false,
@@ -106,7 +101,7 @@ const main = async function () {
     expressionDeployer: _expressionDeployer,
     interpreter: _interpreter,
     token: _token,
-    stateConfig: stateConfig,
+    stateConfig: lobbyStateConfig,
     description: "0x00",
     timeoutDuration: 15000000, // Aprox 6months,
   };
@@ -126,3 +121,4 @@ main()
     const exit = process.exit;
     exit(1);
   });
+   
